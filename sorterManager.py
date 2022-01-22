@@ -1,48 +1,95 @@
 import random
 
+PROCESS_RUNS = False
+
+# misc todo:
 # 1. fiddle with statistics to stop everything in a run from getting high - chance of run terminating based on run length and size
 # 2. slice by reference instead of copying
 
+# plan
+# 1. peeksort
+# 2. powersort
+# 3. consolidation
+# 4. analysis
+
 class sorterManager:
+	# * * * * * * * * *  * * * * * * * * *
+	# * * * * * INPUT GENERATION * * * * *
+	# * * * * * * * * *  * * * * * * * * *
+
+	# generates an unsorted input, formatted for the sorters
 	def generateInput(self, sizePower, sortedRunLengthPower, unsortedRunLengthPower):
 		self.input = []
 		self.inputLength = 10**sizePower
 
+		# initialise run toggle
 		runNext = random.choice([True, False])
 
-		#print(runNext)
-
 		while len(self.input) < self.inputLength:
+			# determines the length of the next run of sorted/unsorted inputs
 			if runNext:
 				runLength = int(random.random()*10**sortedRunLengthPower)
-				#print("add a run, length =", runLength)
 			else:
 				runLength = int(random.random()*10**unsortedRunLengthPower)
-				#print("add some randomly ordered stuff, length =", runLength)
 
-			newPortion = []
-
+			# constructs the new portion
+			newPortion = [int(random.random()*self.inputLength)]
 			while len(newPortion) < runLength:
 				newChar = int(random.random()*self.inputLength)
-				if len(newPortion) == 0:
-					newPortion.append(newChar)
-				elif newChar >= newPortion[-1] or not runNext:
+				if newChar >= newPortion[-1] or not runNext:
 					newPortion.append(newChar)
 
-			#print(newPortion)
 			self.input += newPortion
-			#break
 
-		print(self.input)
+		# because of the run system, length can be slightly overshot - delete surplus elements
+		while len(self.input) > self.inputLength:
+			self.input.pop(-1)
 
-	def mergeSort2(self):
-		self.wIP = []
+		# wrap for output - each presorted element needs wrapping in square brackets (whether or not runs are detected)
+		if PROCESS_RUNS:
+			self.input = ourSM.processRuns()
+		else:
+			processedInput = []
+			for i in self.input:
+				processedInput.append([i])
 
-		# partition the input
+			self.input = processedInput
+
+
+		return self.input
+
+	# detects runs in an input and partitions them with square brackets
+	def processRuns(self):
+		# initialise
+		runProcessedInput = []
+		run = [self.input[0]]
+		firstStep = True
+		
+		# wraps all runs
 		for i in self.input:
-			self.wIP.append([i])
+			# ignore first step
+			if firstStep:
+				firstStep = False
+			# if in the run - add it on
+			elif i >= run[-1]:
+				run.append(i)
+			# if it's broken the run, append and reset
+			else:
+				runProcessedInput.append(run)
+				run = [i]
 
-		print(self.wIP)
+		# last char can't break last run, so tack the last run on
+		runProcessedInput.append(run)
+
+		return runProcessedInput
+
+	# * * * * * * * * * * * * * *
+	# * * * * * SORTERS * * * * *
+	# * * * * * * * * * * * * * *
+
+	# sorts an input using two way merging
+	def mergeSort2(self):
+		self.wIP = self.input
 
 		# loop over itterative rounds
 		while len(self.wIP) > 1:
@@ -50,28 +97,17 @@ class sorterManager:
 			i = 0
 			while i < len(self.wIP):
 				if len(self.wIP) - i >= 2:
-					print(self.wIP[i], self.wIP[i+1])
-					
 					leftInput = self.wIP.pop(i)
 					rightInput = self.wIP.pop(i)
 
 					self.wIP.insert(i, self.merge2([leftInput, rightInput]))
-				elif len(self.wIP) - i == 1:
-					print(self.wIP[i])
 
 				i += 1
+		return self.wIP[0]
 
-			print(self.wIP)
-			#input()
-
+	# sorts an input using three way merging
 	def mergeSort3(self):
-		self.wIP = []
-
-		# partition the input
-		for i in self.input:
-			self.wIP.append([i])
-
-		print(self.wIP)
+		self.wIP = self.input
 
 		# loop over itterative rounds
 		while len(self.wIP) > 1:
@@ -79,40 +115,22 @@ class sorterManager:
 			i = 0
 			while i < len(self.wIP):
 				if len(self.wIP) - i >= 3:
-					print(self.wIP[i], self.wIP[i+1], self.wIP[i+2])
-					
 					leftInput = self.wIP.pop(i)
 					centreInput = self.wIP.pop(i)
 					rightInput = self.wIP.pop(i)
 
 					self.wIP.insert(i, self.merge3([leftInput, centreInput, rightInput]))
+				# handle the end
 				elif len(self.wIP) == 2:
-					print("handle the thing")
-					print(self.wIP)
-					print("sections to merge:", len(self.wIP))
-					#return self.wIP
-					
 					self.wIP = [self.merge2(self.wIP)]
-					print("after:")
-					print(self.wIP)
 					break
 
-
 				i += 1
+		return self.wIP[0]
 
-		print()
-		print("sorted array:")
-		print(self.wIP[0])
-		return self.wIP
-
+	# sorts an input using four way merging
 	def mergeSort4(self):
-		self.wIP = []
-
-		# partition the input
-		for i in self.input:
-			self.wIP.append([i])
-
-		print(self.wIP)
+		self.wIP = self.input
 
 		# loop over itterative rounds
 		while len(self.wIP) > 1:
@@ -120,49 +138,38 @@ class sorterManager:
 			i = 0
 			while i < len(self.wIP):
 				if len(self.wIP) - i >= 4:
-					print(self.wIP[i], self.wIP[i+1], self.wIP[i+2], self.wIP[i+3])
-					
 					leftInput = self.wIP.pop(i)
 					centreLeftInput = self.wIP.pop(i)
 					centreRightInput = self.wIP.pop(i)
 					rightInput = self.wIP.pop(i)
 
 					self.wIP.insert(i, self.merge4([leftInput, centreLeftInput, centreRightInput, rightInput]))
-				elif len(self.wIP) == 2:
-					print("handle the thing")
-					print(self.wIP)
-					print("sections to merge:", len(self.wIP))
-					#return self.wIP
-					
-					self.wIP = [self.merge2(self.wIP)]
-					print("after:")
-					print(self.wIP)
+				# handle the end
+				elif len(self.wIP) == 3:
+					self.wIP = [self.merge3(self.wIP)]
 					break
-
+				elif len(self.wIP) == 2:
+					self.wIP = [self.merge2(self.wIP)]
+					break
 
 				i += 1
 
-		print()
-		print("sorted array:")
-		print(self.wIP[0])
-		return self.wIP
+		return self.wIP[0]
 
-	
+	# * * * * * * * * * * * * * * * * * *
+	# * * * * * SUPPORT METHODS * * * * *
+	# * * * * * * * * * * * * * * * * * *
 
-
-
+	# merges two inputs
 	@staticmethod
 	def merge2(mergeInput):
 		output = []
 
 		while len(mergeInput[0]) > 0 and len(mergeInput[1]) > 0:
-			print("merge:", mergeInput[0][0], "and", mergeInput[1][0])
-
 			if mergeInput[0][0] <= mergeInput[1][0]:
 				output.append(mergeInput[0].pop(0))
 			else:
 				output.append(mergeInput[1].pop(0))
-
 
 		# if there's anything left in either array, there's nothing left in the other one,
 		# and it's all greater than the output array
@@ -172,80 +179,28 @@ class sorterManager:
 		elif len(mergeInput[1]) > 0:
 			output += mergeInput[1]
 
-		print(output)
-		print()
-
 		return output
 
-	# not the best implementation - uses tripple comparison instead of 2 uses of merge2
+	# merges three inputs using merge2
 	@staticmethod
 	def merge3(mergeInput):
 		output = []
 
-		while len(mergeInput[0]) > 0 and len(mergeInput[1]) > 0 and len(mergeInput[2]) > 0:
-			print("merge:", mergeInput[0][0], "and", mergeInput[1][0], "and", mergeInput[2][0])
+		leftInput = sorterManager.merge2([mergeInput.pop(0), mergeInput.pop(0)])
 
-			if mergeInput[0][0] <= mergeInput[1][0] and mergeInput[0][0] <= mergeInput[2][0]:
-				output.append(mergeInput[0].pop(0))
-			elif mergeInput[1][0] <= mergeInput[0][0] and mergeInput[1][0] <= mergeInput[2][0]:
-				output.append(mergeInput[1].pop(0))
-			else:
-				output.append(mergeInput[2].pop(0))
-
-		# only one array can be empty, so merge the two remaining arrays
-		
-		print("current input:", output, mergeInput)
-
-		for i in range(len(mergeInput)):
-			if len(mergeInput[i]) == 0:
-				mergeInput.pop(i)
-				break
-
-		print("after scrubbing:", output, mergeInput)
-
-		output += sorterManager.merge2(mergeInput)
-
-		print("plus the tail:", output)
-		print()
+		output = sorterManager.merge2([leftInput, mergeInput.pop(0)])
 
 		return output
 
+	# merges four inputs using merge2
 	@staticmethod
 	def merge4(mergeInput):
 		output = []
 
-		while len(mergeInput[0]) > 0 and \
-		      len(mergeInput[1]) > 0 and \
-		      len(mergeInput[2]) > 0 and \
-		      len(mergeInput[3]) > 0:
+		leftInput = sorterManager.merge2([mergeInput.pop(0), mergeInput.pop(0)])
+		rightInput = sorterManager.merge2([mergeInput.pop(0), mergeInput.pop(0)])
 
-			print("merge:", mergeInput[0][0], ",", mergeInput[1][0], ",", mergeInput[2][0], "and", mergeInput[3][0])
-
-			print("continue from here")
-			exit(0)
-
-			if mergeInput[0][0] <= mergeInput[1][0] and mergeInput[0][0] <= mergeInput[2][0]:
-				output.append(mergeInput[0].pop(0))
-			elif mergeInput[1][0] <= mergeInput[0][0] and mergeInput[1][0] <= mergeInput[2][0]:
-				output.append(mergeInput[1].pop(0))
-			else:
-				output.append(mergeInput[2].pop(0))
-
-		# only one array can be empty, so merge the two remaining arrays
-		
-		print("current input:", output, mergeInput)
-
-		for i in range(len(mergeInput)):
-			if len(mergeInput[i]) == 0:
-				mergeInput.pop(i)
-				break
-
-		print("after scrubbing:", output, mergeInput)
-
-		output += sorterManager.merge2(mergeInput)
-
-		print("plus the tail:", output)
-		print()
+		output = sorterManager.merge2([leftInput, rightInput])
 
 		return output
 
@@ -253,9 +208,8 @@ class sorterManager:
 
 
 ourSM = sorterManager()
-ourSM.generateInput(2.73, 0.1, 0.6)
-ourSM.mergeSort4()
-
+print("input")
+print(ourSM.generateInput(1, 0.1, 0.6))
 print()
-print("complete")
-print("length:", len(ourSM.input))
+print("output:")
+print(ourSM.mergeSort4())
