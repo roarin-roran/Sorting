@@ -168,41 +168,9 @@ class mergeSorter:
 	# previous run, though this will be modified as elements are moved
 	# to output
 	def mergeK(self, runs):
-		# overwritten portion of workingOutPos starts at the start of
-		# the set of runs
-		self.workingOutPos = runs[0][0]
+		ourTT = tournamentTree.tournamentTree(self.getCurrentList(), self.getWorkingOutList(), runs)
 
-		currentList = self.getCurrentList()
-		workingOutList = self.getWorkingOutList()
-
-		# while there are still runs
-		while len(runs) > 1:
-			# find the run with the smallest first index
-
-			# initialise to the first run
-			minRun = 0
-			for i in range(len(runs) - 1):
-				# if the first element is smaller, update it.
-				if currentList[runs[i+1][0]] < currentList[runs[minRun][0]]:
-					minRun = i + 1
-
-			# move that element to the output
-			workingOutList[self.workingOutPos] = currentList[runs[minRun][0]]
-			self.workingOutPos += 1
-
-			# increment position in this run
-			runs[minRun][0] += 1
-
-			# if the current and end pos of that run are now equal,
-			# remove it from the list
-			if runs[minRun][0] == runs[minRun][1]:
-				runs.pop(minRun)
-
-		# copy remaining run over - no need to pay the overheads of comparing 
-		while runs[0][0] != runs[0][1]:
-			workingOutList[self.workingOutPos] = currentList[runs[0][0]]
-			runs[0][0] += 1
-			self.workingOutPos += 1
+		ourTT.merge()
 
 
 

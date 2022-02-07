@@ -14,9 +14,6 @@ class tournamentTree:
 
 		self.numElements = self.runs[-1][1] - self.runs[0][0]
 
-		# important to do this somewhere - might be moved to __init__ if this is called by init, but needs to be called whenever this is
-		self.addInfs()
-
 
 
 	# adds infinities to the end of each run, updating the run array
@@ -191,11 +188,20 @@ class tournamentTree:
 
 	# merges all entered runs
 	def merge(self):
+		# add infinities to the end of runs
+		self.addInfs()
+
+		# overwrite the output from the start of the first run onwards
 		ourputArrayLocation = self.runs[0][0]
 
+		# for all elements
 		for i in range(self.numElements):
+			# pop the minimum value from our heap, which will repair itself automatically
 			self.outputArray[ourputArrayLocation] = self.popMin()[0]
 			ourputArrayLocation += 1
+
+		# remove the infinities from the ends of runs, because 
+		self.removeInfs()
 
 		return self.outputArray
 
@@ -204,10 +210,10 @@ class tournamentTree:
 
 
 
-ourInput = [16,17,12,13,3,9,12,34,12,65,34,76,8,12,4,31]
+#ourInput = [16,17,12,13,3,9,12,34,12,65,34,76,8,12,4,31]
 
 #ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4]])
-ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6]])
+#ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6]])
 #ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6],[6,8]])
 #ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6],[6,8],[8,10]])
 #ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6],[6,8],[8,10],[10,12]])
@@ -219,10 +225,10 @@ ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6]])
 #ourTT.simpleMerge()
 #print(ourTT.outputArray)
 
-ourTT.constructTHeap()
+#ourTT.constructTHeap()
 #print(ourTT.tHeap)
 
-ourTT.merge()
+#ourTT.merge()
 
 #for i in range(12):
 #	print(ourTT.popMin())
