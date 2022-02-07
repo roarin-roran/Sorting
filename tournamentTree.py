@@ -12,6 +12,10 @@ class tournamentTree:
 		self.outputArray = outputArray
 		self.runs = runs
 
+		self.numElements = self.runs[-1][1] - self.runs[0][0]
+
+		# important to do this somewhere - might be moved to __init__ if this is called by init, but needs to be called whenever this is
+		self.addInfs()
 
 
 
@@ -77,8 +81,6 @@ class tournamentTree:
 
 	# initiates the tHeap variable using the first value of each run
 	def constructTHeap(self):
-		# important to do this somewhere - might be moved to __init__ if this is called by init, but needs to be called whenever this is
-		self.addInfs()
 		# initialise heap with blank values - this declares a list that's the correct size (unless ints go over the standard max)
 		# [run number, first element, position within the run]
 		self.tHeap = [[0,0,0]]*len(self.runs)
@@ -187,7 +189,15 @@ class tournamentTree:
 		return False
 
 
+	# merges all entered runs
+	def merge(self):
+		ourputArrayLocation = self.runs[0][0]
 
+		for i in range(self.numElements):
+			self.outputArray[ourputArrayLocation] = self.popMin()[0]
+			ourputArrayLocation += 1
+
+		return self.outputArray
 
 
 
@@ -197,10 +207,10 @@ class tournamentTree:
 ourInput = [16,17,12,13,3,9,12,34,12,65,34,76,8,12,4,31]
 
 #ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4]])
-#ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6]])
+ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6]])
 #ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6],[6,8]])
 #ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6],[6,8],[8,10]])
-ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6],[6,8],[8,10],[10,12]])
+#ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6],[6,8],[8,10],[10,12]])
 
 
 
@@ -210,10 +220,11 @@ ourTT = tournamentTree(ourInput, ourInput.copy(), [[0,2],[2,4],[4,6],[6,8],[8,10
 #print(ourTT.outputArray)
 
 ourTT.constructTHeap()
-print(ourTT.tHeap)
+#print(ourTT.tHeap)
 
+ourTT.merge()
 
-for i in range(12):
-	print(ourTT.popMin())
+#for i in range(12):
+#	print(ourTT.popMin())
 
-print(ourTT.tHeap)
+#print(ourTT.tHeap)
