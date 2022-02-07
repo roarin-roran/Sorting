@@ -4,9 +4,6 @@ import math
 
 # todo:
 # 1. askSeb use a global variable to reduce changes to sinkingTime in popMin?
-# 2. rename compareParentAndChild
-
-
 
 
 class tournamentTree:
@@ -75,23 +72,8 @@ class tournamentTree:
 			self.runs[0][0] += 1
 			workingOutPos += 1
 
-
-
-
-
-
-
-
-#	tournament tree time!
-
-#	add the infinities, then construct the loser tree (though these can probably be done in any order)
-
-#	three operations:
-#	1) construct
-#	2) popmin&repair
-#	3) merge, including setup and wrap up
-
 # NOTE: stability condition is NOT written into tree, must be written into popMin
+# askSeb - views on this
 
 	# initiates the tHeap variable using the first value of each run
 	def constructTHeap(self):
@@ -155,7 +137,7 @@ class tournamentTree:
 		# initialise with the first sinking step - first node only has one child
 		parent = 0
 		child  = 1
-		sinkingTime = self.compareParentAndChild(parent, child)
+		sinkingTime = self.isFirstRunLarger(parent, child)
 		
 		# until sinking is complete
 		while sinkingTime:
@@ -172,18 +154,18 @@ class tournamentTree:
 			if rightChild < len(self.tHeap):
 
 				# returns true if second element is smaller - method needs renaming
-				if self.compareParentAndChild(leftChild, rightChild):
+				if self.isFirstRunLarger(leftChild, rightChild):
 					child = rightChild
 				else:
 					child = leftChild
 
 				# use the smaller child to work out whether you need to keep sinking
-				sinkingTime = self.compareParentAndChild(parent, child)
+				sinkingTime = self.isFirstRunLarger(parent, child)
 			# if the left child exists and the right doesn't, it is the smallest
 			elif leftChild < len(self.tHeap):
 				child = leftChild
 
-				sinkingTime = self.compareParentAndChild(parent, child)
+				sinkingTime = self.isFirstRunLarger(parent, child)
 			# if neither child exists, we're at the bottom
 			else:
 				sinkingTime = False
@@ -191,15 +173,14 @@ class tournamentTree:
 		return minElement, minElementOrigin
 
 
-	# RENAME ME - nodes could be siblings
-	# returns true iff parent is larger
-	def compareParentAndChild(self, parent, child):
+	# returns true iff firstRun is larger
+	def isFirstRunLarger(self, firstRun, secondRun):
 		# if elements aren't the same size, that decides the matter
-		if self.tHeap[parent][1] > self.tHeap[child][1]:
+		if self.tHeap[firstRun][1] > self.tHeap[secondRun][1]:
 			return True
 		# if they're the same size - use run number (stability criterion)
-		elif self.tHeap[parent][1] == self.tHeap[child][1]:
-			if self.tHeap[parent][0] > self.tHeap[child][0]:
+		elif self.tHeap[firstRun][1] == self.tHeap[secondRun][1]:
+			if self.tHeap[firstRun][0] > self.tHeap[secondRun][0]:
 				return True
 
 		# default, if we haven't returned yet - return false
