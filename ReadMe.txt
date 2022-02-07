@@ -3,4 +3,6 @@ sorterManager creats inputs with various levels of presortedness, and will be ex
 mergeSorter sorts an input using two-way ping-pong merge sort, as well as a k-way merge sort
 it will be expanded to add run detection.
 
+tournamentTree constructs an (unfinished) explicit tournament tree for k way merging, and will be expaned to include a more efficient binary heap version
+
 the mothballed folder contains several old attempts at making the mergeSorter class, retained for reference.
