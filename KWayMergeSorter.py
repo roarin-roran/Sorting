@@ -1,8 +1,17 @@
+# major updates:
+# 1. run detection
+# 2. virtual sentinels
+# 3. real IPQ
+# 4. top down
+# 4. galloping merge
+
+
 # small improvements:
 # 1. make mergerIPQ return the priority and the index
 # 2. infrastructure for multiple mergerIPQ implementations, using a variable passed to init
 # 3. basic test suite - random inputs and timing, output to screen
 # 4. local k value for the ends - no point in having more than 50% of runs empty in a merge
+
 
 from SimpleMergerPQ import SimpleMergerPQ as Merger
 import math
