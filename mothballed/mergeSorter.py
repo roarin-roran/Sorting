@@ -1,17 +1,15 @@
 # work plan:
-# 1. implement tournament merging
-# 		advantage being - other than potential modifications from the
-#		winner having a new value, you get to retain all the
-#		comparisons you've made to find that winner
+# 1. Define interface IndexPQ
+# 
+# 2. Implement using dummy implementation
+# 
+# 3. Write merge method using IndexPQ, (test with 2)
+# 
+# 4. Implement binary heaps version of 1, using your current code
+# 
+# 5. Implement tournament heap version
 #		
-#		do this in a seperate class for cleanness, maybe move back afterwards for speed
-#
-#		version 1 - explicitly linked
-#		
-#		version 2 - binary heap style version, using a list
-#			this is a limmited version of an indexed priority queue
-#		
-# 2. top down mergesort
+# 6. top down mergesort
 #		use a stack of tasks, but opperate only on the leftmost
 #		element of each member of the stack
 #		
@@ -19,13 +17,13 @@
 #
 #		use function names to distinguish different styles, and maintain both
 #
-# 3. run detection
+# 7. run detection
 #		saving runs to some data structure
 #
-# 4. peeksort
-# 5. k-way peeksort
-# 5. powersort
-# 6. experimental tools
+# 8. peeksort
+# 9. k-way peeksort
+# 10. powersort
+# 11. experimental tools
 #		timing, random run generation, comparison counting, memory
 #		transfer counting
 

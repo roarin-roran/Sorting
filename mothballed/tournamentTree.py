@@ -4,6 +4,7 @@ import math
 
 # todo:
 # 1. askSeb use a global variable to reduce changes to sinkingTime in popMin?
+# 2. todo - add galloping mode
 
 
 class tournamentTree:
