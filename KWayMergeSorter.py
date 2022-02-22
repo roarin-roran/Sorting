@@ -80,11 +80,10 @@ class KWayMergeSorter:
         # until writing is finished
         while write_posn < write_end:
             # get the smallest run from the merger
-            lowest_priority_element = our_merger.peek_at_lowest_priority_element()
-            min_run = lowest_priority_element[0]
+            min_run, min_priority = our_merger.peek_at_lowest_priority_element()
 
             # output that value
-            write_list[write_posn] = lowest_priority_element[1]
+            write_list[write_posn] = min_priority
             write_posn += 1
             internal_positions[min_run] += 1
 

@@ -20,7 +20,7 @@ class SimpleMergerPQ(MergerIPQ.MergerIPQ):
 
         self.priorities[min_priority_index] = new_priority
 
-    def peek_at_lowest_priority_element(self) -> [int, int]:
+    def peek_at_lowest_priority_element(self) -> (int, int):
         min_priority_run = 0
         min_priority_value = self.priorities[0]
 
