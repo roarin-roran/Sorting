@@ -3,7 +3,7 @@
 # 2. virtual sentinels
 # 3. real IPQ
 # 4. top down
-# 4. galloping merge
+# 5. galloping merge
 
 
 # small improvements:

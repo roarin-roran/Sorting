@@ -21,6 +21,6 @@ class MergerIPQ:
         """Updates the priority of the lowest priority element"""
         pass
 
-    def peek_at_lowest_priority_element(self) -> [int, int]:
+    def peek_at_lowest_priority_element(self) -> [int, PRIORITY_TYPE]:
         """returns the [index,priority] of the lowest priority element, without modifying it"""
         pass
