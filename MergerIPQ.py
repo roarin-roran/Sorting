@@ -22,6 +22,4 @@ class MergerIPQ:
     def peek_at_lowest_priority_element(self) -> Tuple[int, PRIORITY_TYPE]:
         """returns the index of the highest priority element, without modifying it"""
         pass
-    def peek_at_lowest_priority_element2(self) -> (int, PRIORITY_TYPE):
-        """returns the [index,priority] of the lowest priority element, without modifying it"""
-        pass
+
