@@ -1,15 +1,15 @@
 # a trimmed down version of a priority queue for use in merge sorting algorithms
-from typing import Type
+from typing import Type, TypeVar, List, Tuple
 
 # define the type of the priorities we're using
 # (kinda sketch.. but ultimately we're unlikely to need to use non-ints here)
-# noinspection PyTypeChecker
-PRIORITY_TYPE: Type[Type] = int
+
+PRIORITY_TYPE = TypeVar('PRIORITY_TYPE')
 
 
 class MergerIPQ:
     # do we really need this?
-    def build_index_priority_queue(self, initial_priorities: list) -> None:
+    def build_index_priority_queue(self, initial_priorities: List[PRIORITY_TYPE]) -> None:
         """FORMALISE: input initial_priorities has priorities according to index. index == run ID
 
         pair = (i, initialPriorities[i])
@@ -21,6 +21,6 @@ class MergerIPQ:
         """Updates the priority of the lowest priority element"""
         pass
 
-    def peek_at_lowest_priority_element(self) -> int:
+    def peek_at_lowest_priority_element(self) -> Tuple[int, PRIORITY_TYPE]:
         """returns the index of the highest priority element, without modifying it"""
         pass
