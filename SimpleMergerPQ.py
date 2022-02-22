@@ -8,16 +8,19 @@ class SimpleMergerPQ(MergerIPQ.MergerIPQ):
     def build_index_priority_queue(self, initial_priorities: list) -> None:
         pass
 
+    def get_name(self):
+        return self.__class__.__name__
+
     def update_lowest_priority(self, new_priority: int) -> None:
         """
 
         :type new_priority: int
         """
-        min_priority_index = self.peek_at_lowest_priority_element()
+        min_priority_index = self.peek_at_lowest_priority_element()[0]
 
         self.priorities[min_priority_index] = new_priority
 
-    def peek_at_lowest_priority_element(self) -> int:
+    def peek_at_lowest_priority_element(self) -> (int, int):
         min_priority_run = 0
         min_priority_value = self.priorities[0]
 
@@ -30,4 +33,4 @@ class SimpleMergerPQ(MergerIPQ.MergerIPQ):
                 min_priority_run = i
                 min_priority_value = self.priorities[i]
 
-        return min_priority_run
+        return [min_priority_run, min_priority_value]

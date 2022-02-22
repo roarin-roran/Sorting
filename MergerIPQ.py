@@ -2,8 +2,6 @@
 from typing import Type, TypeVar, List, Tuple
 
 # define the type of the priorities we're using
-# (kinda sketch.. but ultimately we're unlikely to need to use non-ints here)
-
 PRIORITY_TYPE = TypeVar('PRIORITY_TYPE')
 
 
@@ -23,4 +21,7 @@ class MergerIPQ:
 
     def peek_at_lowest_priority_element(self) -> Tuple[int, PRIORITY_TYPE]:
         """returns the index of the highest priority element, without modifying it"""
+        pass
+    def peek_at_lowest_priority_element2(self) -> (int, PRIORITY_TYPE):
+        """returns the [index,priority] of the lowest priority element, without modifying it"""
         pass
