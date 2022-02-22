@@ -7,20 +7,18 @@
 
 
 # small improvements:
-# 1. make mergerIPQ return the priority and the index
-# 2. infrastructure for multiple mergerIPQ implementations, using a variable passed to init
-# 3. basic test suite - random inputs and timing, output to screen
-# 4. local k value for the ends - no point in having more than 50% of runs empty in a merge
+# 1. basic test suite - random inputs and timing, output to screen
+# 2. local k value for the ends - no point in having more than 50% of runs empty in a merge
 
-
-from SimpleMergerPQ import SimpleMergerPQ as Merger
+import SimpleMergerPQ
 import math
 
 
 class KWayMergeSorter:
-    def __init__(self, input_array, k):
+    def __init__(self, input_array, k, merger_init=SimpleMergerPQ.SimpleMergerPQ):
         self.inputArray = input_array
         self.k = k
+        self.merger_init = merger_init
 
         self.input_length = len(input_array)
 
@@ -75,17 +73,18 @@ class KWayMergeSorter:
         first_values_of_runs = prep[2]
 
         # create a merger, and all values needed to manage it
-        our_merger = Merger(first_values_of_runs)
+        our_merger = self.merger_init(first_values_of_runs)
         write_posn = start_point
         write_end = min((start_point + run_length * self.k), len(write_list))
 
         # until writing is finished
         while write_posn < write_end:
             # get the smallest run from the merger
-            min_run = our_merger.peek_at_lowest_priority_element()
+            lowest_priority_element = our_merger.peek_at_lowest_priority_element()
+            min_run = lowest_priority_element[0]
 
             # output that value
-            write_list[write_posn] = runs_with_infs[internal_positions[min_run]]
+            write_list[write_posn] = lowest_priority_element[1]
             write_posn += 1
             internal_positions[min_run] += 1
 
