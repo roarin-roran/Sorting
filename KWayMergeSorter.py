@@ -123,24 +123,18 @@ class KWayMergeSorter:
             block_number = 0
 
             while block_number < len(start_points):
-                next_block_starts = ListSlice(start_points, block_number, min(block_number+self.k, len(start_points)))
-                next_block_ends = ListSlice(end_points, block_number, min(block_number+self.k, len(end_points)))
+                next_block_starts = ListSlice(start_points, block_number, min(block_number + self.k, len(start_points)))
+                next_block_ends = ListSlice(end_points, block_number, min(block_number + self.k, len(end_points)))
 
                 self.merge_k_runs_variable_length(next_block_starts.get_list(), next_block_ends.get_list())
 
-                first = True
-                for start in next_block_starts.get_list():
-                    if first:
-                        first = False
-                    else:
-                        start_points.remove(start)
+                # remove all but the start of the new run from start_points
+                start_points = next_block_starts.list[0:next_block_starts.start + 1] + \
+                               next_block_starts.list[next_block_starts.end:]
 
-                first = True
-                for end in reversed(next_block_ends.get_list()):
-                    if first:
-                        first = False
-                    else:
-                        end_points.remove(end)
+                # remove all but the end of the new run from end_points
+                end_points = next_block_ends.list[0:next_block_ends.start] + \
+                             next_block_ends.list[next_block_ends.end - 1:]
 
                 block_number += 1
 
