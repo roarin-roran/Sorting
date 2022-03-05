@@ -10,7 +10,7 @@ the mothballed folder contains several old attempts at making the mergeSorter cl
 
 
 planned major features:
-1. merge slice object - full implementation
+1. ListSlice object - full implementation
 2. merge method interface, separating our merger as an instance
 3. merge sorter interface, formatting our merger as an instance
 4. virtual sentinels
