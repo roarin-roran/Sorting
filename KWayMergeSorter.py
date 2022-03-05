@@ -1,17 +1,10 @@
-# major updates:
-# 1. run detection
-# 2. virtual sentinels
-# 3. real IPQ
-# 4. top down
-# 5. galloping merge
-
-
-# small improvements:
-# 1. basic test suite - random inputs and timing, output to screen
-# 2. local k value for the ends - no point in having more than 50% of runs empty in a merge
+# notes:
+# 1. at some point, "day trip" array management will be used in place of ping pong, for methods like powersort
+#   which lack clear run definitions
 
 import SimpleMergerPQ
 import math
+import numpy as np
 
 
 class KWayMergeSorter:
@@ -41,8 +34,12 @@ class KWayMergeSorter:
         else:
             return self.ping
 
-    # sorts the elements using k way merge sort
-    def merge_sort_k(self):
+    # * * * * * * * * * ** * * * * * * * * * *
+    # * * * * * NON-ADAPTIVE SORTING * * * * *
+    # * * * * * * * * * ** * * * * * * * * * *
+
+    # sorts the elements using k way merge sort with fixed length runs
+    def merge_sort_k_fixed_length(self):
         run_length = 1
 
         # while the array isn't sorted
@@ -62,15 +59,9 @@ class KWayMergeSorter:
         read_list = self.get_read_list()
         write_list = self.get_write_list()
 
-        print("merging from", read_list)
-        print("starting at element", start_point, "with run length", run_length)
-
         # create runs_with_infs, internal_positions, and first_values_of_runs
-        prep = self.prepare_merge_k_runs_fixed_length(start_point, run_length)
-
-        runs_with_infs = prep[0]
-        internal_positions = prep[1]
-        first_values_of_runs = prep[2]
+        runs_with_infs, internal_positions, first_values_of_runs = \
+            self.prepare_merge_k_runs_fixed_length(read_list, start_point, run_length)
 
         # create a merger, and all values needed to manage it
         our_merger = self.merger_init(first_values_of_runs)
@@ -91,9 +82,8 @@ class KWayMergeSorter:
             our_merger.update_lowest_priority(runs_with_infs[internal_positions[min_run]])
 
     # creates a temp list with the runs needed, followed by infs, and the internal positions of run starts within
-    # that list
-    def prepare_merge_k_runs_fixed_length(self, start_point, run_length):
-        read_list = self.get_read_list()
+    # that list, used for fixed length k-way merging
+    def prepare_merge_k_runs_fixed_length(self, read_list, start_point, run_length):
         read_list_posn = start_point
 
         runs_with_infs = []
@@ -122,14 +112,148 @@ class KWayMergeSorter:
 
         return [runs_with_infs, internal_positions, initial_values]
 
+    # * * * * * * * * * *  * * * * * * * * *
+    # * * * * * * ADAPTIVE SORTING * * * * *
+    # * * * * * * * * * *  * * * * * * * * *
+
+    def merge_sort_k_run_detection(self):
+        start_points, end_points = self.detect_runs()
+
+        while len(start_points) > 1:
+            block_number = 0
+
+            while block_number < len(start_points):
+                next_block_starts = ListSlice(start_points, block_number, min(block_number+self.k, len(start_points)))
+                next_block_ends = ListSlice(end_points, block_number, min(block_number+self.k, len(end_points)))
+
+                self.merge_k_runs_variable_length(next_block_starts.get_list(), next_block_ends.get_list())
+
+                first = True
+                for start in next_block_starts.get_list():
+                    if first:
+                        first = False
+                    else:
+                        start_points.remove(start)
+
+                first = True
+                for end in reversed(next_block_ends.get_list()):
+                    if first:
+                        first = False
+                    else:
+                        end_points.remove(end)
+
+                block_number += 1
+
+            self.read_ping_write_pong = not self.read_ping_write_pong
+
+        print(self.get_read_list())
+
+    # merges k runs as defined by their start and end points
+    def merge_k_runs_variable_length(self, start_points, end_points):
+        read_list = self.get_read_list()
+        write_list = self.get_write_list()
+
+        # create runs_with_infs, internal_positions, and first_values_of_runs
+        runs_with_infs, internal_positions, first_values_of_runs = \
+            KWayMergeSorter.prep_merge_k_runs_variable_length(read_list, start_points, end_points)
+
+        # create a merger, and all values needed to manage it
+        our_merger = self.merger_init(first_values_of_runs)
+        write_posn = start_points[0]
+        write_end = end_points[-1]
+
+        # until writing is finished
+        while write_posn < write_end:
+            # get the smallest run from the merger
+            min_run, min_priority = our_merger.peek_at_lowest_priority_element()
+
+            # output that value
+            write_list[write_posn] = min_priority
+            write_posn += 1
+            internal_positions[min_run] += 1
+
+            # update the value in the merger
+            our_merger.update_lowest_priority(runs_with_infs[internal_positions[min_run]])
+
+    # creates a temp list with the runs needed, followed by infs, and the internal positions of run starts within
+    # that list, used for variable length k-way merging
+    @staticmethod
+    def prep_merge_k_runs_variable_length(read_list, start_points, end_points):
+        read_list_posn = start_points[0]
+
+        runs_with_infs = []
+        internal_positions = []
+        initial_values = []
+
+        # creates data for each run
+        # note - end of input handled by creating runs of length 0 - probably not optimal
+        for run_number in range(len(start_points)):
+            # start of the run about to be copied
+            internal_positions.append(len(runs_with_infs))
+
+            # copy the elements over
+            while read_list_posn < end_points[run_number]:
+                runs_with_infs.append(read_list[read_list_posn])
+                read_list_posn += 1
+
+            # add an inf to end the run
+            runs_with_infs.append(math.inf)
+
+            # add the first value of this run to the initial values list - used to create the merger
+            initial_values.append(runs_with_infs[internal_positions[run_number]])
+
+        return [runs_with_infs, internal_positions, initial_values]
+
+    # returns arrays containing the starts and ends of all runs in the input
+    def detect_runs(self):
+        start_points = [0]
+        end_points = []
+
+        last_element_current_run = self.inputArray[0]
+
+        for index in range(len(self.inputArray)):
+            element = self.inputArray[index]
+
+            if element < last_element_current_run:
+                end_points.append(index)
+                start_points.append(index)
+
+            last_element_current_run = element
+
+        end_points.append(len(self.inputArray))
+
+        return start_points, end_points
+
+
+class ListSlice:
+    def __init__(self, sliced_list, start, end):
+        self.list = sliced_list
+        self.start = start
+        self.end = end
+
+    def __str__(self):
+        return str(self.list[self.start:self.end])
+
+    def get_list(self):
+        return self.list[self.start:self.end]
+
 
 input1 = [1, 3, 2, 4, 9, 8, 7]
+input2 = [4, 6, 12, 3, 5, 70, 2, 7, 48, 80, 1]
+random_input = np.random.randint(1, 50, 50)
 
-ourKWMS = KWayMergeSorter(input1, k=3)
+ourKWMS = KWayMergeSorter(random_input, k=8)
+
 # ourKWMS.merge_sort_k()
 # ourKWMS.merge_k_runs_fixed_length(start_point=0, run_length=2)
 # ourKWMS.merge_k_runs_fixed_length(start_point=3, run_length=1)
 # ourKWMS.merge_k_runs_fixed_length(start_point=4, run_length=1)
 
-ourKWMS.merge_sort_k()
-print(ourKWMS.get_read_list())
+# ourKWMS.merge_sort_k_fixed_length()
+# print(ourKWMS.get_read_list())
+
+# ourKWMS.merge_k_runs_variable_length([0, 2, 4], [2, 4, 5])
+# ourKWMS.merge_k_runs_variable_length([0, 3, 6], [3, 6, 10])
+
+# ourKWMS.detect_runs()
+ourKWMS.merge_sort_k_run_detection()

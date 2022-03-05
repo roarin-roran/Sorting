@@ -33,4 +33,4 @@ class SimpleMergerPQ(MergerIPQ.MergerIPQ):
                 min_priority_run = i
                 min_priority_value = self.priorities[i]
 
-        return [min_priority_run, min_priority_value]
+        return min_priority_run, min_priority_value
