@@ -10,13 +10,15 @@ the mothballed folder contains several old attempts at making the mergeSorter cl
 
 
 planned major features:
-1. merge method interface, separating our merger as an instance
-2. merge sorter interface, formatting our merger as an instance
-3. virtual sentinels
-4. real IPQ
+1. merge sorter interface, formatting our merger as an instance
+2. naming conventions
+3. merge method interface, separating our merger as an instance
+    only need the one merger to support both existing sorters, taking a list of list slices as input
+4. virtual sentinels
+5. real IPQ
     tournament tree should make its own empty runs
-5. top down
-6. galloping merge
+6. top down
+7. galloping merge
 
 planned minor features:
 1. basic test suite - random inputs and timing, output to screen
