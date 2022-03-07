@@ -1,9 +1,11 @@
-sorterManager creates inputs with various levels of presortedness, and will be expanded to add analysis functions
+Interfaces are defined for each substitutable class, currently MergerIPQ and Sorter
 
-mergeSorter sorts an input using two-way ping-pong merge sort, as well as a k-way merge sort
-it will be expanded to add run detection.
+one MergerIPQ is currently used - a dummy method that makes no pretense to efficiency
 
-tournamentTree constructs an (unfinished) explicit tournament tree for k way merging, and will be expaned to include a more efficient binary heap version
+Two sorters are currently used, with an intermediate class defining methods which they both share - PingPong memory
+    management
+
+Adaptive sorting takes account of run length, Bottom up does not.
 
 the mothballed folder contains several old attempts at making the mergeSorter class, retained for reference.
 
@@ -11,14 +13,13 @@ the mothballed folder contains several old attempts at making the mergeSorter cl
 
 planned major features:
 1. merge sorter interface, formatting our merger as an instance
-2. naming conventions
-3. merge method interface, separating our merger as an instance
+2. merge method interface, separating our merger as an instance
     only need the one merger to support both existing sorters, taking a list of list slices as input
-4. virtual sentinels
-5. real IPQ
+3. virtual sentinels
+4. real IPQ
     tournament tree should make its own empty runs
-6. top down
-7. galloping merge
+5. top down
+6. galloping merge
 
 planned minor features:
 1. basic test suite - random inputs and timing, output to screen
@@ -27,3 +28,4 @@ planned minor features:
 delivered major features:
 1. run detection
 2. ListSlice object - implement and use
+3. naming conventions

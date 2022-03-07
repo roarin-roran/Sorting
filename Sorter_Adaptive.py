@@ -1,17 +1,34 @@
-import PingPongKWayMergeSorter
-import SimpleMergerPQ
+import Sorter_PingPong
+import MergerPQ_Dummy
 import ListSlice
 import math
 import numpy as np
 
 
-class AdaptiveKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
-    def __init__(self, input_array, k, merger_init=SimpleMergerPQ.SimpleMergerPQ):
-        self.inputArray = input_array
+class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
+    def __init__(self, input_list, k, merger_init=MergerPQ_Dummy.MergerPQ_Dummy):
+        self.input_list = input_list
         self.k = k
         self.merger_init = merger_init
 
-        super().__init__(input_array)
+        super().__init__(input_list)
+
+        self.sorted = False
+
+    # sorts the input
+    def sort(self):
+        self.merge_sort_k_run_detection()
+
+    # returns the input list
+    def get_input_list(self):
+        return self.input_list
+
+    # ensures that the sorted list exists, and is sorted, then returns it
+    def get_sorted_list(self):
+        if not self.sorted:
+            self.sort()
+
+        return self.get_read_list()
 
     # a k way merge sorter using runs detected as a prepossessing step
     def merge_sort_k_run_detection(self):
@@ -40,6 +57,8 @@ class AdaptiveKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
 
             self.read_ping_write_pong = not self.read_ping_write_pong
 
+        self.sorted = True
+
         print("sorted!")
         print(self.get_read_list())
 
@@ -50,7 +69,7 @@ class AdaptiveKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
 
         # create runs_with_infs, internal_positions, and first_values_of_runs
         runs_with_infs, internal_positions, first_values_of_runs = \
-            AdaptiveKWayMergeSorter.prep_merge_k_runs_variable_length(read_list, start_points, end_points)
+            Sorter_PingPong_Adaptive.prep_merge_k_runs_variable_length(read_list, start_points, end_points)
 
         # create a merger, and all values needed to manage it
         our_merger = self.merger_init(first_values_of_runs)
@@ -105,10 +124,10 @@ class AdaptiveKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
         start_points = [0]
         end_points = []
 
-        last_element_current_run = self.inputArray[0]
+        last_element_current_run = self.input_list[0]
 
-        for index in range(len(self.inputArray)):
-            element = self.inputArray[index]
+        for index in range(len(self.input_list)):
+            element = self.input_list[index]
 
             if element < last_element_current_run:
                 end_points.append(index)
@@ -116,7 +135,7 @@ class AdaptiveKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
 
             last_element_current_run = element
 
-        end_points.append(len(self.inputArray))
+        end_points.append(len(self.input_list))
 
         return start_points, end_points
 
@@ -125,5 +144,5 @@ class AdaptiveKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
 # input2 = [4, 6, 12, 3, 5, 70, 2, 7, 48, 80, 1]
 random_input = np.random.randint(1, 50, 50)
 
-our_AKWMS = AdaptiveKWayMergeSorter(random_input, 2)
+our_AKWMS = Sorter_PingPong_Adaptive(random_input, 2)
 our_AKWMS.merge_sort_k_run_detection()

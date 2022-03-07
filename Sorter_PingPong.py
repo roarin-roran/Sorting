@@ -1,7 +1,8 @@
-import KWayMergeSorter
+import Sorter
 
 
-class PingPongKWayMergeSorter(KWayMergeSorter.KWayMergeSorter):
+# defines methods shared by sorters using ping pong memory management
+class Sorter_PingPong(Sorter.Sorter):
     def __init__(self, input_array):
         self.input_length = len(input_array)
 
@@ -9,6 +10,9 @@ class PingPongKWayMergeSorter(KWayMergeSorter.KWayMergeSorter):
         self.pong = input_array.copy()
 
         self.read_ping_write_pong = True
+
+        # this won't do anything, but keeps the IDE happy
+        super().__init__()
 
     # read and write lists change - returns the internal list being read from
     def get_read_list(self):

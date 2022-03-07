@@ -1,16 +1,33 @@
-import PingPongKWayMergeSorter
-import SimpleMergerPQ
+import Sorter_PingPong
+import MergerPQ_Dummy
 import math
 import numpy as np
 
 
-class SimpleKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
-    def __init__(self, input_array, k, merger_init=SimpleMergerPQ.SimpleMergerPQ):
-        self.inputArray = input_array
+class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
+    def __init__(self, input_list, k, merger_init=MergerPQ_Dummy.MergerPQ_Dummy):
+        self.input_list = input_list
         self.k = k
         self.merger_init = merger_init
 
-        super().__init__(input_array)
+        super().__init__(input_list)
+
+        self.sorted = False
+
+    # sorts the input
+    def sort(self):
+        self.merge_sort_k_fixed_length()
+
+    # returns the input list
+    def get_input_list(self):
+        return self.input_list
+
+    # ensures that the sorted list exists, and is sorted, then returns it
+    def get_sorted_list(self):
+        if not self.sorted:
+            self.sort()
+
+        return self.get_read_list()
 
     # sorts the elements using k way merge sort with fixed length runs
     def merge_sort_k_fixed_length(self):
@@ -27,6 +44,8 @@ class SimpleKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
             # swap the ping and pong arrays
             self.read_ping_write_pong = not self.read_ping_write_pong
             run_length *= self.k
+
+        self.sorted = True
 
         print("sorted!")
         print(self.get_read_list())
@@ -94,5 +113,5 @@ class SimpleKWayMergeSorter(PingPongKWayMergeSorter.PingPongKWayMergeSorter):
 # input2 = [4, 6, 12, 3, 5, 70, 2, 7, 48, 80, 1]
 random_input = np.random.randint(1, 50, 50)
 
-our_SKWMS = SimpleKWayMergeSorter(random_input, 2)
+our_SKWMS = Sorter_PingPong_BottomUp(random_input, 2)
 our_SKWMS.merge_sort_k_fixed_length()
