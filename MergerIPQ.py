@@ -1,13 +1,12 @@
 # a trimmed down version of a priority queue for use in merge sorting algorithms
-from typing import Type, TypeVar, List, Tuple
+from typing import TypeVar, List, Tuple
 
 # define the type of the priorities we're using
 PRIORITY_TYPE = TypeVar('PRIORITY_TYPE')
 
 
 class MergerIPQ:
-    # do we really need this?
-    def build_index_priority_queue(self, initial_priorities: List[PRIORITY_TYPE]) -> None:
+    def __init__(self, initial_priorities: List[PRIORITY_TYPE]) -> None:
         """FORMALISE: input initial_priorities has priorities according to index. index == run ID
 
         pair = (i, initialPriorities[i])
@@ -22,4 +21,3 @@ class MergerIPQ:
     def peek_at_lowest_priority_element(self) -> Tuple[int, PRIORITY_TYPE]:
         """returns the index of the highest priority element, without modifying it"""
         pass
-

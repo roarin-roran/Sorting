@@ -3,10 +3,9 @@ import MergerIPQ
 
 class MergerPQ_Dummy(MergerIPQ.MergerIPQ):
     def __init__(self, initial_priorities):
-        self.priorities = initial_priorities.copy()
+        super().__init__(initial_priorities)
 
-    def build_index_priority_queue(self, initial_priorities: list) -> None:
-        pass
+        self.priorities = initial_priorities.copy()
 
     def get_name(self):
         return self.__class__.__name__
