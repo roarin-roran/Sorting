@@ -1,4 +1,7 @@
 # run as: 
+# python3 -m pyperf timeit -v  -s 'import pyflate_list' 'pyflate_list.sort_pyflate_list()'
+
+# or, if needs be, without pyperf, as:
 # python3 -m timeit -s 'import pyflate_list' 'pyflate_list.sort_pyflate_list()'
 
 
