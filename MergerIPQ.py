@@ -16,8 +16,10 @@ class MergerIPQ:
 
     def update_lowest_priority(self, new_priority: PRIORITY_TYPE) -> None:
         """Updates the priority of the lowest priority element"""
-        pass
+        print("update_lowest_priority is not implemented")
+        raise NotImplementedError
 
     def peek_at_lowest_priority_element(self) -> Tuple[int, PRIORITY_TYPE]:
         """returns the index of the highest priority element, without modifying it"""
-        pass
+        print("peek_at_lowest_priority_element is not implemented")
+        raise NotImplementedError

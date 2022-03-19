@@ -2,7 +2,6 @@ import Sorter_PingPong
 import MergerPQ_Dummy
 import ListSlice
 import math
-import numpy as np
 
 
 class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
@@ -58,9 +57,6 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
             self.read_ping_write_pong = not self.read_ping_write_pong
 
         self.sorted = True
-
-        print("sorted!")
-        print(self.get_read_list())
 
     # merges k runs as defined by their start and end points, inputted as ListSlice objects
     def merge_k_runs_variable_length(self, start_points, end_points):
@@ -139,10 +135,3 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
 
         return start_points, end_points
 
-
-# input1 = [1, 3, 2, 4, 9, 8, 7]
-# input2 = [4, 6, 12, 3, 5, 70, 2, 7, 48, 80, 1]
-random_input = np.random.randint(1, 50, 50)
-
-our_AKWMS = Sorter_PingPong_Adaptive(random_input, 2)
-our_AKWMS.merge_sort_k_run_detection()

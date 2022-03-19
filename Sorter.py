@@ -9,12 +9,15 @@ class Sorter:
 
     # sorts the input
     def sort(self):
-        pass
+        print("sort is not implemented")
+        raise NotImplementedError
 
     # returns the input list
     def get_input_list(self):
-        pass
+        print("get_input_list is not implemented")
+        raise NotImplementedError
 
     # returns the sorted list
     def get_sorted_list(self):
-        pass
+        print("get_sorted_list is not implemented")
+        raise NotImplementedError

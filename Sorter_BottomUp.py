@@ -1,7 +1,6 @@
 import Sorter_PingPong
 import MergerPQ_Dummy
 import math
-import numpy as np
 
 
 class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
@@ -46,9 +45,6 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
             run_length *= self.k
 
         self.sorted = True
-
-        print("sorted!")
-        print(self.get_read_list())
 
     # merges k fixed length runs
     def merge_k_runs_fixed_length(self, start_point, run_length):
@@ -109,9 +105,4 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
         return [runs_with_infs, internal_positions, initial_values]
 
 
-# input1 = [1, 3, 2, 4, 9, 8, 7]
-# input2 = [4, 6, 12, 3, 5, 70, 2, 7, 48, 80, 1]
-random_input = np.random.randint(1, 50, 50)
 
-our_SKWMS = Sorter_PingPong_BottomUp(random_input, 2)
-our_SKWMS.merge_sort_k_fixed_length()
