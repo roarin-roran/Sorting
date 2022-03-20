@@ -1,13 +1,13 @@
 # notes:
 # 1. at some point, "day trip" array management will be used in place of ping pong, for methods like powersort
 #   which lack clear run definitions
-import MergerPQ_Dummy
+import MergerIPQ_Dummy
 import Merger_Adaptive
 
 
 class Sorter:
     def __init__(self, input_list, k,
-                 merger_ipq_init=MergerPQ_Dummy.MergerPQ_Dummy,
+                 merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy,
                  merger_init=Merger_Adaptive.Merger_Adaptive):
         self.input_list = input_list
         self.k = k

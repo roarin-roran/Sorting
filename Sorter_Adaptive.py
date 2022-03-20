@@ -1,5 +1,5 @@
 import Sorter_PingPong
-import MergerPQ_Dummy
+import MergerIPQ_Dummy
 import ListSlice
 import Merger_Adaptive
 

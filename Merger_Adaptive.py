@@ -1,10 +1,10 @@
 import Merger
 import math
-import MergerPQ_Dummy
+import MergerIPQ_Dummy
 
 
 class Merger_Adaptive(Merger.Merger):
-    def __init__(self, runs, write_list_slice, merger_ipq_init=MergerPQ_Dummy.MergerPQ_Dummy):
+    def __init__(self, runs, write_list_slice, merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy):
         super().__init__(runs, write_list_slice)
 
         self.runs = runs

@@ -1,7 +1,7 @@
 import MergerIPQ
 
 
-class MergerPQ_Dummy(MergerIPQ.MergerIPQ):
+class MergerIPQ_Dummy(MergerIPQ.MergerIPQ):
     def __init__(self, initial_priorities):
         super().__init__(initial_priorities)
 

@@ -1,10 +1,10 @@
-import MergerPQ_Dummy
+import MergerIPQ_Dummy
 
 
-def test_simple_merger():
+def test_dummy_ipq():
     sample_input = [4, 3, 2, 1]
 
-    our_simple_merger = MergerPQ_Dummy.MergerPQ_Dummy(sample_input)
+    our_simple_merger = MergerIPQ_Dummy.MergerIPQ_Dummy(sample_input)
 
     print(our_simple_merger.peek_at_lowest_priority_element())
 
