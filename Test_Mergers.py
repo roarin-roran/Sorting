@@ -3,7 +3,7 @@ import ListSlice
 import Merger_Adaptive
 
 
-class Test_Merger(unittest.TestCase):
+class Test_Mergers(unittest.TestCase):
 
     def test_merge_two(self):
         two_runs = [2, 3, 0, 1]

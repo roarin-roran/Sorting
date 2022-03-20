@@ -1,16 +1,34 @@
+import unittest
 import MergerIPQ_Dummy
 
 
-def test_dummy_ipq():
-    sample_input = [4, 3, 2, 1]
+class Test_MergerIPQ(unittest.TestCase):
 
-    our_simple_merger = MergerIPQ_Dummy.MergerIPQ_Dummy(sample_input)
+    def test_dummy_ipq(self):
+        sample_input = [4, 3, 2, 1]
 
-    print(our_simple_merger.peek_at_lowest_priority_element())
+        our_simple_merger = MergerIPQ_Dummy.MergerIPQ_Dummy(sample_input)
 
-    our_simple_merger.update_lowest_priority(17)
+        self.assertEqual(our_simple_merger.peek_at_lowest_priority_element(), (3, 1))
 
-    print(our_simple_merger.peek_at_lowest_priority_element())
+        our_simple_merger.update_lowest_priority(17)
+
+        self.assertEqual(our_simple_merger.peek_at_lowest_priority_element(), (2, 2))
+
+        our_simple_merger.update_lowest_priority(12)
+
+        self.assertEqual(our_simple_merger.peek_at_lowest_priority_element(), (1, 3))
+
+        our_simple_merger.update_lowest_priority(15)
+
+        self.assertEqual(our_simple_merger.peek_at_lowest_priority_element(), (0, 4))
+
+        our_simple_merger.update_lowest_priority(34)
+
+        self.assertEqual(our_simple_merger.peek_at_lowest_priority_element(), (2, 12))
 
 
-test_simple_merger()
+
+
+
+
