@@ -42,10 +42,10 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
                 # get a list slice for the merger to write to
                 write_start = this_block_runs[0].start
                 write_end = this_block_runs[-1].end
-                next_block_write_list_slice = ListSlice.ListSlice(self.get_write_list(), write_start, write_end)
+                this_block_write_list_slice = ListSlice.ListSlice(self.get_write_list(), write_start, write_end)
 
                 # merge, using an external merger object
-                our_merger = self.merger_init(this_block_runs, next_block_write_list_slice)
+                our_merger = self.merger_init(this_block_runs, this_block_write_list_slice)
                 new_run = our_merger.merge()
 
                 # insert the new run in place of the old
