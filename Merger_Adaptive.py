@@ -4,12 +4,12 @@ import MergerPQ_Dummy
 
 
 class Merger_Adaptive(Merger.Merger):
-    def __init__(self, runs, write_list_slice, merger_init=MergerPQ_Dummy.MergerPQ_Dummy):
+    def __init__(self, runs, write_list_slice, merger_ipq_init=MergerPQ_Dummy.MergerPQ_Dummy):
         super().__init__(runs, write_list_slice)
 
         self.runs = runs
         self.write_list_slice = write_list_slice
-        self.merger_init = merger_init
+        self.merger_ipq_init = merger_ipq_init
 
     def merge(self):
         runs_with_infs = []
@@ -35,13 +35,13 @@ class Merger_Adaptive(Merger.Merger):
 
         # second, update the first part of the merger function
         # create a merger, and all values needed to manage it
-        our_merger = self.merger_init(initial_values)
+        our_merger_ipq = self.merger_ipq_init(initial_values)
         write_posn = self.write_list_slice.start
 
         # until writing is finished
         while write_posn < self.write_list_slice.end:
             # get the smallest run from the merger
-            min_run, min_priority = our_merger.peek_at_lowest_priority_element()
+            min_run, min_priority = our_merger_ipq.peek_at_lowest_priority_element()
 
             # output that value
             self.write_list_slice.list[write_posn] = min_priority
@@ -49,9 +49,8 @@ class Merger_Adaptive(Merger.Merger):
             internal_positions[min_run] += 1
 
             # update the value in the merger
-            our_merger.update_lowest_priority(runs_with_infs[internal_positions[min_run]])
+            our_merger_ipq.update_lowest_priority(runs_with_infs[internal_positions[min_run]])
 
         return self.write_list_slice
 
         # fifth, change the two classes to use this instead of the previous method
-

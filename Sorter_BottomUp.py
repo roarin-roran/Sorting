@@ -1,15 +1,10 @@
 import Sorter_PingPong
-import MergerPQ_Dummy
 import math
 
 
 class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
-    def __init__(self, input_list, k, merger_init=MergerPQ_Dummy.MergerPQ_Dummy):
-        self.input_list = input_list
-        self.k = k
-        self.merger_init = merger_init
-
-        super().__init__(input_list)
+    def __init__(self, input_list, k):
+        super().__init__(input_list, k)
 
         self.sorted = False
 
@@ -56,7 +51,7 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
             self.prepare_merge_k_runs_fixed_length(read_list, start_point, run_length)
 
         # create a merger, and all values needed to manage it
-        our_merger = self.merger_init(first_values_of_runs)
+        our_merger = self.merger_ipq_init(first_values_of_runs)
         write_posn = start_point
         write_end = min((start_point + run_length * self.k), len(write_list))
 
@@ -103,6 +98,3 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
             initial_values.append(runs_with_infs[internal_positions[run_number]])
 
         return [runs_with_infs, internal_positions, initial_values]
-
-
-
