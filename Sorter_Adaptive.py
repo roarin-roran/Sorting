@@ -5,8 +5,10 @@ import Merger_Adaptive
 
 
 class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
-    def __init__(self, input_list, k):
-        super().__init__(input_list, k)
+    def __init__(self, input_list, k,
+                 merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy,
+                 merger_init=Merger_Adaptive.Merger_Adaptive):
+        super().__init__(input_list, k, merger_ipq_init, merger_init)
 
         self.sorted = False
 
@@ -45,7 +47,8 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
                 this_block_write_list_slice = ListSlice.ListSlice(self.get_write_list(), write_start, write_end)
 
                 # merge, using an external merger object
-                our_merger = self.merger_init(this_block_runs, this_block_write_list_slice)
+                our_merger = self.merger_init(this_block_runs, this_block_write_list_slice,
+                                              merger_ipq_init=self.merger_ipq_init)
                 new_run = our_merger.merge()
 
                 # insert the new run in place of the old

@@ -1,5 +1,6 @@
 import unittest
 import ListSlice
+import Test_Sorters
 import Merger_Adaptive
 
 
@@ -12,6 +13,7 @@ class Test_Mergers(unittest.TestCase):
 
         write_list_slice = ListSlice.ListSlice([-1, -1, -1, -1], 0, 4)
 
+        # fiddle with this when more mergers are added
         our_merger = Merger_Adaptive.Merger_Adaptive([run_1, run_2], write_list_slice)
         output = our_merger.merge()
 
@@ -25,10 +27,15 @@ class Test_Mergers(unittest.TestCase):
 
         write_list_slice = ListSlice.ListSlice([-1]*7, 0, 7)
 
+        # fiddle with this when more mergers are added
         our_merger = Merger_Adaptive.Merger_Adaptive([run_1, run_2, run_3], write_list_slice)
         output = our_merger.merge()
 
         self.assertEqual(output.list, sorted(write_list_slice.list))
+
+    def test_adaptive_sort(self):
+        sorter_tester = Test_Sorters.Test_Sorters()
+        sorter_tester.test_sorter_bottom_up(merger_init=Merger_Adaptive.Merger_Adaptive)
 
 
 if __name__ == '__main__':

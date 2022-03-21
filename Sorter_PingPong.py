@@ -1,11 +1,15 @@
 import Sorter
+import MergerIPQ_Dummy
+import Merger_Adaptive
 
 
 # defines methods shared by sorters using ping pong memory management
 class Sorter_PingPong(Sorter.Sorter):
-    def __init__(self, input_array, k):
+    def __init__(self, input_array, k,
+                 merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy,
+                 merger_init=Merger_Adaptive.Merger_Adaptive):
         # passes data down, where it'll be saved
-        super().__init__(input_array, k)
+        super().__init__(input_array, k, merger_ipq_init, merger_init)
 
         self.input_length = len(input_array)
 

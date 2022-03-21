@@ -1,4 +1,5 @@
 import unittest
+import Test_Sorters
 import MergerIPQ_Dummy
 
 
@@ -27,8 +28,6 @@ class Test_MergerIPQ(unittest.TestCase):
 
         self.assertEqual(our_simple_merger.peek_at_lowest_priority_element(), (2, 12))
 
-
-
-
-
-
+    def test_dummy_ipq_sort(self):
+        sorter_tester = Test_Sorters.Test_Sorters()
+        sorter_tester.test_sorter_bottom_up(merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy)

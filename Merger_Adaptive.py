@@ -5,7 +5,7 @@ import MergerIPQ_Dummy
 
 class Merger_Adaptive(Merger.Merger):
     def __init__(self, runs, write_list_slice, merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy):
-        super().__init__(runs, write_list_slice)
+        super().__init__(runs, write_list_slice, merger_ipq_init=merger_ipq_init)
 
         self.runs = runs
         self.write_list_slice = write_list_slice

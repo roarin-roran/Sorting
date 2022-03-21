@@ -1,11 +1,15 @@
 import Sorter_PingPong
 import math
 import ListSlice
+import MergerIPQ_Dummy
+import Merger_Adaptive
 
 
 class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
-    def __init__(self, input_list, k):
-        super().__init__(input_list, k)
+    def __init__(self, input_list, k,
+                 merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy,
+                 merger_init=Merger_Adaptive.Merger_Adaptive):
+        super().__init__(input_list, k, merger_ipq_init, merger_init)
 
         self.sorted = False
 
