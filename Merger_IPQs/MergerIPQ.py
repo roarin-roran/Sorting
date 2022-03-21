@@ -12,14 +12,12 @@ class MergerIPQ:
         pair = (i, initialPriorities[i])
 
         Builds the IPQ, partially sorting the input array (details differ in different implementations)"""
-        pass
+        self.priorities = initial_priorities
 
     def update_lowest_priority(self, new_priority: PRIORITY_TYPE) -> None:
         """Updates the priority of the lowest priority element"""
-        print("update_lowest_priority is not implemented")
-        raise NotImplementedError
+        raise NotImplementedError("update_lowest_priority is not implemented")
 
     def peek_at_lowest_priority_element(self) -> Tuple[int, PRIORITY_TYPE]:
         """returns the index of the highest priority element, without modifying it"""
-        print("peek_at_lowest_priority_element is not implemented")
-        raise NotImplementedError
+        raise NotImplementedError("peek_at_lowest_priority_element is not implemented")

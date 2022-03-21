@@ -2,11 +2,6 @@ from Merger_IPQs import MergerIPQ
 
 
 class MergerIPQ_Dummy(MergerIPQ.MergerIPQ):
-    def __init__(self, initial_priorities):
-        super().__init__(initial_priorities)
-
-        self.priorities = initial_priorities.copy()
-
     def get_name(self):
         return self.__class__.__name__
 
