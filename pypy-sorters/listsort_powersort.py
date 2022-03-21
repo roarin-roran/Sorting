@@ -8,6 +8,49 @@
 ## ------------------------------------------------------------------------
 ##         Adapted from CPython, original code and algorithms by Tim Peters
 
+
+def merge_compute_minrun(n):
+    # Compute a good value for the minimum run length; natural runs shorter
+    # than this are boosted artificially via binary insertion.
+    #
+    # If n < 64, return n (it's too small to bother with fancy stuff).
+    # Else if n is an exact power of 2, return 32.
+    # Else return an int k, 32 <= k <= 64, such that n/k is close to, but
+    # strictly less than, an exact power of 2.
+    #
+    # See listsort.txt for more info.
+    r = 0    # becomes 1 if any 1 bits are shifted off
+    while n >= 64:
+        r |= n & 1
+        n >>= 1
+    return n + r
+
+def powerloop(s1, n1, n2, n):
+    # Two adjacent runs begin at index s1. The first run has length n1, and
+    # the second run (starting at index s1+n1) has length n2. The list has total
+    # length n.
+    # Compute the "power" of the first run. See listsort.txt for details.
+    assert s1 >= 0
+    assert n1 >= 1 and n2 >= 1
+    assert s1 + n1 + n2 <= n
+    # a' = s1 + n1/2
+    # b' = s1 + n1 + n2/2 = a' + (n1 + n2)/2
+    a = 2 * s1 + n1       # 2 * a'
+    b = a + n1 + n2       # 2 * b'
+    result = 0
+    while True:
+        result += 1
+        if a >= n:
+            assert b >= a
+            a -= n
+            b -= n
+        elif b >= n:
+            break
+        assert a < b < n
+        a <<= 1
+        b <<= 1
+    return result
+
 def make_timsort_class(getitem=None, setitem=None, length=None,
                        getitem_slice=None, lt=None):
 
@@ -150,7 +193,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
         #@specialize.arg(4)
         def gallopTrue(self, key, a, hint):#, rightmost):
             assert 0 <= hint < a.len
-            if True:
+            if True:#rightmost:
                 lower = self.le   # search for the largest k for which a[k] <= key
             else:
                 lower = self.lt   # search for the largest k for which a[k] < key
@@ -192,7 +235,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                         # key <= a[hint - ofs]
                         lastofs = ofs
                         try:
-                            ofs = ofs << 1 #ovfcheck(ofs << 1)
+                            ofs = ofs << 1 # ovfcheck(ofs << 1)
                         except OverflowError:
                             ofs = maxofs
                         else:
@@ -218,10 +261,10 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
 
             assert lastofs == ofs         # so a[ofs-1] < key <= a[ofs]
             return ofs
-            
+
         def gallopFalse(self, key, a, hint):#, rightmost):
             assert 0 <= hint < a.len
-            if False:
+            if False: #rightmost:
                 lower = self.le   # search for the largest k for which a[k] <= key
             else:
                 lower = self.lt   # search for the largest k for which a[k] < key
@@ -263,7 +306,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                         # key <= a[hint - ofs]
                         lastofs = ofs
                         try:
-                            ofs = ofs << 1 #ovfcheck(ofs << 1)
+                            ofs = ofs << 1 # ovfcheck(ofs << 1)
                         except OverflowError:
                             ofs = maxofs
                         else:
@@ -562,60 +605,39 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
             else:
                 self.merge_hi(a, b)
 
-        # Examine the stack of runs waiting to be merged, merging adjacent runs
-        # until the stack invariants are re-established:
-        #
-        # 1. len[-3] > len[-2] + len[-1]
-        # 2. len[-2] > len[-1]
-        #
-        # Note these invariants will not hold for the entire pending array even
-        # after this function completes. [1] This does not affect the
-        # correctness of the overall algorithm.
-        #
-        # [1] http://envisage-project.eu/proving-android-java-and-python-sorting-algorithm-is-broken-and-how-to-fix-it/
-        #
-        # See listsort.txt for more info.
+        def found_new_run(self, run):
+            """
+            The next run has been identified.
+            If there's already a run on the stack, apply the "powersort" merge strategy:
+            compute the topmost run's "power" (depth in a conceptual binary merge tree)
+            and merge adjacent runs on the stack with greater power. See listsort.txt
+            for more info.
 
-        def merge_collapse(self):
+            It's the caller's responsibilty to push the new run on the stack when this
+            returns.
+
+            See listsort.txt for more info.
+            """
+
             p = self.pending
-            while len(p) > 1:
-                if len(p) >= 3 and p[-3].len <= p[-2].len + p[-1].len:
-                    if p[-3].len < p[-1].len:
-                        self.merge_at(-3)
-                    else:
-                        self.merge_at(-2)
-                elif p[-2].len <= p[-1].len:
+            if p:
+                s1 = p[-1].base
+                n1 = p[-1].len
+                power = powerloop(s1, n1, run.len, self.listlength)
+                while len(p) > 1 and p[-2].power > power:
                     self.merge_at(-2)
-                else:
-                    break
-
-        # Regardless of invariants, merge all runs on the stack until only one
-        # remains.  This is used at the end of the mergesort.
+                assert len(p) < 2 or p[-2].power < power
+                p[-1].power = power;
 
         def merge_force_collapse(self):
             p = self.pending
             while len(p) > 1:
+                n = -2
                 if len(p) >= 3 and p[-3].len < p[-1].len:
-                    self.merge_at(-3)
-                else:
-                    self.merge_at(-2)
+                    n = -3
+                self.merge_at(n)
 
-        # Compute a good value for the minimum run length; natural runs shorter
-        # than this are boosted artificially via binary insertion.
-        #
-        # If n < 64, return n (it's too small to bother with fancy stuff).
-        # Else if n is an exact power of 2, return 32.
-        # Else return an int k, 32 <= k <= 64, such that n/k is close to, but
-        # strictly less than, an exact power of 2.
-        #
-        # See listsort.txt for more info.
-
-        def merge_compute_minrun(self, n):
-            r = 0    # becomes 1 if any 1 bits are shifted off
-            while n >= 64:
-                r |= n & 1
-                n >>= 1
-            return n + r
+        merge_compute_minrun = staticmethod(merge_compute_minrun)
 
         # ____________________________________________________________
         # Entry point.
@@ -640,11 +662,12 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                     sorted = run.len
                     run.len = min(minrun, remaining.len)
                     self.binarysort(run, sorted)
+                # maybe merge (but never the newest)
+                self.found_new_run(run)
+                # Push run onto pending-runs stack
+                self.pending.append(run)
                 # Advance remaining past this run.
                 remaining.advance(run.len)
-                # Push run onto pending-runs stack, and maybe merge.
-                self.pending.append(run)
-                self.merge_collapse()
 
             assert remaining.base == self.listlength
 
@@ -660,6 +683,10 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
             self.list = list
             self.base = base
             self.len  = len
+
+        def __repr__(self):
+            return "<ListSlice base=%s len=%s %s>" % (
+                    self.base, self.len, self.list[self.base: self.base+self.len])
 
         def copyitems(self):
             "Make a copy of the slice of the original list."
@@ -704,17 +731,16 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
 
 TimSort = make_timsort_class() #backward compatible interface
 
-def sort(l):
-	#print("running timsort")
-	TimSort(l).sort()
 
+def sort(l):
+	#print("running powersort")
+	TimSort(l).sort()
 
 if __name__ == "__main__":
 	A = [1,3,5,64,34123.34,6734,3,.263]
 	print(A)
 	sort(A)
 	print(A)
-
 
 
 
