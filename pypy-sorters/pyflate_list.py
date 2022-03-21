@@ -7,7 +7,9 @@
 # python3 -m timeit -s 'import pyflate_list' 'pyflate_list.sort_pyflate_list()'
 
 import listsort_timsort
+import listsort_timsort_opt
 import listsort_powersort
+import listsort_baby
 import sys
 
 
@@ -27,9 +29,19 @@ def timsort_pyflate_list():
 	listsort_timsort.sort(copy)
 	return copy[42]
 
+def opttimsort_pyflate_list():
+	copy = pyflate_list[:]
+	listsort_timsort_opt.sort(copy)
+	return copy[42]
+
 def powersort_pyflate_list():
 	copy = pyflate_list[:]
 	listsort_powersort.sort(copy)
+	return copy[42]
+
+def babysort_pyflate_list():
+	copy = pyflate_list[:]
+	listsort_baby.sort(copy)
 	return copy[42]
 
 to_run = {

@@ -1,0 +1,36 @@
+times on sleeky
+
+pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.timsort_pyflate_list()'
+Mean +- std dev: 63.0 ms +- 4.9 ms
+
+pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.powersort_pyflate_list()'
+Mean +- std dev: 65.8 ms +- 5.2 ms
+
+pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.babysort_pyflate_list()'
+Mean +- std dev: 129 ms +- 11 ms
+
+pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.sort_pyflate_list()'
+Mean +- std dev: 14.7 ms +- 0.6 ms
+
+pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.opttimsort_pyflate_list()'
+Mean +- std dev: 71.5 ms +- 4.2 ms
+
+
+python3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.timsort_pyflate_list()'
+Mean +- std dev: 3.09 sec +- 0.12 sec
+
+python3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.powersort_pyflate_list()'
+Mean +- std dev: 3.00 sec +- 0.07 sec
+
+python3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.babysort_pyflate_list()'
+Mean +- std dev: 1.80 sec +- 0.11 sec
+
+python3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.sort_pyflate_list()'
+Mean +- std dev: 14.6 ms +- 0.8 ms
+
+python3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.opttimsort_pyflate_list()'
+Mean +- std dev: 3.42 sec +- 0.08 sec
+
+
+
+
