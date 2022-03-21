@@ -8,24 +8,29 @@ from Merger_IPQs import MergerIPQ_Dummy
 class Sorter:
     def __init__(self, input_list,
                  k=2,
-                 merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy,
-                 merger_init=Merger_Adaptive.Merger_Adaptive):
+                 merger_ipq_init=False,
+                 merger_init=False):
         self.input_list = input_list
         self.k = k
-        self.merger_ipq_init = merger_ipq_init
-        self.merger_init = merger_init
+
+        if merger_ipq_init:
+            self.merger_ipq_init = merger_ipq_init
+        else:
+            self.merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
+
+        if merger_init:
+            self.merger_init = merger_init
+        else:
+            self.merger_init = Merger_Adaptive.Merger_Adaptive
 
     # sorts the input
     def sort(self):
-        print("sort is not implemented")
-        raise NotImplementedError
+        raise NotImplementedError("sort is not implemented")
 
     # returns the input list
     def get_input_list(self):
-        print("get_input_list is not implemented")
-        raise NotImplementedError
+        raise NotImplementedError("get_input_list is not implemented")
 
     # returns the sorted list
     def get_sorted_list(self):
-        print("get_sorted_list is not implemented")
-        raise NotImplementedError
+        raise NotImplementedError("get_sorted_list is not implemented")

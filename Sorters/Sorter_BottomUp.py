@@ -1,14 +1,12 @@
 from Sorters import Sorter_PingPong
-import math
 from Support import ListSlice
-from Mergers import Merger_Adaptive
-from Merger_IPQs import MergerIPQ_Dummy
+import math
 
 
 class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
     def __init__(self, input_list, k,
-                 merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy,
-                 merger_init=Merger_Adaptive.Merger_Adaptive):
+                 merger_ipq_init=False,
+                 merger_init=False):
         super().__init__(input_list, k, merger_ipq_init, merger_init)
 
         self.sorted = False

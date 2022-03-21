@@ -1,16 +1,8 @@
 from Mergers import Merger
-from Merger_IPQs import MergerIPQ_Dummy
 import math
 
 
 class Merger_Adaptive(Merger.Merger):
-    def __init__(self, runs, write_list_slice, merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy):
-        super().__init__(runs, write_list_slice, merger_ipq_init=merger_ipq_init)
-
-        self.runs = runs
-        self.write_list_slice = write_list_slice
-        self.merger_ipq_init = merger_ipq_init
-
     def merge(self):
         runs_with_infs = []
         internal_positions = []
@@ -50,7 +42,3 @@ class Merger_Adaptive(Merger.Merger):
 
             # update the value in the merger
             our_merger_ipq.update_lowest_priority(runs_with_infs[internal_positions[min_run]])
-
-        return self.write_list_slice
-
-        # fifth, change the two classes to use this instead of the previous method

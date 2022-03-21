@@ -7,5 +7,3 @@ suiteList = [unittest.TestLoader().loadTestsFromTestCase(Test_Sorters.Test_Sorte
 
 comboSuite = unittest.TestSuite(suiteList)
 unittest.TextTestRunner().run(comboSuite)
-
-

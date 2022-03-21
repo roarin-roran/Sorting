@@ -47,7 +47,7 @@ class Test_Sorters(unittest.TestCase):
         for power in range(1, max_power):
             self.sort_n_inputs(n=10**power)
 
-    def sort_n_inputs(self, n=1):
+    def sort_n_inputs(self, n):
         random.seed(n)
 
         random_input = list(range(n))

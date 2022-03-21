@@ -15,9 +15,9 @@ class Test_Mergers(unittest.TestCase):
 
         # fiddle with this when more mergers are added
         our_merger = Merger_Adaptive.Merger_Adaptive([run_1, run_2], write_list_slice)
-        output = our_merger.merge()
+        our_merger.merge()
 
-        self.assertEqual(output.list, sorted(write_list_slice.list))
+        self.assertEqual(write_list_slice.list, sorted(write_list_slice.list))
 
     def test_merge_three_variable_lengths(self):
         three_runs = [7, 0, 2, 4, 1, 3, 5, 6]
@@ -29,9 +29,9 @@ class Test_Mergers(unittest.TestCase):
 
         # fiddle with this when more mergers are added
         our_merger = Merger_Adaptive.Merger_Adaptive([run_1, run_2, run_3], write_list_slice)
-        output = our_merger.merge()
+        our_merger.merge()
 
-        self.assertEqual(output.list, sorted(write_list_slice.list))
+        self.assertEqual(write_list_slice.list, sorted(write_list_slice.list))
 
     def test_adaptive_sort(self):
         sorter_tester = Test_Sorters.Test_Sorters()

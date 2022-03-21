@@ -1,13 +1,12 @@
+from abc import ABC
 from Sorters import Sorter
-from Mergers import Merger_Adaptive
-from Merger_IPQs import MergerIPQ_Dummy
 
 
 # defines methods shared by sorters using ping pong memory management
-class Sorter_PingPong(Sorter.Sorter):
+class Sorter_PingPong(Sorter.Sorter, ABC):
     def __init__(self, input_array, k,
-                 merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy,
-                 merger_init=Merger_Adaptive.Merger_Adaptive):
+                 merger_ipq_init=False,
+                 merger_init=False):
         # passes data down, where it'll be saved
         super().__init__(input_array, k, merger_ipq_init, merger_init)
 
