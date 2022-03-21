@@ -1,4 +1,4 @@
-from Mergers import MergerIPQ
+from Merger_IPQs import MergerIPQ
 
 
 class MergerIPQ_Dummy(MergerIPQ.MergerIPQ):

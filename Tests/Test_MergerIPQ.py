@@ -1,6 +1,6 @@
 import unittest
 from Tests import Test_Sorters
-from Mergers import MergerIPQ_Dummy
+from Merger_IPQs import MergerIPQ_Dummy
 
 
 class Test_MergerIPQ(unittest.TestCase):

@@ -1,5 +1,6 @@
 from Sorters import Sorter
-from Mergers import Merger_Adaptive, MergerIPQ_Dummy
+from Mergers import Merger_Adaptive
+from Merger_IPQs import MergerIPQ_Dummy
 
 
 # defines methods shared by sorters using ping pong memory management

@@ -1,4 +1,5 @@
-from Mergers import Merger, MergerIPQ_Dummy
+from Mergers import Merger
+from Merger_IPQs import MergerIPQ_Dummy
 import math
 
 

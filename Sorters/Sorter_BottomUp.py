@@ -1,7 +1,8 @@
 from Sorters import Sorter_PingPong
 import math
 from Support import ListSlice
-from Mergers import Merger_Adaptive, MergerIPQ_Dummy
+from Mergers import Merger_Adaptive
+from Merger_IPQs import MergerIPQ_Dummy
 
 
 class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
