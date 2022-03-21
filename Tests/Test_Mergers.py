@@ -1,7 +1,7 @@
 import unittest
-import ListSlice
-import Test_Sorters
-import Merger_Adaptive
+from Support import ListSlice
+from Tests import Test_Sorters
+from Mergers import Merger_Adaptive
 
 
 class Test_Mergers(unittest.TestCase):
@@ -25,7 +25,7 @@ class Test_Mergers(unittest.TestCase):
         run_2 = ListSlice.ListSlice(three_runs, 1, 4)
         run_3 = ListSlice.ListSlice(three_runs, 4, 8)
 
-        write_list_slice = ListSlice.ListSlice([-1]*7, 0, 7)
+        write_list_slice = ListSlice.ListSlice([-1] * 7, 0, 7)
 
         # fiddle with this when more mergers are added
         our_merger = Merger_Adaptive.Merger_Adaptive([run_1, run_2, run_3], write_list_slice)

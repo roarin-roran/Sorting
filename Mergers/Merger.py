@@ -1,5 +1,5 @@
 from typing import List
-import ListSlice
+from Support import ListSlice
 
 
 class Merger:

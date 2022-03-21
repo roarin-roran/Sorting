@@ -1,9 +1,7 @@
 import unittest
-import Sorter_Adaptive
-import Sorter_BottomUp
+from Sorters import Sorter_Adaptive, Sorter_BottomUp
 import random
-import MergerIPQ_Dummy
-import Merger_Adaptive
+from Mergers import Merger_Adaptive, MergerIPQ_Dummy
 
 
 class Test_Sorters(unittest.TestCase):

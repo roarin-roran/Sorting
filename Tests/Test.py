@@ -1,7 +1,5 @@
 import unittest
-import Test_Sorters
-import Test_Mergers
-import Test_MergerIPQ
+from Tests import Test_Mergers, Test_MergerIPQ, Test_Sorters
 
 suiteList = [unittest.TestLoader().loadTestsFromTestCase(Test_Sorters.Test_Sorters),
              unittest.TestLoader().loadTestsFromTestCase(Test_Mergers.Test_Mergers),

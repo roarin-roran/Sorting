@@ -1,6 +1,5 @@
-import Merger
+from Mergers import Merger, MergerIPQ_Dummy
 import math
-import MergerIPQ_Dummy
 
 
 class Merger_Adaptive(Merger.Merger):

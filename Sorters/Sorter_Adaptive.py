@@ -1,7 +1,6 @@
-import Sorter_PingPong
-import MergerIPQ_Dummy
-import ListSlice
-import Merger_Adaptive
+from Sorters import Sorter_PingPong
+from Support import ListSlice
+from Mergers import Merger_Adaptive, MergerIPQ_Dummy
 
 
 class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
