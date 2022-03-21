@@ -5,7 +5,8 @@ from Mergers import Merger_Adaptive, MergerIPQ_Dummy
 
 
 class Sorter:
-    def __init__(self, input_list, k,
+    def __init__(self, input_list,
+                 k=2,
                  merger_ipq_init=MergerIPQ_Dummy.MergerIPQ_Dummy,
                  merger_init=Merger_Adaptive.Merger_Adaptive):
         self.input_list = input_list

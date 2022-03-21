@@ -1,6 +1,6 @@
-import unittest
-from Sorters import Sorter_Adaptive, Sorter_BottomUp
 import random
+import unittest
+from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods
 from Mergers import Merger_Adaptive, MergerIPQ_Dummy
 
 
@@ -18,6 +18,15 @@ class Test_Sorters(unittest.TestCase):
                               merger_init=False):
         self.set_methods_used(merger_ipq_init, merger_init)
         self.sorter = Sorter_BottomUp.Sorter_PingPong_BottomUp
+
+        self.sort_and_test_up_to_power(4)
+
+    def test_sorter_default(self):
+        # not used by the default sorter, but needed for compatibility
+        self.merger_ipq_init = False
+        self.merger_init = False
+
+        self.sorter = Sorter_LibraryMethods.Sorter_Default
 
         self.sort_and_test_up_to_power(4)
 
