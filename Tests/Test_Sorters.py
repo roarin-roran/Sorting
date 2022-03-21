@@ -9,25 +9,21 @@ class Test_Sorters(unittest.TestCase):
     def test_sorter_adaptive(self,
                              merger_ipq_init=False,
                              merger_init=False):
-        self.set_methods_used(merger_ipq_init, merger_init)
-        self.sorter = Sorter_Adaptive.Sorter_PingPong_Adaptive
-
-        self.sort_and_test_up_to_power(4)
+        self.prototype_test(Sorter_Adaptive.Sorter_PingPong_Adaptive, merger_ipq_init, merger_init)
 
     def test_sorter_bottom_up(self,
                               merger_ipq_init=False,
                               merger_init=False):
-        self.set_methods_used(merger_ipq_init, merger_init)
-        self.sorter = Sorter_BottomUp.Sorter_PingPong_BottomUp
-
-        self.sort_and_test_up_to_power(4)
+        self.prototype_test(Sorter_BottomUp.Sorter_PingPong_BottomUp, merger_ipq_init, merger_init)
 
     def test_sorter_default(self):
-        # not used by the default sorter, but needed for compatibility
-        self.merger_ipq_init = False
-        self.merger_init = False
+        self.prototype_test(Sorter_LibraryMethods.Sorter_Default)
 
-        self.sorter = Sorter_LibraryMethods.Sorter_Default
+    def prototype_test(self, sorter_init,
+                       merger_ipq_init=False,
+                       merger_init=False):
+        self.set_methods_used(merger_ipq_init, merger_init)
+        self.sorter_init = sorter_init
 
         self.sort_and_test_up_to_power(4)
 
@@ -56,7 +52,9 @@ class Test_Sorters(unittest.TestCase):
         for k in range(2, 9):
             random.shuffle(random_input)
 
-            sorter = self.sorter(random_input, k, merger_ipq_init=self.merger_ipq_init, merger_init=self.merger_init)
+            sorter = self.sorter_init(random_input, k,
+                                      merger_ipq_init=self.merger_ipq_init,
+                                      merger_init=self.merger_init)
 
             # note that sort is called by get_sorted_list, so sort is tested implicitly here
             self.assertEqual(sorter.get_input_list(), random_input)

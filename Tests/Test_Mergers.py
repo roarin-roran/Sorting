@@ -2,9 +2,28 @@ import unittest
 from Support import ListSlice
 from Tests import Test_Sorters
 from Mergers import Merger_Adaptive
+from Merger_IPQs import MergerIPQ_Dummy
 
 
 class Test_Mergers(unittest.TestCase):
+
+    def test_adaptive_sort(self, merger_ipq_init=False):
+        self.prototype_test(Merger_Adaptive.Merger_Adaptive, merger_ipq_init)
+
+    def prototype_test(self,
+                       merger_init,
+                       merger_ipq_init=False):
+        if merger_ipq_init:
+            self.merger_ipq_init = merger_ipq_init
+        else:
+            self.merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
+
+        sorter_tester = Test_Sorters.Test_Sorters()
+        sorter_tester.test_sorter_bottom_up(self.merger_ipq_init, merger_init)
+
+        self.merge_two(merger_init)
+
+        self.merge_three_variable_lengths(merger_init)
 
     def merge_two(self, merger_init):
         two_runs = [2, 3, 0, 1]
@@ -30,14 +49,6 @@ class Test_Mergers(unittest.TestCase):
         our_merger.merge()
 
         self.assertEqual(write_list_slice.list, sorted(write_list_slice.list))
-
-    def test_adaptive_sort(self):
-        sorter_tester = Test_Sorters.Test_Sorters()
-        sorter_tester.test_sorter_bottom_up(merger_init=Merger_Adaptive.Merger_Adaptive)
-
-        self.merge_two(Merger_Adaptive.Merger_Adaptive)
-
-        self.merge_three_variable_lengths(Merger_Adaptive.Merger_Adaptive)
 
 
 if __name__ == '__main__':
