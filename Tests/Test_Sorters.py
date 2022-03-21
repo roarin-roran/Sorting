@@ -55,10 +55,9 @@ class Test_Sorters(unittest.TestCase):
             sorter = self.sorter_init(random_input, k,
                                       merger_ipq_init=self.merger_ipq_init,
                                       merger_init=self.merger_init)
+            sorter.sort()
 
-            # note that sort is called by get_sorted_list, so sort is tested implicitly here
-            self.assertEqual(sorter.get_input_list(), random_input)
-            self.assertEqual(sorter.get_sorted_list(), sorted_input)
+            self.assertEqual(random_input, sorted_input)
 
 
 if __name__ == '__main__':

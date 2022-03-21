@@ -4,16 +4,16 @@ from Sorters import Sorter
 
 # defines methods shared by sorters using ping pong memory management
 class Sorter_PingPong(Sorter.Sorter, ABC):
-    def __init__(self, input_array, k,
+    def __init__(self, input_list, k,
                  merger_ipq_init=False,
                  merger_init=False):
         # passes data down, where it'll be saved
-        super().__init__(input_array, k, merger_ipq_init, merger_init)
+        super().__init__(input_list, k, merger_ipq_init, merger_init)
 
-        self.input_length = len(input_array)
+        self.input_length = len(input_list)
 
-        self.ping = input_array.copy()
-        self.pong = input_array.copy()
+        self.ping = input_list
+        self.pong = input_list.copy()
 
         self.read_ping_write_pong = True
 
