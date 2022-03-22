@@ -1,4 +1,6 @@
-times on sleeky
+## Running Python
+
+### times on sleeky
 
 pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.timsort_pyflate_list()'
 Mean +- std dev: 63.0 ms +- 4.9 ms
@@ -14,6 +16,13 @@ Mean +- std dev: 14.7 ms +- 0.6 ms
 
 pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.opttimsort_pyflate_list()'
 Mean +- std dev: 71.5 ms +- 4.2 ms
+
+
+~/programs/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.timsort_pyflate_list()'
+Mean +- std dev: 70.6 ms +- 8.4 ms
+
+~/programs/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.powersort_pyflate_list()'
+Mean +- std dev: 86.0 ms +- 11.0 ms
 
 
 python3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.timsort_pyflate_list()'
@@ -32,5 +41,34 @@ python3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.o
 Mean +- std dev: 3.42 sec +- 0.08 sec
 
 
+### sgwcawle
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.timsort_pyflate_list()'
+Mean +- std dev: 45.2 ms +- 1.0 ms
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.powersort_pyflate_list()'
+Mean +- std dev: 46.9 ms +- 0.8 ms
+
+## Running RPython implementations directly
+
+1000 repetitions each, compiled using ./bin/rpython translator/goal/my-target-listsort-*sort
+
+swild@sgwcawle:/LOCAL/swild/pypy3.9-v7.3.8-src/rpython$ time ./my-target-listsort-timsort-c && time ./my-target-listsort-powersort-c 
+
+real	0m11.259s
+user	0m10.747s
+sys	0m0.488s
+
+real	0m11.821s
+user	0m11.022s
+sys	0m0.772s
 
 
+swild@sleeky:~/projects/nearly-optimal-mergesort/pypy3.9-v7.3.8-src/rpython$ time ./my-target-listsort-timsort-c && time ./my-target-listsort-powersort-c
+real	0m13.910s
+user	0m12.877s
+sys	0m1.004s
+
+real	0m14.657s
+user	0m13.623s
+sys	0m1.004s
