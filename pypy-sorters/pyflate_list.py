@@ -18,31 +18,46 @@ pyflate_list = [10, 10, 144, 122, 122, 122, 122, 122, 122, 122, 122, 122, 122, 1
 
 my_value = 0;
 
-def sort_pyflate_list():
+def sort_pyflate_list(reps=1):
 	#print("Running systemsort")
-	copy = pyflate_list[:]
-	copy.sort()
-	return copy[42]
+	res = 0;
+	for x in range(reps):
+		copy = pyflate_list[:]
+		copy.sort()
+		res += copy[42]
+	return res
 
-def timsort_pyflate_list():
-	copy = pyflate_list[:]
-	listsort_timsort.sort(copy)
-	return copy[42]
+def timsort_pyflate_list(reps=1):
+	res = 0;
+	for x in range(reps):
+		copy = pyflate_list[:]
+		listsort_timsort.sort(copy)
+		res += copy[42]
+	return res
 
-def opttimsort_pyflate_list():
-	copy = pyflate_list[:]
-	listsort_timsort_opt.sort(copy)
-	return copy[42]
+def opttimsort_pyflate_list(reps=1):
+	res = 0;
+	for x in range(reps):
+		copy = pyflate_list[:]
+		listsort_timsort_opt.sort(copy)
+		res += copy[42]
+	return res
 
-def powersort_pyflate_list():
-	copy = pyflate_list[:]
-	listsort_powersort.sort(copy)
-	return copy[42]
+def powersort_pyflate_list(reps=1):
+	res = 0;
+	for x in range(reps):
+		copy = pyflate_list[:]
+		listsort_powersort.sort(copy)
+		res += copy[42]
+	return res
 
-def babysort_pyflate_list():
-	copy = pyflate_list[:]
-	listsort_baby.sort(copy)
-	return copy[42]
+def babysort_pyflate_list(reps=1):
+	res = 0;
+	for x in range(reps):
+		copy = pyflate_list[:]
+		listsort_baby.sort(copy)
+		res += copy[42]
+	return res
 
 to_run = {
 	"lib": sort_pyflate_list,
