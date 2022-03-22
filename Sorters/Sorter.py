@@ -26,11 +26,3 @@ class Sorter:
     # sorts the input
     def sort(self):
         raise NotImplementedError("sort is not implemented")
-
-    # returns the input list
-    def get_input_list(self):
-        raise NotImplementedError("get_input_list is not implemented")
-
-    # returns the sorted list
-    def get_sorted_list(self):
-        raise NotImplementedError("get_sorted_list is not implemented")

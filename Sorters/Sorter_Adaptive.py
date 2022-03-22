@@ -8,22 +8,9 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
                  merger_init=False):
         super().__init__(input_list, k, merger_ipq_init, merger_init)
 
-        self.sorted = False
-
     # sorts the input
     def sort(self):
-        self.merge_sort_k_run_detection()
-
-    # returns the input list
-    def get_input_list(self):
-        return self.input_list
-
-    # ensures that the sorted list exists, and is sorted, then returns it
-    def get_sorted_list(self):
-        if not self.sorted:
-            self.sort()
-
-        return self.get_read_list()
+        return self.merge_sort_k_run_detection()
 
     # a k way merge sorter using runs detected as a prepossessing step
     def merge_sort_k_run_detection(self):
@@ -56,7 +43,11 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
 
             self.read_ping_write_pong = not self.read_ping_write_pong
 
-        self.sorted = True
+        read_list = self.get_read_list()
+        for i in range(len(self.input_list)):
+            self.input_list[i] = read_list[i]
+
+        return self.input_list
 
     # detects runs, returning a list of list slices - each of the one run
     def detect_runs(self):

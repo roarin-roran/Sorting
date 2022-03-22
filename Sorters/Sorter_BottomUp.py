@@ -13,18 +13,7 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
 
     # sorts the input
     def sort(self):
-        self.merge_sort_k_fixed_length()
-
-    # returns the input list
-    def get_input_list(self):
-        return self.input_list
-
-    # ensures that the sorted list exists, and is sorted, then returns it
-    def get_sorted_list(self):
-        if not self.sorted:
-            self.sort()
-
-        return self.get_read_list()
+        return self.merge_sort_k_fixed_length()
 
     # sorts the elements using k way merge sort with fixed length runs
     def merge_sort_k_fixed_length(self):
@@ -62,4 +51,9 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
             self.read_ping_write_pong = not self.read_ping_write_pong
             run_length *= self.k
 
-        self.sorted = True
+        read_list = self.get_read_list()
+        for i in range(len(self.input_list)):
+            self.input_list[i] = read_list[i]
+
+        return self.input_list
+

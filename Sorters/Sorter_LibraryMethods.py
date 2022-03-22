@@ -8,20 +8,12 @@ class Sorter_Default(Sorter.Sorter):
                  merger_init=False):
         super().__init__(input_list, k, merger_ipq_init, merger_init)
 
-        self.sortedList = False
+        self.sorted = False
 
     def sort(self):
-        self.sortedList = self.input_list.copy()
-        self.sortedList.sort()
+        self.input_list.sort()
+        self.sorted = True
 
-    # returns the input list
-    def get_input_list(self):
         return self.input_list
 
-    # ensures that the sorted list exists, and is sorted, then returns it
-    def get_sorted_list(self):
-        if not self.sortedList:
-            self.sort()
-
-        return self.sortedList
 
