@@ -1,5 +1,5 @@
 import unittest
-from Tests import Test_Sorters
+from Tests import Test_Sorters, Test_Mergers
 from Merger_IPQs import MergerIPQ_Dummy, MergerIPQ_Tester
 import os
 from os.path import exists
@@ -16,8 +16,13 @@ class Test_MergerIPQ(unittest.TestCase):
 
     def prototype_test(self, merger_ipq_init):
         """a prototype for all testing of merger ipqs - call it with the right init and let her rip"""
+
+        Test_Mergers.Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.clear_file_ipq()
+
         # use the ipq at issue to do a sorting test - high volume random values, testing for problems caused by the ipq
         sorter_tester = Test_Sorters.Test_Sorters()
+
         sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init)
 
         # apply fixed tests - use human generated values to reproduce expected behaviour
@@ -60,12 +65,14 @@ class Test_MergerIPQ(unittest.TestCase):
 
         f_r.close()
 
-        # remove the test options file - calling this function implies a complete test has finished
-        os.remove("test_options_merger_ipq.txt")
-
     @staticmethod
     def print_options_merger_ipq():
         if exists("test_options_merger_ipq.txt"):
             f_r = open("test_options_merger_ipq.txt", "r")
             for entry in f_r:
                 print(entry)
+
+    @staticmethod
+    def clear_file_ipq():
+        if exists("test_options_merger_ipq.txt"):
+            os.remove("test_options_merger_ipq.txt")

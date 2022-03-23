@@ -5,12 +5,13 @@ from Mergers import Merger_Adaptive, Merger_Tester
 from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester
 from typing import Union
 import os
+from os.path import exists
 
 
 class Test_Mergers(unittest.TestCase):
     def test_tests(self, override_merger_ipq_init=False):
         """ensures that the tests below correctly use the desired merger"""
-        merger_init = Merger_Tester.Merger_tester
+        merger_init = Merger_Tester.Merger_Tester
         default_merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
 
         self.passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
@@ -47,6 +48,9 @@ class Test_Mergers(unittest.TestCase):
         sorter_tester = Test_Sorters.Test_Sorters()
         sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init,
                                             override_merger_init=merger_init)
+
+        Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
 
         self.merge_two(merger_init, merger_ipq_init)
 
@@ -93,8 +97,17 @@ class Test_Mergers(unittest.TestCase):
 
         f_r.close()
 
-        # remove the test options file - calling this function implies a complete test has finished
-        os.remove("test_options_merger.txt")
+    @staticmethod
+    def print_options_merger():
+        if exists("test_options_merger.txt"):
+            f_r = open("test_options_merger.txt", "r")
+            for entry in f_r:
+                print(entry)
+
+    @staticmethod
+    def clear_file_merger():
+        if exists("test_options_merger.txt"):
+            os.remove("test_options_merger.txt")
 
 
 if __name__ == '__main__':

@@ -37,12 +37,19 @@ class Merger:
     def record_options(option_code):
         """records which merger is used to an external file for testing purposes"""
 
+        num_options = 0
+        # only write unique inputs
         if exists("test_options_merger.txt"):
             f_r = open("test_options_merger.txt", "r")
             for entry in f_r:
                 if entry == str(option_code) + "\n":
                     return
+                else:
+                    num_options += 1
             f_r.close()
+
+        if num_options > 0:
+            raise ValueError("multiple mergers used in the same test - not currently supported")
 
         f_a = open("test_options_merger.txt", "a")
 

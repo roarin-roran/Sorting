@@ -3,7 +3,7 @@ from Support import ListSlice
 from typing import List
 
 
-class Merger_tester(Merger_Adaptive.Merger_Adaptive):
+class Merger_Tester(Merger_Adaptive.Merger_Adaptive):
     """a reskin of the adaptive merger used to test whether variables are passed correctly"""
     def __init__(self, runs: List[ListSlice.ListSlice],
                  write_list_slice: ListSlice.ListSlice,

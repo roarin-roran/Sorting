@@ -32,12 +32,20 @@ class MergerIPQ:
     @staticmethod
     def record_options(option_code):
         """records which IPQ is used to an external file for testing purposes"""
+
+        num_options = 0
+
         if exists("test_options_merger_ipq.txt"):
             f_r = open("test_options_merger_ipq.txt", "r")
             for entry in f_r:
                 if entry == str(option_code)+"\n":
                     return
+                else:
+                    num_options += 1
             f_r.close()
+
+        if num_options > 0:
+            raise ValueError("multiple ipqs used in the same test - not currently supported:", option_code, "not added")
 
         f_a = open("test_options_merger_ipq.txt", "a")
 
