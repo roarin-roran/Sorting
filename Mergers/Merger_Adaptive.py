@@ -1,8 +1,18 @@
 from Mergers import Merger
 import math
+from Support import ListSlice
+from typing import List
 
 
 class Merger_Adaptive(Merger.Merger):
+    def __init__(self,
+                 runs: List[ListSlice.ListSlice],
+                 write_list_slice: ListSlice.ListSlice,
+                 option_code: int = 1,
+                 merger_ipq_init=False, test_mode=False):
+
+        super().__init__(runs, write_list_slice, option_code, merger_ipq_init, test_mode)
+
     def merge(self):
         runs_with_infs = []
         internal_positions = []
@@ -27,7 +37,7 @@ class Merger_Adaptive(Merger.Merger):
 
         # second, update the first part of the merger function
         # create a merger, and all values needed to manage it
-        our_merger_ipq = self.merger_ipq_init(initial_values)
+        our_merger_ipq = self.merger_ipq_init(initial_values, test_mode=self.test_mode)
         write_posn = self.write_list_slice.start
 
         # until writing is finished

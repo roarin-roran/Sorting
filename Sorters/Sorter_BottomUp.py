@@ -6,8 +6,10 @@ import math
 class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
     def __init__(self, input_list, k,
                  merger_ipq_init=False,
-                 merger_init=False):
-        super().__init__(input_list, k, merger_ipq_init, merger_init)
+                 merger_init=False,
+                 test_mode=False):
+
+        super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)
 
         self.sorted = False
 
@@ -44,7 +46,9 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
                 write_list_slice = ListSlice.ListSlice(self.get_write_list(), runs[0].start, runs[-1].end)
 
                 # merge, using an external merger object
-                our_merger = self.merger_init(runs, write_list_slice)
+                our_merger = self.merger_init(runs, write_list_slice,
+                                              merger_ipq_init=self.merger_ipq_init,
+                                              test_mode=self.test_mode)
                 our_merger.merge()
 
             # swap the ping and pong arrays

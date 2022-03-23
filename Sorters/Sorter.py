@@ -9,7 +9,8 @@ class Sorter:
     def __init__(self, input_list,
                  k=2,
                  merger_ipq_init=False,
-                 merger_init=False):
+                 merger_init=False,
+                 test_mode=False):
         self.input_list = input_list
         self.k = k
 
@@ -22,6 +23,8 @@ class Sorter:
             self.merger_init = merger_init
         else:
             self.merger_init = Merger_Adaptive.Merger_Adaptive
+
+        self.test_mode = test_mode
 
     # sorts the input
     def sort(self):
