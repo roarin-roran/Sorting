@@ -5,6 +5,8 @@ from typing import List
 
 
 class Merger_Adaptive(Merger.Merger):
+    """merges elements from a list of slices into an output slice, adapting to variable run length by using real
+    sentinels (infs at the end of runs - not the most efficient option possible)"""
     def __init__(self,
                  runs: List[ListSlice.ListSlice],
                  write_list_slice: ListSlice.ListSlice,
@@ -14,6 +16,7 @@ class Merger_Adaptive(Merger.Merger):
         super().__init__(runs, write_list_slice, option_code, merger_ipq_init, test_mode)
 
     def merge(self):
+        """merges the elements passed at object creation by modifying the original list, modifying the write slice"""
         runs_with_infs = []
         internal_positions = []
         initial_values = []

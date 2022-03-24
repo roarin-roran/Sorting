@@ -7,16 +7,10 @@ PRIORITY_TYPE = TypeVar('PRIORITY_TYPE')
 
 
 class MergerIPQ:
-    def __init__(self, initial_priorities: List[PRIORITY_TYPE], option_code: int,
-                 test_mode=False) -> None:
-        """FORMALISE: input initial_priorities has priorities according to index. index == run ID
-
-        pair = (i, initialPriorities[i])
-
-        Builds the IPQ, partially sorting the input array (details differ in different implementations)"""
+    def __init__(self, initial_priorities: List[PRIORITY_TYPE], option_code: int, test_mode=False) -> None:
+        """an informal interface for an indexed priority queue, with a few shared helper methods built in"""
         self.priorities = initial_priorities
         self.option_code = option_code
-        self.test_mode = test_mode
 
         if test_mode:
             self.record_options(option_code)

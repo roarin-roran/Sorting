@@ -5,14 +5,11 @@ from os.path import exists
 
 
 class Merger:
+    """accepts a list of list slices to merge and a list slice to write to - uses merge method to merge the input
+    into the output """
     def __init__(self, runs: List[ListSlice.ListSlice], write_list_slice: ListSlice.ListSlice, option_code: int,
                  merger_ipq_init=False,
                  test_mode=False) -> None:
-        """records the input and performs setup tasks
-
-        input will be a list of ListSlice objects, which each point to a list, and have start and end indices in that
-        list
-        """
         self.runs = runs
         self.write_list_slice = write_list_slice
 
@@ -29,14 +26,12 @@ class Merger:
             self.record_options(option_code)
 
     def merge(self) -> ListSlice.ListSlice:
-        """merges the elements passed at object creation by modifying the original list, returning a ListSlice with the
-        new run"""
+        """merges the elements passed at object creation by modifying the original list, modifying the write slice"""
         raise NotImplementedError("merge is not implemented")
 
     @staticmethod
     def record_options(option_code):
         """records which merger is used to an external file for testing purposes"""
-
         num_options = 0
         # only write unique inputs
         if exists("test_options_merger.txt"):

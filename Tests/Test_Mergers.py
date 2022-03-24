@@ -17,13 +17,14 @@ class Test_Mergers(unittest.TestCase):
         self.passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
 
     def test_adaptive_merge(self, override_merger_ipq_init=False):
+        """runs all tests for the adaptive merge sort"""
         merger_init = Merger_Adaptive.Merger_Adaptive
         default_merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
 
         self.passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
 
     def passing_ipq_test_wrapper(self, merger_init, override_merger_ipq_init, default_merger_ipq_init):
-        """wraps prototype_test, checking if merger_ipq is passed around flawlessly"""
+        """wraps prototype_test, checking if merger_ipq is passed around correctly"""
         # use default ipq, or override it
         if override_merger_ipq_init:
             merger_ipq_init = override_merger_ipq_init
@@ -42,8 +43,7 @@ class Test_Mergers(unittest.TestCase):
         self.prototype_test(merger_init, MergerIPQ_Tester.MergerIPQ_Tester)
         ipq_tester.check_correct_merger_ipq_used(correct_merger_ipq_init=MergerIPQ_Tester.MergerIPQ_Tester)
 
-    def prototype_test(self, merger_init,
-                       merger_ipq_init: Union[bool, type(MergerIPQ.MergerIPQ)] = False):
+    def prototype_test(self, merger_init, merger_ipq_init: Union[bool, type(MergerIPQ.MergerIPQ)] = False):
         """groups all individual test cases together"""
         sorter_tester = Test_Sorters.Test_Sorters()
         sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init,
@@ -59,6 +59,7 @@ class Test_Mergers(unittest.TestCase):
         self.check_correct_merger_used(merger_init)
 
     def merge_two(self, merger_init, merger_ipq_init):
+        """merges two trivial inputs of the same length"""
         two_runs = [2, 3, 0, 1]
         run_1 = ListSlice.ListSlice(two_runs, 0, 2)
         run_2 = ListSlice.ListSlice(two_runs, 2, 4)
@@ -72,6 +73,7 @@ class Test_Mergers(unittest.TestCase):
         self.assertEqual(write_list_slice.list, sorted(write_list_slice.list))
 
     def merge_three_variable_lengths(self, merger_init, merger_ipq_init):
+        """merges three inputs with different lengths"""
         three_runs = [7, 0, 2, 4, 1, 3, 5, 6]
         run_1 = ListSlice.ListSlice(three_runs, 0, 1)
         run_2 = ListSlice.ListSlice(three_runs, 1, 4)
@@ -86,6 +88,7 @@ class Test_Mergers(unittest.TestCase):
         self.assertEqual(write_list_slice.list, sorted(write_list_slice.list))
 
     def check_correct_merger_used(self, correct_merger_init):
+        """checks that the correct merger is the only merger that's been used since the last wipe"""
         blank_merger = correct_merger_init([], ListSlice.ListSlice([], 0, 0))
         f_r = open("test_options_merger.txt", "r")
 
@@ -99,6 +102,7 @@ class Test_Mergers(unittest.TestCase):
 
     @staticmethod
     def print_options_merger():
+        """prints all mergers used since the last wipe"""
         if exists("test_options_merger.txt"):
             f_r = open("test_options_merger.txt", "r")
             for entry in f_r:
@@ -106,6 +110,7 @@ class Test_Mergers(unittest.TestCase):
 
     @staticmethod
     def clear_file_merger():
+        """wipes the file which records which mergers have been used"""
         if exists("test_options_merger.txt"):
             os.remove("test_options_merger.txt")
 

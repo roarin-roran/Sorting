@@ -12,6 +12,7 @@ class Test_MergerIPQ(unittest.TestCase):
         self.prototype_test(MergerIPQ_Tester.MergerIPQ_Tester)
 
     def test_dummy_ipq(self):
+        """tests the simple ipq"""
         self.prototype_test(MergerIPQ_Dummy.MergerIPQ_Dummy)
 
     def prototype_test(self, merger_ipq_init):
@@ -31,6 +32,7 @@ class Test_MergerIPQ(unittest.TestCase):
         self.check_correct_merger_ipq_used(merger_ipq_init)
 
     def fixed_tests(self, merger_ipq_init):
+        """test the ipq with fixed, well defined values - covering all core methods"""
         sample_input = [4, 3, 2, 1]
 
         our_simple_merger = merger_ipq_init(sample_input, test_mode=True)
@@ -54,6 +56,7 @@ class Test_MergerIPQ(unittest.TestCase):
         self.assertEqual(our_simple_merger.peek_at_lowest_priority_element(), (2, 12))
 
     def check_correct_merger_ipq_used(self, correct_merger_ipq_init):
+        """checks that the input is the only ipq used since records were last wiped"""
         blank_merger_ipq = correct_merger_ipq_init([])
         f_r = open("test_options_merger_ipq.txt", "r")
 
@@ -67,6 +70,7 @@ class Test_MergerIPQ(unittest.TestCase):
 
     @staticmethod
     def print_options_merger_ipq():
+        """print the record file, to see which ipqs have been used since the last wipe"""
         if exists("test_options_merger_ipq.txt"):
             f_r = open("test_options_merger_ipq.txt", "r")
             for entry in f_r:
@@ -74,5 +78,6 @@ class Test_MergerIPQ(unittest.TestCase):
 
     @staticmethod
     def clear_file_ipq():
+        """wipes the options file"""
         if exists("test_options_merger_ipq.txt"):
             os.remove("test_options_merger_ipq.txt")

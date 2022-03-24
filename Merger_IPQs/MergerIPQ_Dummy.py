@@ -2,22 +2,18 @@ from Merger_IPQs import MergerIPQ
 
 
 class MergerIPQ_Dummy(MergerIPQ.MergerIPQ):
+    """a simple dummy method for IPQ implementations - methods work, but are far from optimised"""
     def __init__(self, initial_priorities, option_code=1, test_mode=False):
         super().__init__(initial_priorities, option_code, test_mode)
 
-    def get_name(self):
-        return self.__class__.__name__
-
     def update_lowest_priority(self, new_priority: int) -> None:
-        """
-
-        :type new_priority: int
-        """
+        """Updates the priority of the lowest priority element"""
         min_priority_index = self.peek_at_lowest_priority_element()[0]
 
         self.priorities[min_priority_index] = new_priority
 
     def peek_at_lowest_priority_element(self) -> (int, int):
+        """returns the index of the highest priority element, without modifying it"""
         min_priority_run = 0
         min_priority_value = self.priorities[0]
 

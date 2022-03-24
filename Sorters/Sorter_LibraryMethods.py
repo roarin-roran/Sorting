@@ -2,6 +2,7 @@ from Sorters import Sorter
 
 
 class Sorter_Default(Sorter.Sorter):
+    """a wrapper class """
     def __init__(self, input_list,
                  k=2,
                  merger_ipq_init=False,

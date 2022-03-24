@@ -4,6 +4,7 @@ import math
 
 
 class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
+    """a ping-pong implementation of a bottom-up k-way merge sort with no run detection"""
     def __init__(self, input_list, k,
                  merger_ipq_init=False,
                  merger_init=False,
@@ -13,12 +14,8 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
 
         self.sorted = False
 
-    # sorts the input
     def sort(self):
-        return self.merge_sort_k_fixed_length()
-
-    # sorts the elements using k way merge sort with fixed length runs
-    def merge_sort_k_fixed_length(self):
+        """sorts the input using k elements without run detection"""
         run_length = 1
 
         # while the array isn't sorted
@@ -53,11 +50,14 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
 
             # swap the ping and pong arrays
             self.read_ping_write_pong = not self.read_ping_write_pong
+
             run_length *= self.k
 
+        # copy the correct answer back into the input list if these lists differ
         read_list = self.get_read_list()
-        for i in range(len(self.input_list)):
-            self.input_list[i] = read_list[i]
+        if read_list != self.input_list:
+            for i in range(len(self.input_list)):
+                self.input_list[i] = read_list[i]
 
         return self.input_list
 
