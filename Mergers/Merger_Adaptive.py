@@ -51,7 +51,6 @@ class Merger_Adaptive(Merger.Merger):
                 our_merger_ipq.update_lowest_priority(next_value)
 
 
-# todo - currently not tested, add tests back
 class Merger_Adaptive_Real_Sentinels(Merger.Merger):
     """merges elements from a list of slices into an output slice, adapting to variable run length by using real
     sentinels (infs at the end of runs - not the most efficient option possible)

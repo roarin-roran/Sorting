@@ -28,6 +28,10 @@ class Test_MergerIPQ(unittest.TestCase):
         # check that the desired merger_ipq was used and no other merger_ipq was used
         self.check_correct_merger_ipq_used(merger_ipq_init)
 
+        # clear files to prevent memory leaks
+        Test_Mergers.Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.clear_file_ipq()
+
     def fixed_tests(self, merger_ipq_init):
         """test the ipq with fixed, well defined values - covering all core methods"""
         sample_input = [4, 3, 2, 1]

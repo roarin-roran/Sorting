@@ -9,7 +9,3 @@ comboSuite = unittest.TestSuite(suiteList)
 
 # run them
 unittest.TextTestRunner().run(comboSuite)
-
-# clean up
-Test_Mergers.Test_Mergers.clear_file_merger()
-Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()

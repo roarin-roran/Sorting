@@ -23,6 +23,13 @@ class Test_Mergers(unittest.TestCase):
 
         self.passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
 
+    def test_adaptive_merge_real_sentinels(self, override_merger_ipq_init=False):
+        """runs all tests for the legacy adaptive merge sort which uses real sentinels"""
+        merger_init = Merger_Adaptive.Merger_Adaptive_Real_Sentinels
+        default_merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
+
+        self.passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
+
     def passing_ipq_test_wrapper(self, merger_init, override_merger_ipq_init, default_merger_ipq_init):
         """wraps prototype_test, checking if merger_ipq is passed around correctly"""
         # use default ipq, or override it
@@ -38,6 +45,10 @@ class Test_Mergers(unittest.TestCase):
         self.prototype_test(merger_init, merger_ipq_init)
         # check that the correct ipq was used, whatever that was
         ipq_tester.check_correct_merger_ipq_used(correct_merger_ipq_init=merger_ipq_init)
+
+        # wipe to prevent leaks
+        Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
 
         # use a non-default merger, check that that's passed down correctly
         self.prototype_test(merger_init, MergerIPQ_Tester.MergerIPQ_Tester)

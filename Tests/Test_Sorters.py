@@ -39,6 +39,10 @@ class Test_Sorters(unittest.TestCase):
         # the correct one
         self.prototype_test(Sorter_LibraryMethods.Sorter_Default)
 
+        # this test will create meaningless output files - clear them for safety
+        Test_Mergers.Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
+
     def passing_test_wrapper(self, sorter_init,
                              override_merger_init, default_merger_init,
                              override_merger_ipq_init, default_merger_ipq_init):
@@ -66,9 +70,17 @@ class Test_Sorters(unittest.TestCase):
         # check that the correct ipq was used, whatever that was
         ipq_tester.check_correct_merger_ipq_used(correct_merger_ipq_init=merger_ipq_init)
 
+        # wipe files to prevent leaks
+        Test_Mergers.Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
+
         # use a non-default ipq, check that that's passed down correctly
         self.prototype_test(sorter_init, MergerIPQ_Tester.MergerIPQ_Tester, merger_init)
         ipq_tester.check_correct_merger_ipq_used(correct_merger_ipq_init=MergerIPQ_Tester.MergerIPQ_Tester)
+
+        # wipe files to prevent leaks
+        Test_Mergers.Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
 
         # use a non-default merger, check that that's passed down correctly
         self.prototype_test(sorter_init, merger_ipq_init, Merger_Tester.Merger_Tester)
@@ -88,11 +100,6 @@ class Test_Sorters(unittest.TestCase):
         self.sorter_init = sorter_init
         self.merger_ipq_init = merger_ipq_init
         self.merger_init = merger_init
-
-        # todo - files really should be wiped after use.
-        # wipe files before testing for safety
-        Test_Mergers.Test_Mergers.clear_file_merger()
-        Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
 
         self.sort_and_test_up_to_power(max_power=2, max_k=4)
 
