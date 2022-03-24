@@ -38,6 +38,7 @@ class Merger:
             f_r = open("test_options_merger.txt", "r")
             for entry in f_r:
                 if entry == str(option_code) + "\n":
+                    f_r.close()
                     return
                 else:
                     num_options += 1
