@@ -34,30 +34,25 @@ class Test_Mergers(unittest.TestCase):
         # make ipq_tester
         ipq_tester = Test_MergerIPQ.Test_MergerIPQ()
 
-        print("\n\t\tNON TEST MERGER\n")
         # test using either default values or override values
         self.prototype_test(merger_init, merger_ipq_init)
         # check that the correct ipq was used, whatever that was
         ipq_tester.check_correct_merger_ipq_used(correct_merger_ipq_init=merger_ipq_init)
 
-        print("\n\t\tTEST MERGER\n")
         # use a non-default merger, check that that's passed down correctly
         self.prototype_test(merger_init, MergerIPQ_Tester.MergerIPQ_Tester)
         ipq_tester.check_correct_merger_ipq_used(correct_merger_ipq_init=MergerIPQ_Tester.MergerIPQ_Tester)
 
-    def prototype_test(self, merger_init, merger_ipq_init: Union[bool, type(MergerIPQ.MergerIPQ)] = False):
-        """groups all individual test cases together"""
-
-        print("\n\t\tTEST BY USING\n")
-        sorter_tester = Test_Sorters.Test_Sorters()
-        sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init,
-                                            override_merger_init=merger_init)
-
-        # todo - this seems a little low
+        # test complete - delete test files to avoid memory leaks
         Test_Mergers.clear_file_merger()
         Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
 
-        print("\n\t\tTEST WITH FIXED VALUES\n")
+    def prototype_test(self, merger_init, merger_ipq_init: Union[bool, type(MergerIPQ.MergerIPQ)] = False):
+        """groups all individual test cases together"""
+
+        sorter_tester = Test_Sorters.Test_Sorters()
+        sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init,
+                                            override_merger_init=merger_init)
 
         self.merge_two(merger_init, merger_ipq_init)
 

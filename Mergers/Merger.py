@@ -36,7 +36,10 @@ class Merger:
         # only write unique inputs
         if exists("test_options_merger.txt"):
             f_r = open("test_options_merger.txt", "r")
+            all_options = [str(option_code)]
             for entry in f_r:
+                all_options.append(entry[0])
+
                 if entry == str(option_code) + "\n":
                     f_r.close()
                     return
@@ -44,8 +47,8 @@ class Merger:
                     num_options += 1
             f_r.close()
 
-        if num_options > 0:
-            raise ValueError("multiple mergers used in the same test - not currently supported")
+            if num_options > 0:
+                raise ValueError("multiple mergers used in the same test - not currently supported. options used:", all_options)
 
         f_a = open("test_options_merger.txt", "a")
 

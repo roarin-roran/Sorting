@@ -77,6 +77,10 @@ class Test_Sorters(unittest.TestCase):
         # os.remove("test_options_merger_ipq.txt")
         merger_tester.check_correct_merger_used(correct_merger_init=Merger_Tester.Merger_Tester)
 
+        # test complete - delete test files to avoid memory leaks
+        Test_Mergers.Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
+
     def prototype_test(self, sorter_init,
                        merger_ipq_init: Union[bool, type(MergerIPQ.MergerIPQ)] = False,
                        merger_init: Union[bool, type(Merger.Merger)] = False):
@@ -85,6 +89,8 @@ class Test_Sorters(unittest.TestCase):
         self.merger_ipq_init = merger_ipq_init
         self.merger_init = merger_init
 
+        # todo - files really should be wiped after use.
+        # wipe files before testing for safety
         Test_Mergers.Test_Mergers.clear_file_merger()
         Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
 

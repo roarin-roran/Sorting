@@ -18,9 +18,6 @@ class Test_MergerIPQ(unittest.TestCase):
     def prototype_test(self, merger_ipq_init):
         """a prototype for all testing of merger ipqs - call it with the right init and let her rip"""
 
-        Test_Mergers.Test_Mergers.clear_file_merger()
-        Test_MergerIPQ.clear_file_ipq()
-
         # use the ipq at issue to do a sorting test - high volume random values, testing for problems caused by the ipq
         sorter_tester = Test_Sorters.Test_Sorters()
 
