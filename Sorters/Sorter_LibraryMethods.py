@@ -17,5 +17,3 @@ class Sorter_Default(Sorter.Sorter):
         self.sorted = True
 
         return self.input_list
-
-

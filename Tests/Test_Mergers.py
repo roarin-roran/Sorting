@@ -2,7 +2,7 @@ import unittest
 from Support import ListSlice
 from Tests import Test_Sorters, Test_MergerIPQ
 from Mergers import Merger_Adaptive, Merger_Tester
-from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester
+from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_Tournament
 from typing import Union
 import os
 from os.path import exists
@@ -19,14 +19,14 @@ class Test_Mergers(unittest.TestCase):
     def test_adaptive_merge(self, override_merger_ipq_init=False):
         """runs all tests for the adaptive merge sort"""
         merger_init = Merger_Adaptive.Merger_Adaptive
-        default_merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
+        default_merger_ipq_init = MergerIPQ_Tournament.MergerIPQ_Tournament
 
         self.passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
 
     def test_adaptive_merge_real_sentinels(self, override_merger_ipq_init=False):
         """runs all tests for the legacy adaptive merge sort which uses real sentinels"""
         merger_init = Merger_Adaptive.Merger_Adaptive_Real_Sentinels
-        default_merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
+        default_merger_ipq_init = MergerIPQ_Tournament.MergerIPQ_Tournament
 
         self.passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
 

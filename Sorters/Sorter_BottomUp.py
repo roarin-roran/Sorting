@@ -60,4 +60,3 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
                 self.input_list[i] = read_list[i]
 
         return self.input_list
-

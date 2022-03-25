@@ -9,7 +9,6 @@ PRIORITY_TYPE = TypeVar('PRIORITY_TYPE')
 class MergerIPQ:
     def __init__(self, initial_priorities: List[PRIORITY_TYPE], option_code: int, test_mode=False) -> None:
         """an informal interface for an indexed priority queue, with a few shared helper methods built in"""
-        self.priorities = initial_priorities
         self.option_code = option_code
 
         if test_mode:
@@ -25,22 +24,25 @@ class MergerIPQ:
 
     @staticmethod
     def record_options(option_code):
-        """records which IPQ is used to an external file for testing purposes"""
-
+        """records which merger IPQ is used to an external file for testing purposes"""
         num_options = 0
-
+        # only write unique inputs
         if exists("test_options_merger_ipq.txt"):
             f_r = open("test_options_merger_ipq.txt", "r")
+            all_options = [str(option_code)]
             for entry in f_r:
-                if entry == str(option_code)+"\n":
+                all_options.append(entry[0])
+
+                if entry == str(option_code) + "\n":
                     f_r.close()
                     return
                 else:
                     num_options += 1
             f_r.close()
 
-        if num_options > 0:
-            raise ValueError("multiple ipqs used in the same test - not currently supported:", option_code, "not added")
+            if num_options > 0:
+                raise ValueError("multiple mergers used in the same test - not currently supported. options used:",
+                                 all_options)
 
         f_a = open("test_options_merger_ipq.txt", "a")
 

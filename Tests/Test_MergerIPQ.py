@@ -1,6 +1,6 @@
 import unittest
 from Tests import Test_Sorters, Test_Mergers
-from Merger_IPQs import MergerIPQ_Dummy, MergerIPQ_Tester
+from Merger_IPQs import MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_Tournament
 import os
 from os.path import exists
 
@@ -14,6 +14,10 @@ class Test_MergerIPQ(unittest.TestCase):
     def test_dummy_ipq(self):
         """tests the simple ipq"""
         self.prototype_test(MergerIPQ_Dummy.MergerIPQ_Dummy)
+
+    def test_tournament_ipq(self):
+        """tests the tournament tree based ipq"""
+        self.prototype_test(MergerIPQ_Tournament.MergerIPQ_Tournament)
 
     def prototype_test(self, merger_ipq_init):
         """a prototype for all testing of merger ipqs - call it with the right init and let her rip"""
