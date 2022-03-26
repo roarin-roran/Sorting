@@ -20,6 +20,10 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
 
             # while we haven't overshot the last block
             while block_number < len(runs):
+                # test for a single block run - this is already merged.
+                if block_number + 1 == len(runs):
+                    break
+
                 # put all the runs for this block in a list, removing them from the main run list
                 this_block_runs = []
                 for run_number in range(block_number, min(block_number + self.k, len(runs))):

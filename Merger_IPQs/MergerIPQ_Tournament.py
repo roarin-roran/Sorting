@@ -23,10 +23,6 @@ class MergerIPQ_Tournament(MergerIPQ.MergerIPQ):
         """updates the lowest priority element per the loser tree, and sinks the modified element as far as necessary"""
         self.priorities[self.loser_tree[0]] = new_priority
 
-        # catch the edge case where the IPQ is of length 1
-        if self.n == 1:
-            return
-
         # first node only has one child - special case it
         posn = 0
         keep_sinking = self.first_larger(0, 1)

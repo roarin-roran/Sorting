@@ -25,10 +25,23 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
             # a block consists of k runs, and is merged in a single step
             number_of_blocks = math.ceil(self.input_length / (self.k * run_length))
             for block_number in range(number_of_blocks):
-
                 runs = []
                 # initialise run_start - run end doesn't need initialising
                 run_start = block_number * run_length * self.k
+
+                # if there's only going to be one run in this block, just copy the run from the read list to the write
+                # list
+                if run_start + run_length >= self.input_length:
+                    write_list = self.get_write_list()
+
+                    posn = run_start
+                    while posn < self.input_length:
+
+                        write_list[posn] = read_list[posn]
+
+                        posn += 1
+
+                    break
 
                 for run in range(self.k):
                     run_end = min(run_start + run_length, self.input_length)
@@ -48,7 +61,7 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
                                               test_mode=self.test_mode)
                 our_merger.merge()
 
-            # swap the ping and pong arrays
+                # swap the ping and pong arrays
             self.read_ping_write_pong = not self.read_ping_write_pong
 
             run_length *= self.k

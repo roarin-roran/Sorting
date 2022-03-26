@@ -5,8 +5,10 @@ from Mergers import Merger, Merger_Adaptive, Merger_Tester
 from Merger_IPQs import MergerIPQ, MergerIPQ_Tester, MergerIPQ_Tournament
 from Tests import Test_MergerIPQ, Test_Mergers
 from typing import Union
+import os
 
 
+# todo - explicit test for the handling of runs of length 1
 class Test_Sorters(unittest.TestCase):
     def test_sorter_adaptive(self,
                              override_merger_ipq_init=False,
@@ -84,9 +86,6 @@ class Test_Sorters(unittest.TestCase):
 
         # use a non-default merger, check that that's passed down correctly
         self.prototype_test(sorter_init, merger_ipq_init, Merger_Tester.Merger_Tester)
-        # os.remove("test_options_merger.txt")
-
-        # os.remove("test_options_merger_ipq.txt")
         merger_tester.check_correct_merger_used(correct_merger_init=Merger_Tester.Merger_Tester)
 
         # test complete - delete test files to avoid memory leaks
@@ -101,6 +100,9 @@ class Test_Sorters(unittest.TestCase):
         self.merger_ipq_init = merger_ipq_init
         self.merger_init = merger_init
 
+        # note - this order is crucial! sort_single_element asserts that no ipq/merger options files have been created
+        # other tests may create these, so it *must* be executed first.
+        self.sort_single_element()
         self.sort_and_test_up_to_power(max_power=2, max_k=4)
 
     def sort_and_test_up_to_power(self, max_power, max_k):
@@ -109,15 +111,15 @@ class Test_Sorters(unittest.TestCase):
         random.seed(405)
 
         # for all powers
-        for power in range(1, max_power+1):
-            n = 10**power
+        for power in range(1, max_power + 1):
+            n = 10 ** power
 
             # create input in order, then shuffle it
             sorted_input = list(range(n))
             random_input = sorted_input.copy()
 
             # for all k values
-            for k in range(2, max_k+1):
+            for k in range(2, max_k + 1):
                 # shuffle input
                 random.shuffle(random_input)
 
@@ -130,6 +132,26 @@ class Test_Sorters(unittest.TestCase):
 
                 # check sortedness
                 self.assertEqual(random_input, sorted_input)
+
+    def sort_single_element(self):
+        """tests that a sorter can handle the trivial input of a single character. note that this should NOT be special
+        cased - the potential flaw we're checking for here is the creation of a merger"""
+        random_input = [1]
+        sorted_input = [1]
+        sorter = self.sorter_init(sorted_input, 2, merger_ipq_init=self.merger_ipq_init,
+                                  merger_init=self.merger_init,
+                                  test_mode=True)
+        sorter.sort()
+
+        # check sortedness
+        self.assertEqual(random_input, sorted_input)
+
+        # assure that no mergers or merger ipqs are used for this input
+        self.assertFalse(os.path.isfile("test_options_merger_ipq.txt")), "a merger ipq was used for a single element"
+        self.assertFalse(os.path.isfile("test_options_merger.txt")), "a merger was used for a single element"
+
+
+
 
 
 if __name__ == '__main__':
