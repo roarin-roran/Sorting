@@ -2,7 +2,7 @@ import random
 import unittest
 from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods
 from Mergers import Merger, Merger_Adaptive, Merger_Tester
-from Merger_IPQs import MergerIPQ, MergerIPQ_Tester, MergerIPQ_Tournament
+from Merger_IPQs import MergerIPQ, MergerIPQ_Tester, MergerIPQ_LoserTree
 from Tests import Test_MergerIPQ, Test_Mergers
 from typing import Union
 import os
@@ -17,7 +17,7 @@ class Test_Sorters(unittest.TestCase):
 
         sorter_init = Sorter_Adaptive.Sorter_PingPong_Adaptive
         default_merger_init = Merger_Adaptive.Merger_Adaptive
-        default_merger_ipq_init = MergerIPQ_Tournament.MergerIPQ_Tournament
+        default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
 
         self.passing_test_wrapper(sorter_init,
                                   override_merger_init, default_merger_init,
@@ -29,7 +29,7 @@ class Test_Sorters(unittest.TestCase):
         """tests the k-way bottom up sorter"""
         sorter_init = Sorter_BottomUp.Sorter_PingPong_BottomUp
         default_merger_init = Merger_Adaptive.Merger_Adaptive
-        default_merger_ipq_init = MergerIPQ_Tournament.MergerIPQ_Tournament
+        default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
 
         self.passing_test_wrapper(sorter_init,
                                   override_merger_init, default_merger_init,

@@ -2,7 +2,6 @@
 # 1. at some point, "day trip" array management will be used in place of ping pong, for methods like powersort
 #   which lack clear run definitions
 from Mergers import Merger_Adaptive
-from Merger_IPQs import MergerIPQ_Dummy
 
 
 class Sorter:

@@ -1,6 +1,6 @@
 from typing import List
 from Support import ListSlice
-from Merger_IPQs import MergerIPQ_Tournament
+from Merger_IPQs import MergerIPQ_LoserTree
 from os.path import exists
 
 
@@ -17,7 +17,7 @@ class Merger:
         if merger_ipq_init:
             self.merger_ipq_init = merger_ipq_init
         else:
-            self.merger_ipq_init = MergerIPQ_Tournament
+            self.merger_ipq_init = MergerIPQ_LoserTree
 
         self.option_code = option_code
         self.test_mode = test_mode

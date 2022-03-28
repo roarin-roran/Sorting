@@ -2,8 +2,10 @@ from Merger_IPQs import MergerIPQ
 import math
 
 
-class MergerIPQ_Tournament(MergerIPQ.MergerIPQ):
-    """an ipq using a loser version of a tournament tree"""
+class MergerIPQ_LoserTree(MergerIPQ.MergerIPQ):
+    """an ipq using a loser tree, a restricted binary heap which is arguably a tournament tree variation (opinions
+    differ in the literature)"""
+    # todo - update to use binary heap language in method names, variable names, and comments
 
     def __init__(self, initial_priorities, option_code=2, test_mode=False):
         super().__init__(initial_priorities, option_code, test_mode)
