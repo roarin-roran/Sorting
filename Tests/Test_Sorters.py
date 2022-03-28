@@ -108,7 +108,10 @@ class Test_Sorters(unittest.TestCase):
     def sort_and_test_up_to_power(self, max_power, max_k):
         """creates inputs up to 10^max_power, and sorts each one with all k values between 2 and max_k, inclusive."""
         # seed with star wars day
+        # todo - move this seed higher
         random.seed(405)
+
+        # todo - rewrite with Experiments class to reduce copied code
 
         # for all powers
         for power in range(1, max_power + 1):

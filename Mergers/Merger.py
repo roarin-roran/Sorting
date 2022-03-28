@@ -17,7 +17,7 @@ class Merger:
         if merger_ipq_init:
             self.merger_ipq_init = merger_ipq_init
         else:
-            self.merger_ipq_init = MergerIPQ_LoserTree
+            self.merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
 
         self.option_code = option_code
         self.test_mode = test_mode
