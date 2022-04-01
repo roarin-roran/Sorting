@@ -1,5 +1,5 @@
-#from rpython.rlib.rarithmetic import ovfcheck
-#from rpython.rlib.objectmodel import specialize
+from rpython.rlib.rarithmetic import ovfcheck
+from rpython.rlib.objectmodel import specialize
 
 
 ## ------------------------------------------------------------------------
@@ -112,7 +112,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
         def binarysort(self, a, sorted=1):
             abase = a.base
             alist = a.list
-            for start in range(a.base + sorted, a.base + a.len):
+            for start in xrange(a.base + sorted, a.base + a.len):
                 # set l to where list[start] belongs
                 l = abase
                 r = start
@@ -133,7 +133,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                 # that if there are elements equal to pivot, l points to the
                 # first slot after them -- that's why this sort is stable.
                 # Slide over to make room.
-                for p in range(start, l, -1):
+                for p in xrange(start, l, -1):
                     setitem(alist, p, getitem(alist, p-1))
                 setitem(alist, l, pivot)
 
@@ -161,14 +161,14 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                 n = 2
                 if self.lt(a.getitem(a.base + 1), a.getitem(a.base)):
                     descending = True
-                    for p in range(a.base + 2, a.base + a.len):
+                    for p in xrange(a.base + 2, a.base + a.len):
                         if self.lt(a.getitem(p), a.getitem(p-1)):
                             n += 1
                         else:
                             break
                 else:
                     descending = False
-                    for p in range(a.base + 2, a.base + a.len):
+                    for p in xrange(a.base + 2, a.base + a.len):
                         if self.lt(a.getitem(p), a.getitem(p-1)):
                             break
                         else:
@@ -198,10 +198,10 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
         # the two cases.  (This is actually needed for technical reasons: the
         # variable 'lower' must contain a known method, which is the case in each
         # specialized version but not in the unspecialized one.)
-        #@specialize.arg(4)
-        def gallopTrue(self, key, a, hint):#, rightmost):
+        @specialize.arg(4)
+        def gallop(self, key, a, hint, rightmost):
             assert 0 <= hint < a.len
-            if True:#rightmost:
+            if rightmost:
                 lower = self.le   # search for the largest k for which a[k] <= key
             else:
                 lower = self.lt   # search for the largest k for which a[k] < key
@@ -218,7 +218,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                     if lower(a.getitem(p + ofs), key):
                         lastofs = ofs
                         try:
-                            ofs = ofs << 1 #ovfcheck(ofs << 1)
+                            ofs = ovfcheck(ofs << 1)
                         except OverflowError:
                             ofs = maxofs
                         else:
@@ -243,78 +243,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                         # key <= a[hint - ofs]
                         lastofs = ofs
                         try:
-                            ofs = ofs << 1 # ovfcheck(ofs << 1)
-                        except OverflowError:
-                            ofs = maxofs
-                        else:
-                            ofs = ofs + 1
-                if ofs > maxofs:
-                    ofs = maxofs
-                # Translate back to positive offsets relative to a.
-                lastofs, ofs = hint-ofs, hint-lastofs
-
-            assert -1 <= lastofs < ofs <= a.len
-
-            # Now a[lastofs] < key <= a[ofs], so key belongs somewhere to the
-            # right of lastofs but no farther right than ofs.  Do a binary
-            # search, with invariant a[lastofs-1] < key <= a[ofs].
-
-            lastofs += 1
-            while lastofs < ofs:
-                m = lastofs + ((ofs - lastofs) >> 1)
-                if lower(a.getitem(a.base + m), key):
-                    lastofs = m+1   # a[m] < key
-                else:
-                    ofs = m         # key <= a[m]
-
-            assert lastofs == ofs         # so a[ofs-1] < key <= a[ofs]
-            return ofs
-
-        def gallopFalse(self, key, a, hint):#, rightmost):
-            assert 0 <= hint < a.len
-            if False: #rightmost:
-                lower = self.le   # search for the largest k for which a[k] <= key
-            else:
-                lower = self.lt   # search for the largest k for which a[k] < key
-
-            p = a.base + hint
-            lastofs = 0
-            ofs = 1
-            if lower(a.getitem(p), key):
-                # a[hint] < key -- gallop right, until
-                #     a[hint + lastofs] < key <= a[hint + ofs]
-
-                maxofs = a.len - hint     # a[a.len-1] is highest
-                while ofs < maxofs:
-                    if lower(a.getitem(p + ofs), key):
-                        lastofs = ofs
-                        try:
-                            ofs = ofs << 1 #ovfcheck(ofs << 1)
-                        except OverflowError:
-                            ofs = maxofs
-                        else:
-                            ofs = ofs + 1
-                    else:  # key <= a[hint + ofs]
-                        break
-
-                if ofs > maxofs:
-                    ofs = maxofs
-                # Translate back to offsets relative to a.
-                lastofs += hint
-                ofs += hint
-
-            else:
-                # key <= a[hint] -- gallop left, until
-                #     a[hint - ofs] < key <= a[hint - lastofs]
-                maxofs = hint + 1   # a[0] is lowest
-                while ofs < maxofs:
-                    if lower(a.getitem(p - ofs), key):
-                        break
-                    else:
-                        # key <= a[hint - ofs]
-                        lastofs = ofs
-                        try:
-                            ofs = ofs << 1 # ovfcheck(ofs << 1)
+                            ofs = ovfcheck(ofs << 1)
                         except OverflowError:
                             ofs = maxofs
                         else:
@@ -423,9 +352,9 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                         min_gallop -= min_gallop > 1
                         self.min_gallop = min_gallop
 
-                        acount = self.gallopTrue(b.getitem(b.base), a, hint=0)#,
-                                             #rightmost=True)
-                        for p in range(a.base, a.base + acount):
+                        acount = self.gallop(b.getitem(b.base), a, hint=0,
+                                             rightmost=True)
+                        for p in xrange(a.base, a.base + acount):
                             self.setitem(dest, a.getitem(p))
                             dest += 1
                         a.advance(acount)
@@ -440,9 +369,9 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                         if b.len == 0:
                             return
 
-                        bcount = self.gallopFalse(a.getitem(a.base), b, hint=0)#,
-                                             #rightmost=False)
-                        for p in range(b.base, b.base + bcount):
+                        bcount = self.gallop(a.getitem(a.base), b, hint=0,
+                                             rightmost=False)
+                        for p in xrange(b.base, b.base + bcount):
                             self.setitem(dest, b.getitem(p))
                             dest += 1
                         b.advance(bcount)
@@ -464,10 +393,10 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                 # The last element of a belongs at the end of the merge, so we copy
                 # the remaining elements of b before the remaining elements of a.
                 assert a.len >= 0 and b.len >= 0
-                for p in range(b.base, b.base + b.len):
+                for p in xrange(b.base, b.base + b.len):
                     self.setitem(dest, b.getitem(p))
                     dest += 1
-                for p in range(a.base, a.base + a.len):
+                for p in xrange(a.base, a.base + a.len):
                     self.setitem(dest, a.getitem(p))
                     dest += 1
 
@@ -531,9 +460,9 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                         self.min_gallop = min_gallop
 
                         nextb = b.getitem(b.base + b.len - 1)
-                        k = self.gallopTrue(nextb, a, hint=a.len-1)#, rightmost=True)
+                        k = self.gallop(nextb, a, hint=a.len-1, rightmost=True)
                         acount = a.len - k
-                        for p in range(a.base + a.len - 1, a.base + k - 1, -1):
+                        for p in xrange(a.base + a.len - 1, a.base + k - 1, -1):
                             dest -= 1
                             self.setitem(dest, a.getitem(p))
                         a.len -= acount
@@ -546,9 +475,9 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                             return
 
                         nexta = a.getitem(a.base + a.len - 1)
-                        k = self.gallopFalse(nexta, b, hint=b.len-1)#, rightmost=False)
+                        k = self.gallop(nexta, b, hint=b.len-1, rightmost=False)
                         bcount = b.len - k
-                        for p in range(b.base + b.len - 1, b.base + k - 1, -1):
+                        for p in xrange(b.base + b.len - 1, b.base + k - 1, -1):
                             dest -= 1
                             self.setitem(dest, b.getitem(p))
                         b.len -= bcount
@@ -573,10 +502,10 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                 # The last element of a belongs at the end of the merge, so we copy
                 # the remaining elements of a and then the remaining elements of b.
                 assert a.len >= 0 and b.len >= 0
-                for p in range(a.base + a.len - 1, a.base - 1, -1):
+                for p in xrange(a.base + a.len - 1, a.base - 1, -1):
                     dest -= 1
                     self.setitem(dest, a.getitem(p))
-                for p in range(b.base + b.len - 1, b.base - 1, -1):
+                for p in xrange(b.base + b.len - 1, b.base - 1, -1):
                     dest -= 1
                     self.setitem(dest, b.getitem(p))
 
@@ -594,15 +523,15 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
 
             # Where does b start in a?  Elements in a before that can be
             # ignored (already in place).
-            k = self.gallopTrue(b.getitem(b.base), a, hint=0)#, rightmost=True)
+            k = self.gallop(b.getitem(b.base), a, hint=0, rightmost=True)
             a.advance(k)
             if a.len == 0:
                 return
 
             # Where does a end in b?  Elements in b after that can be
             # ignored (already in place).
-            b.len = self.gallopFalse(a.getitem(a.base+a.len-1), b, hint=b.len-1)#,
-                                #rightmost=False)
+            b.len = self.gallop(a.getitem(a.base+a.len-1), b, hint=b.len-1,
+                                rightmost=False)
             if b.len == 0:
                 return
 
@@ -748,18 +677,3 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
     return TimSort
 
 TimSort = make_timsort_class() #backward compatible interface
-
-
-def sort(l):
-	#print("running powersort")
-	TimSort(l).sort()
-
-if __name__ == "__main__":
-	A = [1,3,5,64,34123.34,6734,3,.263]
-	print(A)
-	sort(A)
-	print(A)
-
-
-
-
