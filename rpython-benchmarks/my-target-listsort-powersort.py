@@ -303,7 +303,8 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
             #
             # so we could cut the storage for this, but it's a minor amount,
             # and keeping all the info explicit simplifies the code.
-            self.pending = []
+            self.pending = [] 
+            #    XXX should try [ListSlice(None,0,0)] * 85 # allocate with fixed size as in CPython
 
         # Merge the slice "a" with the slice "b" in a stable way, in-place.
         # a.len and b.len must be > 0, and a.base + a.len == b.base.
@@ -633,6 +634,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
             self.list = list
             self.base = base
             self.len  = len
+            self.power = 0 # invalid value that is overwritten later; allocate it here so all objects have the field
 
         def __repr__(self):
             return "<ListSlice base=%s len=%s %s>" % (
@@ -708,7 +710,7 @@ class WrapperSort(TimSort):
 
 
 
-use_wrapped_list = False
+use_wrapped_list = True
 
 
 from pyflate_list import *

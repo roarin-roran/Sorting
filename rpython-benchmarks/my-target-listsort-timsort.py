@@ -684,7 +684,7 @@ class WrapperSort(TimSort):
 
 
 
-use_wrapped_list = False
+use_wrapped_list = True
 
 
 from pyflate_list import *
