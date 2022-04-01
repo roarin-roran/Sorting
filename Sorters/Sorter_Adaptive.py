@@ -5,22 +5,25 @@ from Support import ListSlice
 class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
     def __init__(self, input_list, k,
                  merger_ipq_init=False,
-                 merger_init=False):
-        super().__init__(input_list, k, merger_ipq_init, merger_init)
+                 merger_init=False,
+                 test_mode=False):
+        super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)
 
-    # sorts the input
     def sort(self):
-        return self.merge_sort_k_run_detection()
-
-    # a k way merge sorter using runs detected as a prepossessing step
-    def merge_sort_k_run_detection(self):
+        """sorts the input using a bottom up k-way run adaptive merge sort. runs are detected as a pre-processing step,
+        then merged k at a time until one run remains, with no """
         runs = self.detect_runs()
 
+        # while multiple runs remain
         while len(runs) > 1:
             block_number = 0
 
             # while we haven't overshot the last block
             while block_number < len(runs):
+                # test for a single block run - this is already merged.
+                if block_number + 1 == len(runs):
+                    break
+
                 # put all the runs for this block in a list, removing them from the main run list
                 this_block_runs = []
                 for run_number in range(block_number, min(block_number + self.k, len(runs))):
@@ -33,7 +36,8 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
 
                 # merge, using an external merger object
                 our_merger = self.merger_init(this_block_runs, this_block_write_list_slice,
-                                              merger_ipq_init=self.merger_ipq_init)
+                                              merger_ipq_init=self.merger_ipq_init,
+                                              test_mode=self.test_mode)
                 our_merger.merge()
 
                 # insert the new run in place of the old
@@ -43,23 +47,27 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
 
             self.read_ping_write_pong = not self.read_ping_write_pong
 
+        # if the sorted and original lists are different, copy the sorted list into the original list
         read_list = self.get_read_list()
-        for i in range(len(self.input_list)):
-            self.input_list[i] = read_list[i]
+        if read_list != self.input_list:
+            for i in range(len(self.input_list)):
+                self.input_list[i] = read_list[i]
 
         return self.input_list
 
-    # detects runs, returning a list of list slices - each of the one run
     def detect_runs(self):
+        """detects runs, returning them as a list of list slices"""
         runs = []
 
         run_start = 0
         last_element_current_run = self.input_list[0]
         read_list = self.get_read_list()
 
+        # for every input element
         for index in range(len(self.input_list)):
             element = self.input_list[index]
 
+            # if it breaks the run, start a new one
             if element < last_element_current_run:
                 runs.append(ListSlice.ListSlice(read_list, run_start, index))
                 # start of the next run
