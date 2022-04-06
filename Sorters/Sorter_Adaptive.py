@@ -78,3 +78,10 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
         runs.append(ListSlice.ListSlice(read_list, run_start, len(self.input_list)))
 
         return runs
+
+
+# sorts the input
+def sort(input_list, k=2):
+    """creates a sorter object and calls the sort method"""
+    sorter = Sorter_PingPong_Adaptive(input_list, k)
+    sorter.sort()

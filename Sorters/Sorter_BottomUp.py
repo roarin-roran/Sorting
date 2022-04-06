@@ -73,3 +73,10 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
                 self.input_list[i] = read_list[i]
 
         return self.input_list
+
+
+# sorts the input
+def sort(input_list, k=2):
+    """creates a sorter object and calls the sort method"""
+    sorter = Sorter_PingPong_BottomUp(input_list, k)
+    sorter.sort()
