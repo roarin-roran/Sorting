@@ -1,19 +1,25 @@
 # probably needs a better name and some structure.. eventually.
 # for now, will use this file to drop misc experimental helper functions
-import random
+from random import Random
 from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods
 
+
+# From main repo repository run
+# pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=2)'
 
 # pypy3 -m pyperf timeit --rigorous -v  -s  'import Experiments' 'run()'
 # in c:\Users\sgbsmit5\PycharmProjects\Sorting run:
 # C:\Users\sgbsmit5\pypy3.9-v7.3.9-win64\pypy3 -m pyperf timeit --rigorous -v  -s  "import Experiments.Experiments" "Experiments.Experiments.run()"
 
 
-def sort_random_input(input_size, sorter_init, k=2, seed=72, test_mode=False):
+
+def sort_random_input(input_size, sorter_init, k=2, seed=32785623, test_mode=False):
     # make a random input of the desired length
+    random = Random()
     random.seed(seed)
     random_input = list(range(input_size))
     random.shuffle(random_input)
+
 
     # sort it with the desired input and settings
     sorter = sorter_init(random_input, k, test_mode)
@@ -22,6 +28,7 @@ def sort_random_input(input_size, sorter_init, k=2, seed=72, test_mode=False):
 
 def sort_random_input_2(input_size, sorter, repetitions=100, k=2, seed=72, test_mode=False):
     # make a random input of the desired length
+    random = Random()
     random.seed(seed)
     random_input = list(range(input_size))
 
