@@ -692,6 +692,7 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
             self.list = list
             self.base = base
             self.len  = len
+            self.power = -42
 
         def __repr__(self):
             return "<ListSlice base=%s len=%s %s>" % (
