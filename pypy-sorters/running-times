@@ -1,3 +1,32 @@
+## kway speedups
+
+### bottom-up mergesort
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=2)'
+Mean +- std dev: 1.60 sec +- 0.01 sec
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=3)'
+Mean +- std dev: 1.21 sec +- 0.01 sec
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=4)'
+Mean +- std dev: 1.05 sec +- 0.01 sec
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=8)'
+Mean +- std dev: 959 ms +- 4 ms
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=16)'
+Mean +- std dev: 957 ms +- 5 ms
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=32)'
+Mean +- std dev: 937 ms +- 4 ms
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=64)'
+Mean +- std dev: 914 ms +- 6 ms
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=128)'
+Mean +- std dev: 927 ms +- 3 ms
+
+
 ## Running Python
 
 ### times on sleeky
@@ -63,6 +92,18 @@ Mean +- std dev: 11.9 ms +- 0.1 ms
 
 python3 -m pyperf timeit --rigorous -v  -s 'import pyflate_list' 'pyflate_list.babysort_pyflate_list()'
 Mean +- std dev: 1.45 sec +- 0.01 sec
+
+
+#### on TimDrag
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v  -s 'import timdrag_list; import listsort_powersort' 'listsort_powersort.sort(timdrag_list.timdrag_list)'
+Mean +- std dev: 740 us +- 42 us
+Mean +- std dev: 731 us +- 8 us
+
+/LOCAL/swild/pypy3.9-v7.3.8-linux64/bin/pypy3 -m pyperf timeit --rigorous -v  -s 'import timdrag_list; import listsort_timsort' 'listsort_timsort.sort(timdrag_list.timdrag_list)'
+Mean +- std dev: 795 us +- 3 us
+
+
 
 
 ## Running RPython implementations directly
