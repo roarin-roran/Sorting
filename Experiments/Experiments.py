@@ -8,9 +8,18 @@ from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods
 # pypy3 -m pyperf timeit --rigorous -v -s 'import Experiments.Experiments as exp' 'exp.run_bottom_up(n=1000000, repetitions=1, k=2)'
 
 # pypy3 -m pyperf timeit --rigorous -v  -s  'import Experiments' 'run()'
-# in c:\Users\sgbsmit5\PycharmProjects\Sorting run:
-# C:\Users\sgbsmit5\pypy3.9-v7.3.9-win64\pypy3 -m pyperf timeit --rigorous -v  -s  "import Experiments.Experiments" "Experiments.Experiments.run()"
 
+# on ben's uni laptop:
+# in:
+#   C:\Users\sgbsmit5\PycharmProjects\Sorting
+# run:
+#   C:\Users\sgbsmit5\pypy3.9-v7.3.9-win64\pypy3 -m pyperf timeit --rigorous -v  -s  "import Experiments.Experiments" "Experiments.Experiments.run()"
+
+# on ben's home PC:
+# in:
+#   C:\Users\carri\Documents\GitHub\Sorting>
+# run:
+#   C:\Users\carri\pypy\pypy -m pyperf timeit --rigorous -v  -s  "import Experiments.Experiments" "Experiments.Experiments.run_bottom_up(10000, 1, 4)"
 
 
 def sort_random_input(input_size, sorter_init, k=2, seed=32785623, test_mode=False):
