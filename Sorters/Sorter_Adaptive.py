@@ -1,6 +1,5 @@
 from Sorters import Sorter_PingPong
 from Support import ListSlice
-import copy
 
 
 class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
