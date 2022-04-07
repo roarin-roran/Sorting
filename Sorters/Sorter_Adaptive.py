@@ -25,7 +25,6 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
                 if block_number + 1 == len(runs):
                     break
 
-                # todo - initialise this_block_runs instead of appending to it
                 # todo - setup ping pong here for the runs array, copying existing code.
                 # array length is going to reduce as we go - need an "end of array" value recorded for end of the
                 # sensible bit
@@ -61,6 +60,11 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
                 self.input_list[i] = read_list[i]
 
         return self.input_list
+
+    def sort_2(self):
+        # todo - finish me
+        self.read_runs = self.detect_runs()
+        self.write_runs = self.read_runs.copy()
 
     def detect_runs(self):
         """detects runs, returning them as a list of list slices"""
