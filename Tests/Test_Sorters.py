@@ -134,7 +134,7 @@ class Test_Sorters(unittest.TestCase):
                 sorter.sort()
 
                 # check sortedness
-                self.assertEqual(random_input, sorted_input)
+                self.assertEqual(sorted_input, random_input)
 
     def sort_single_element(self):
         """tests that a sorter can handle the trivial input of a single character. note that this should NOT be special
@@ -147,7 +147,7 @@ class Test_Sorters(unittest.TestCase):
         sorter.sort()
 
         # check sortedness
-        self.assertEqual(random_input, sorted_input)
+        self.assertEqual(sorted_input, random_input)
 
         # assure that no mergers or merger ipqs are used for this input
         self.assertFalse(os.path.isfile("test_options_merger_ipq.txt")), "a merger ipq was used for a single element"
