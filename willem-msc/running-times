@@ -1,3 +1,155 @@
+# on sgwcawle
+
+
+## With runs
+
+Experiment std::sort 
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 1
+Elapsed time: 4.69795 s
+Average elapsed time:0.469795 s
+Merge cost = 0
+Average merge cost = 0
+
+Experiment std::Stable_sort 
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 1
+Elapsed time: 4.58066 s
+Average elapsed time:0.458066 s
+Merge cost = 0
+Average merge cost = 0
+
+experiment Powersort Buffer Insertion
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 1
+Elapsed time: 3.98981 s
+Average elapsed time:0.398981 s
+Merge cost = 1130084383
+Average merge cost = 113008438
+
+experiment Powersort4 Buffer Insertion 2
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 1
+Elapsed time: 3.28986 s
+Average elapsed time:0.328986 s
+Merge cost = 638525977
+Average merge cost = 63852597
+
+experiment Powersort4 Buffer Insertion
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 1
+Elapsed time: 3.28548 s
+Average elapsed time:0.328548 s
+Merge cost = 638512934
+Average merge cost = 63851293
+
+Experiment Peeksort Insertion 
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 1
+Elapsed time: 4.00879 s
+Average elapsed time:0.400879 s
+Merge cost = 1124952108
+Average merge cost = 112495210
+
+Experiment Peeksort4way Insertion 
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 1
+Elapsed time: 3.35902 s
+Average elapsed time:0.335902 s
+Merge cost = 620034025
+Average merge cost = 62003402
+
+
+## Without runs
+
+Experiment std::sort 
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 0
+Elapsed time: 6.32764 s
+Average elapsed time:0.632764 s
+Merge cost = 0
+Average merge cost = 0
+
+Experiment std::Stable_sort 
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 0
+Elapsed time: 7.85796 s
+Average elapsed time:0.785796 s
+Merge cost = 0
+Average merge cost = 0
+
+experiment Powersort Buffer Insertion
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 0
+Elapsed time: 8.62318 s
+Average elapsed time:0.862318 s
+Merge cost = 1874170960
+Average merge cost = 187417096
+
+experiment Powersort4 Buffer Insertion 2
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 0
+Elapsed time: 8.30095 s
+Average elapsed time:0.830095 s
+Merge cost = 1040837200
+Average merge cost = 104083720
+
+experiment Powersort4 Buffer Insertion
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 0
+Elapsed time: 8.44983 s
+Average elapsed time:0.844983 s
+Merge cost = 1040838000
+Average merge cost = 104083800
+
+Experiment Peeksort Insertion 
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 0
+Elapsed time: 7.67187 s
+Average elapsed time:0.767187 s
+Merge cost = 1900000000
+Average merge cost = 190000000
+
+Experiment Peeksort4way Insertion 
+size of vectors = 10000000
+number of vectors =10
+range of ints = -2147483648 to 2147483646
+Runs = 0
+Elapsed time: 6.80788 s
+Average elapsed time:0.680788 s
+Merge cost = 1000000000
+Average merge cost = 100000000
+
+
+
+# on sleeky
+
 ## With runs
 
 for x in s S p P Q e E ; do ./a.out $x && echo "" && echo "" ; done
