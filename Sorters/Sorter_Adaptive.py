@@ -16,56 +16,9 @@ class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
         self.runs_read_ping_write_pong = True
 
     def sort(self):
-        """sorts the input using a bottom up k-way run adaptive merge sort. runs are detected as a pre-processing step,
-        then merged k at a time until one run remains, with no """
-        runs = self.runs_ping
+        """sorts the input using a bottom up k-way run adaptive merge sort. runs are detected as an external
+        pre-processing step, then merged k at a time until one run remains. which runs to merge is approached naively"""
 
-        # while multiple runs remain
-        while len(runs) > 1:
-            block_number = 0
-
-            # while we haven't overshot the last block
-            while block_number < len(runs):
-                # test for a single block run - this is already merged.
-                if block_number + 1 == len(runs):
-                    break
-
-                # array length is going to reduce as we go - need an "end of array" value recorded for end of the
-                # sensible bit
-
-                # put all the runs for this block in a list, removing them from the main run list
-
-                this_block_runs = [runs[0]]*(min(block_number + self.k, len(runs)) - block_number)
-                for i in range(len(this_block_runs)):
-                    this_block_runs[i] = runs.pop(block_number)
-
-                # get a list slice for the merger to write to
-                write_start = this_block_runs[0].start
-                write_end = this_block_runs[-1].end
-                this_block_write_list_slice = ListSlice.ListSlice(self.get_write_list(), write_start, write_end)
-
-                # merge, using an external merger object
-                our_merger = self.merger_init(this_block_runs, this_block_write_list_slice,
-                                              merger_ipq_init=self.merger_ipq_init,
-                                              test_mode=self.test_mode)
-                our_merger.merge()
-
-                # insert the new run in place of the old
-                runs.insert(block_number, this_block_write_list_slice)
-
-                block_number += 1
-
-            self.read_ping_write_pong = not self.read_ping_write_pong
-
-        # if the sorted and original lists are different, copy the sorted list into the original list
-        read_list = self.get_read_list()
-        if read_list != self.input_list:
-            for i in range(len(self.input_list)):
-                self.input_list[i] = read_list[i]
-
-        return self.input_list
-
-    def sort_new(self):
         # initialise these, as they're used before they would otherwise be set
         num_read_runs = len(self.get_runs_read_list())
         num_write_runs = len(self.get_runs_write_list())

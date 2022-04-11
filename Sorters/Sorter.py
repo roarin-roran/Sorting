@@ -26,10 +26,10 @@ class Sorter:
     # sorts the input
     def sort(self):
         """put the list in sorted order with some method"""
-        raise NotImplementedError("sort is not implemented")
+        raise NotImplementedError("sort(internal) is not implemented")
 
 
 # sorts the input
 def sort(self, input_list, k=2):
     """creates a sorter object and calls the sort method"""
-    raise NotImplementedError("sort is not implemented")
+    raise NotImplementedError("sort(external) is not implemented")
