@@ -14,6 +14,65 @@ from rpython.rlib.rarithmetic import ovfcheck
 from rpython.rlib.objectmodel import specialize
 
 
+def nocheck_getitem(l, i):
+    return l[i]
+
+def nocheck_setitem(l, i, v):
+    l[i] = v
+
+## ------------------------------------------------------------------------
+## really weird rpython plugin stuff, don't look at this
+
+from rpython.rtyper import extregistry
+from rpython.annotator import model as annmodel
+from rpython.tool.pairtype import pairtype
+from rpython.annotator.bookkeeper import getbookkeeper
+
+class Entry(extregistry.ExtRegistryEntry):
+    _about_ = nocheck_getitem
+
+    def compute_result_annotation(self, s_lst, s_int):
+        position = getbookkeeper().position_key
+        return s_lst.listdef.read_item(position)
+
+    def specialize_call(self, hop):
+        from rpython.rtyper.lltypesystem import lltype
+        hop.exception_cannot_occur()
+        r_list = hop.args_r[0]
+        T = r_list.lowleveltype
+        v_items, v_index = hop.inputargs(*hop.args_r)
+        if hasattr(T.TO, "items"):
+            cname = hop.inputconst(lltype.Void, "items")
+            v_items = hop.genop(
+                    'getfield', [v_items, cname], resulttype=T.TO.items)
+            T = T.TO.items
+        return r_list.recast(hop.llops, hop.genop('getarrayitem',
+                [v_items, v_index], resulttype=T.TO.OF))
+
+
+class Entry(extregistry.ExtRegistryEntry):
+    _about_ = nocheck_setitem
+
+    def compute_result_annotation(self, s_lst, s_int, s_value):
+        s_lst.listdef.mutate()
+        s_lst.listdef.generalize(s_value)
+
+    def specialize_call(self, hop):
+        from rpython.rtyper.lltypesystem import lltype
+        hop.exception_cannot_occur()
+        r_list = hop.args_r[0]
+        T = r_list.lowleveltype
+        v_items, v_index, v_value = hop.inputargs(r_list, lltype.Signed, r_list.item_repr)
+        if hasattr(T.TO, "items"):
+            cname = hop.inputconst(lltype.Void, "items")
+            v_items = hop.genop(
+                    'getfield', [v_items, cname], resulttype=T.TO.items)
+        return hop.genop('setarrayitem', [v_items, v_index, v_value])
+
+
+
+
+
 ## ------------------------------------------------------------------------
 ## Lots of code for an adaptive, stable, natural mergesort.  There are many
 ## pieces to this algorithm; read listsort.txt for overviews and details.
@@ -67,12 +126,10 @@ def make_timsort_class(getitem=None, setitem=None, length=None,
                        getitem_slice=None, lt=None, powersort=False):
 
     if getitem is None:
-        def getitem(list, item):
-            return list[item]
+        getitem = nocheck_getitem
 
     if setitem is None:
-        def setitem(list, item, value):
-            list[item] = value
+        setitem = nocheck_setitem
 
     if length is None:
         def length(list):
