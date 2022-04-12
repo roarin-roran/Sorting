@@ -754,7 +754,7 @@ def entry_point(argv):
             TimSort(l).sort()
             s += l[-42]
     elif variant == "timsort-wrapped":
-        print("Running Powersort on wrapped pyflate list")
+        print("Running TimSort on wrapped pyflate list")
         for rep in range(runs):
             l = pyflate_list[:]
             TimSortWrapped(l).sort()
