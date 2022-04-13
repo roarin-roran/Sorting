@@ -27,9 +27,9 @@ class MergerIPQ_LoserTree(MergerIPQ.MergerIPQ):
 
         # first node only has one child - special case it
         posn = 0
-        keep_sinking = self.first_larger(0, 1)
+        keep_sinking = self._first_larger(0, 1)
         if keep_sinking:
-            self.swap_nodes(0, 1)
+            self._swap_nodes(0, 1)
             posn = 1
 
         while keep_sinking:
@@ -41,7 +41,7 @@ class MergerIPQ_LoserTree(MergerIPQ.MergerIPQ):
 
             both_children_valid = right_child < self.n
             if both_children_valid:
-                if self.first_larger(left_child, right_child):
+                if self._first_larger(left_child, right_child):
                     favoured_child = right_child
                 # else use default value
             else:
@@ -52,13 +52,13 @@ class MergerIPQ_LoserTree(MergerIPQ.MergerIPQ):
 
             # if we're still going, test current node against favoured child and sink if possible.
             if keep_sinking:
-                if self.first_larger(posn, favoured_child):
-                    self.swap_nodes(posn, favoured_child)
+                if self._first_larger(posn, favoured_child):
+                    self._swap_nodes(posn, favoured_child)
                     posn = favoured_child
                 else:
                     keep_sinking = False
 
-    def first_larger(self, first_index, second_index) -> bool:
+    def _first_larger(self, first_index, second_index) -> bool:
         """returns true if the first valid tournament index is larger, false otherwise. """
         # if the challenger is larger on priority
         if self.priorities[self.loser_tree[first_index]] > self.priorities[self.loser_tree[second_index]]:
@@ -73,7 +73,7 @@ class MergerIPQ_LoserTree(MergerIPQ.MergerIPQ):
             else:
                 return False
 
-    def swap_nodes(self, first_index, second_index):
+    def _swap_nodes(self, first_index, second_index):
         """swaps two nodes in the loser tree"""
         temp = self.loser_tree[first_index]
         self.loser_tree[first_index] = self.loser_tree[second_index]

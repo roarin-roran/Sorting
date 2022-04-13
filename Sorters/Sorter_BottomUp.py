@@ -20,7 +20,7 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
 
         # while the array isn't sorted
         while run_length < self.input_length:
-            read_list = self.get_read_list()
+            read_list = self._get_read_list()
 
             # a block consists of k runs, and is merged in a single step
             number_of_blocks = math.ceil(self.input_length / (self.k * run_length))
@@ -32,7 +32,7 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
                 # if there's only going to be one run in this block, just copy the run from the read list to the write
                 # list
                 if run_start + run_length >= self.input_length:
-                    write_list = self.get_write_list()
+                    write_list = self._get_write_list()
 
                     posn = run_start
                     while posn < self.input_length:
@@ -53,7 +53,7 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
                     if run_start >= self.input_length:
                         break
 
-                write_list_slice = ListSlice.ListSlice(self.get_write_list(), runs[0].start, runs[-1].end)
+                write_list_slice = ListSlice.ListSlice(self._get_write_list(), runs[0].start, runs[-1].end)
 
                 # merge, using an external merger object
                 our_merger = self.merger_init(runs, write_list_slice,
@@ -67,7 +67,7 @@ class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
             run_length *= self.k
 
         # copy the correct answer back into the input list if these lists differ
-        read_list = self.get_read_list()
+        read_list = self._get_read_list()
         if read_list != self.input_list:
             for i in range(len(self.input_list)):
                 self.input_list[i] = read_list[i]

@@ -22,20 +22,7 @@ from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods
 #   C:\Users\carri\pypy\pypy -m pyperf timeit --rigorous -v  -s  "import Experiments.Experiments" "Experiments.Experiments.run_bottom_up(10000, 1, 4)"
 
 
-def sort_random_input(input_size, sorter_init, k=2, seed=32785623, test_mode=False):
-    # make a random input of the desired length
-    random = Random()
-    random.seed(seed)
-    random_input = list(range(input_size))
-    random.shuffle(random_input)
-
-
-    # sort it with the desired input and settings
-    sorter = sorter_init(random_input, k, test_mode)
-    sorter.sort()
-
-
-def sort_random_input_2(input_size, sorter, repetitions=100, k=2, seed=72, test_mode=False):
+def sort_random_input(input_size, sorter, repetitions=100, k=2, seed=72, test_mode=False):
     # make a random input of the desired length
     random = Random()
     random.seed(seed)
@@ -51,11 +38,11 @@ def sort_random_input_2(input_size, sorter, repetitions=100, k=2, seed=72, test_
 # usage guide
 
 def run_adaptive(n=100000, repetitions=1, k=4, seed=86438564):
-    sort_random_input_2(n, Sorter_Adaptive, repetitions=repetitions, k=k, seed=seed)
+    sort_random_input(n, Sorter_Adaptive, repetitions=repetitions, k=k, seed=seed)
 
 
 def run_bottom_up(n=100000, repetitions=1, k=4, seed=86438564):
-    sort_random_input_2(n, Sorter_BottomUp, repetitions=repetitions, k=k, seed=seed)
+    sort_random_input(n, Sorter_BottomUp, repetitions=repetitions, k=k, seed=seed)
 
 # current best sorter - bottom up adaptive sorter using the loser tree
 # sort_random_input(100000, Sorter_Adaptive.Sorter_PingPong_Adaptive, k=4, seed=101)

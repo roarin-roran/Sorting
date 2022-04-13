@@ -20,14 +20,14 @@ class Sorter_PingPong(Sorter.Sorter, ABC):
         self.read_ping_write_pong = True
 
     # read and write lists change - returns the internal list being read from
-    def get_read_list(self):
+    def _get_read_list(self):
         if self.read_ping_write_pong:
             return self.ping
         else:
             return self.pong
 
     # read and write list change - returns the internal list being written to
-    def get_write_list(self):
+    def _get_write_list(self):
         if self.read_ping_write_pong:
             return self.pong
         else:
