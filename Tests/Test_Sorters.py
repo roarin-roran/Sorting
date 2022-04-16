@@ -137,7 +137,8 @@ class Test_Sorters(unittest.TestCase):
 
     def _sort_single_element(self):
         """tests that a sorter can handle the trivial input of a single character. note that this should NOT be special
-        cased - the potential flaw we're checking for here is the creation of a merger"""
+        cased - the potential flaw we're checking for here is the creation of a merger for an input that doesn't need
+        one"""
         random_input = [1]
         sorted_input = [1]
         sorter = self.sorter_init(sorted_input, 2, merger_ipq_init=self.merger_ipq_init,

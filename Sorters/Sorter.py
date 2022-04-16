@@ -15,7 +15,7 @@ class Sorter:
         self.k = k
         self.merger_ipq_init = merger_ipq_init
 
-        # if no sorter is selected, use a default
+        # if no merger is selected, use a default
         if merger_init:
             self.merger_init = merger_init
         else:
