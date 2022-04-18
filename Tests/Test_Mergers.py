@@ -66,7 +66,6 @@ class Test_Mergers(unittest.TestCase):
                                             override_merger_init=merger_init)
 
         self._merge_two(merger_init, merger_ipq_init)
-
         self._merge_three_variable_lengths(merger_init, merger_ipq_init)
         # check that the desired merger was used and no other merger was used
         self.check_correct_merger_used(merger_init)
@@ -83,7 +82,7 @@ class Test_Mergers(unittest.TestCase):
                                  test_mode=True)
         our_merger.merge()
 
-        self.assertEqual(sorted(write_list_slice.list), write_list_slice.list)
+        self.assertEqual([0, 1, 2, 3], write_list_slice.list)
 
     def _merge_three_variable_lengths(self, merger_init, merger_ipq_init):
         """merges three inputs with different lengths"""
@@ -92,13 +91,20 @@ class Test_Mergers(unittest.TestCase):
         run_2 = ListSlice.ListSlice(three_runs, 1, 4)
         run_3 = ListSlice.ListSlice(three_runs, 4, 8)
 
-        write_list_slice = ListSlice.ListSlice([-1] * 7, 0, 7)
+        write_list_slice = ListSlice.ListSlice([-1] * 8, 0, 8)
 
         our_merger = merger_init([run_1, run_2, run_3], write_list_slice, merger_ipq_init=merger_ipq_init,
                                  test_mode=True)
         our_merger.merge()
 
-        self.assertEqual(sorted(write_list_slice.list), write_list_slice.list)
+        self.assertEqual([0, 1, 2, 3, 4, 5, 6, 7], write_list_slice.list)
+
+    def _merge_two_runs_short_long(self, merger_init, merger_ipq_init):
+        two_runs = [1, 2, 3, 4, 6, 7, 8, 5]
+        run_1 = ListSlice.ListSlice(two_runs, 0, 7)
+        run_2 = ListSlice.ListSlice(two_runs, 0, 7)
+
+        # todo - finish me
 
     def check_correct_merger_used(self, correct_merger_init):
         """checks that the correct merger is the only merger that's been used since the last wipe"""
