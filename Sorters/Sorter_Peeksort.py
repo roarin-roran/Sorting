@@ -2,10 +2,6 @@ from Sorters import Sorter
 from Support import ListSlice
 import random
 
-# todo: testing required:
-#       1. implement the merge stack, and automatically test that everything is merged exactly once.
-#       2. edge case: long run in the middle
-#       3. edge case: all sorted bar one element at one end (for safety, make two such cases)
 
 class Sorter_Peeksort(Sorter.Sorter):
     def __init__(self, input_list, k,
@@ -17,9 +13,7 @@ class Sorter_Peeksort(Sorter.Sorter):
     def sort(self):
         """put the list in sorted order using k way peeksort"""
 
-        # todo - detect the first and last run
         first_run_end = self._extend_run_right(0, len(self.input_list))
-        print("first run:", 0, first_run_end)
         last_run_start = self._extend_run_left(len(self.input_list) - 1, first_run_end)
 
         self._recursively_sort(0, first_run_end, last_run_start, len(self.input_list))
@@ -58,31 +52,28 @@ class Sorter_Peeksort(Sorter.Sorter):
 
                 # todo - do this with a function that returns the value to add to i for neatness
                 # 8. if any other m_i values are in this run: discard them, recurse on the dangly bit, merge the run
-                skip_runs = 0
+                m_values_to_skip = 0
                 # for all m values after the current one.
-                for j in range(i+1, len(m)):
+                for j in range(i + 1, len(m)):
                     if m[j] < r_i:
-                        print("\tSKIP element:", j + 1)
-                        print("\tcurrent element:", i)
-                        print("\tcurrent m:", m)
-                        skip_runs += 1
+                        m_values_to_skip += 1
                     else:
                         break
 
-                if skip_runs:
+                if m_values_to_skip:
+                    print("\n\tskipping", m_values_to_skip, "m values, because they're contained in this run.")
                     # increment i to skip the runs
-                    i += skip_runs
+                    i += m_values_to_skip
 
-                    # todo - this might not work perfectly in edge cases - test it more thoroughly
                     # if there's anything to recurse on
                     if next_input_start < l_i:
                         # recurse on the dangly bit (if it isn't just a run) and throw it on the merge stack
                         if next_first_run_end < l_i:
                             print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i)
-                        print("\t\tmerge:     ", next_input_start, l_i+1)
+                        print("\t\tmerge:     ", next_input_start, l_i + 1)
                     # throw the discovered run on the merge stack
                     print("\t\tmerge:     ", l_i, r_i)
-                    next_input_start = r_i
+                    next_input_start = r_i - 1
                     next_first_run_end = r_i
                 # 9. if not, it depends on whether m_i is closer to l_i or r_i
                 else:
@@ -91,8 +82,8 @@ class Sorter_Peeksort(Sorter.Sorter):
                         # recurse on the dangly bit (if it isn't just a run) and throw it on the merge stack
                         if next_first_run_end < l_i:
                             # end is l_i+1 because ends are exclusive
-                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i+1)
-                        print("\t\tmerge:     ", next_input_start, l_i+1)
+                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i + 1)
+                        print("\t\tmerge:     ", next_input_start, l_i + 1)
 
                         # this run defines the start of the new dangly bit
                         next_input_start = l_i
@@ -143,6 +134,8 @@ class Sorter_Peeksort(Sorter.Sorter):
         our_merger = self.merger_init(runs, ListSlice.ListSlice(self.input_list, input_start, input_end))
         our_merger.merge()
 
+    # todo - write this without a list slice for cheaper memory interactions
+    #   (try reducing the length of m at the beginning, then generating m_i values)
     def _generate_initial_m_values(self, first_run_end, last_run_start):
         # 2. create k-1 evenly spaced m_i values
         m = [0] * (self.k - 1)
@@ -197,18 +190,31 @@ def sort(input_list, k=2):
     our_peek_sorter.sort()
 
 
+# todo: convert most of these into additional formal tests in test_sorter
+
+# todo: testing required:
+#       1. implement the merge stack, and automatically test that everything is merged exactly once.
+#       2. edge case: long run in the middle
+#       3. edge case: all sorted bar one element at one end (for safety, make two such cases)
+
+
+# trivial, unsorted inputs
 input_1 = [4, 3, 2, 1]
 input_2 = [4, 3, 2, 1, 5, 7, 6, 8]
+# fully sorted input
 input_3 = [1, 2, 3, 4, 5, 6, 7, 8]
 
+# reproducible, random input
 input_4 = list(range(24))
 random.seed(12345678)
 random.shuffle(input_4)
 
-our_input = input_3
+# edge case: long run in the middle of an input, with random stuff on either side (intended for use with k=2 and k=4)
+input_5 = [4, 2, 3, 1, 5, 6, 7, 8, 11, 12, 10, 9]
+
+# choose an input
+our_input = input_5
 
 print("sorting:", our_input)
-sort(our_input, 5)
+sort(our_input, 4)
 print("sorted: ", our_input)
-
-
