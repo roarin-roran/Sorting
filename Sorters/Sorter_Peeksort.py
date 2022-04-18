@@ -3,6 +3,7 @@ from Support import ListSlice
 import random
 
 
+# todo: document conventions used wrt inclusive or exclusive parts of the list in function parameters
 class Sorter_Peeksort(Sorter.Sorter):
     def __init__(self, input_list, k,
                  merger_ipq_init=False,
@@ -21,6 +22,9 @@ class Sorter_Peeksort(Sorter.Sorter):
     # sorts the input
     def _recursively_sort(self, input_start, first_run_end, last_run_start, input_end):
         """recursively sort an input assumed to contain at least two runs"""
+        # todo - test for one big run as a step 0, and strip out higher level tests. this will make things shorter and
+        #  more readable
+
         # 1. test for and handle inputs with at most k inputs that aren't in known runs.
         #   (note that inputs where the first run overlaps the second are illegal)
         if last_run_start - first_run_end <= self.k:
@@ -69,7 +73,7 @@ class Sorter_Peeksort(Sorter.Sorter):
                     if next_input_start < l_i:
                         # recurse on the dangly bit (if it isn't just a run) and throw it on the merge stack
                         if next_first_run_end < l_i:
-                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i)
+                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i+1)
                         print("\t\tmerge:     ", next_input_start, l_i + 1)
                     # throw the discovered run on the merge stack
                     print("\t\tmerge:     ", l_i, r_i)
@@ -90,6 +94,7 @@ class Sorter_Peeksort(Sorter.Sorter):
                         next_first_run_end = r_i
                     else:
                         print("\tr_i is closer")
+                        # todo: see test 3 below (r_i without a dangly bit)
                         # recurse on both the dangly bit and the new run (there should always be a dangly bit)
                         print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, r_i)
                         print("\t\tmerge:     ", next_input_start, r_i)
@@ -119,6 +124,9 @@ class Sorter_Peeksort(Sorter.Sorter):
         return
 
     def _handle_trivial_input(self, input_start, first_run_end, last_run_start, input_end):
+        print("_handle_trivial_input called")
+        print("this method is currently broken as all hell - trust nothing south of here")
+
         # set the first element, while also building a list of the correct length and element type
         first_run = ListSlice.ListSlice(self.input_list, input_start, first_run_end)
         runs = [first_run] * (2 + (1 + last_run_start - first_run_end))
@@ -194,9 +202,8 @@ def sort(input_list, k=2):
 
 # todo: testing required:
 #       1. implement the merge stack, and automatically test that everything is merged exactly once.
-#       2. edge case: long run in the middle
-#       3. edge case: all sorted bar one element at one end (for safety, make two such cases)
-
+#       2. edge case: all sorted bar one element at one end (for safety, make two such cases)
+#       3. edge case: r_i is closer, but there's no dangly bit
 
 # trivial, unsorted inputs
 input_1 = [4, 3, 2, 1]
@@ -204,7 +211,7 @@ input_2 = [4, 3, 2, 1, 5, 7, 6, 8]
 # fully sorted input
 input_3 = [1, 2, 3, 4, 5, 6, 7, 8]
 
-# reproducible, random input
+# reproducible random input
 input_4 = list(range(24))
 random.seed(12345678)
 random.shuffle(input_4)
@@ -212,8 +219,15 @@ random.shuffle(input_4)
 # edge case: long run in the middle of an input, with random stuff on either side (intended for use with k=2 and k=4)
 input_5 = [4, 2, 3, 1, 5, 6, 7, 8, 11, 12, 10, 9]
 
+# edge case: mostly sorted inputs, with one unsorted character on the left or right
+# todo: fix, this case is broken (implying issues with _handle_trivial_cases). output: [1, 2, 3, 4, 5, 5, 6, 6]
+input_6 = [5, 1, 2, 3, 4, 6, 7, 8]
+# todo: fix, this case is broken (implying issues with _handle_trivial_cases). output: [1, 1, 1, 1, 1, 1, 1, 1]
+input_7 = [1, 2, 3, 4, 6, 7, 8, 5]
+
+
 # choose an input
-our_input = input_5
+our_input = input_7
 
 print("sorting:", our_input)
 sort(our_input, 4)
