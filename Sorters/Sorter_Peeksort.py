@@ -2,6 +2,10 @@ from Sorters import Sorter
 from Support import ListSlice
 import random
 
+# todo: testing required:
+#       1. implement the merge stack, and automatically test that everything is merged exactly once.
+#       2. edge case: long run in the middle
+#       3. edge case: all sorted bar one element at one end (for safety, make two such cases)
 
 class Sorter_Peeksort(Sorter.Sorter):
     def __init__(self, input_list, k,
@@ -14,7 +18,11 @@ class Sorter_Peeksort(Sorter.Sorter):
         """put the list in sorted order using k way peeksort"""
 
         # todo - detect the first and last run
-        self._recursively_sort(0, 0, len(self.input_list), len(self.input_list))
+        first_run_end = self._extend_run_right(0, len(self.input_list))
+        print("first run:", 0, first_run_end)
+        last_run_start = self._extend_run_left(len(self.input_list) - 1, first_run_end)
+
+        self._recursively_sort(0, first_run_end, last_run_start, len(self.input_list))
 
     # sorts the input
     def _recursively_sort(self, input_start, first_run_end, last_run_start, input_end):
@@ -22,7 +30,7 @@ class Sorter_Peeksort(Sorter.Sorter):
         # 1. test for and handle inputs with at most k inputs that aren't in known runs.
         #   (note that inputs where the first run overlaps the second are illegal)
         if last_run_start - first_run_end <= self.k:
-            self._handle_trivial_input(input_start, input_end, first_run_end, last_run_start)
+            self._handle_trivial_input(input_start, first_run_end, last_run_start, input_end)
         else:
             # find all m values outside of a known run, steps 2 and 3
             m = self._generate_initial_m_values(first_run_end, last_run_start)
@@ -68,9 +76,10 @@ class Sorter_Peeksort(Sorter.Sorter):
                     # todo - this might not work perfectly in edge cases - test it more thoroughly
                     # if there's anything to recurse on
                     if next_input_start < l_i:
-                        # recurse on the dangly bit, and throw it on the merge stack
-                        print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i)
-                        print("\t\tmerge:     ", next_input_start, l_i)
+                        # recurse on the dangly bit (if it isn't just a run) and throw it on the merge stack
+                        if next_first_run_end < l_i:
+                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i)
+                        print("\t\tmerge:     ", next_input_start, l_i+1)
                     # throw the discovered run on the merge stack
                     print("\t\tmerge:     ", l_i, r_i)
                     next_input_start = r_i
@@ -79,27 +88,31 @@ class Sorter_Peeksort(Sorter.Sorter):
                 else:
                     if m[i] - l_i <= r_i - m[i]:
                         print("\tl_i is closer(default)")
-                        # recurse on the dangly bit only
-                        print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i)
-                        print("\t\tmerge:     ", next_input_start, l_i)
+                        # recurse on the dangly bit (if it isn't just a run) and throw it on the merge stack
+                        if next_first_run_end < l_i:
+                            # end is l_i+1 because ends are exclusive
+                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i+1)
+                        print("\t\tmerge:     ", next_input_start, l_i+1)
 
                         # this run defines the start of the new dangly bit
                         next_input_start = l_i
                         next_first_run_end = r_i
                     else:
                         print("\tr_i is closer")
-                        # recurse on both the dangly bit and the new run
+                        # recurse on both the dangly bit and the new run (there should always be a dangly bit)
                         print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, r_i)
                         print("\t\tmerge:     ", next_input_start, r_i)
 
                         # the next dangly bit start without a run.
-                        next_input_start = r_i
+                        # -1 to fix convention
+                        next_input_start = r_i - 1
                         next_first_run_end = r_i
 
                 print("\tnext peek time!\n")
                 i += 1
 
             # 10. handle the last non-run section, and the final run.
+            print("\t handle last section")
             # if there's a non-run before the last run, recurse on the last section
             if next_input_start < last_run_start:
                 print("\t\trecurse on:", next_input_start, next_first_run_end, last_run_start, input_end)
@@ -114,10 +127,10 @@ class Sorter_Peeksort(Sorter.Sorter):
         # return when everything that was passed in is a single run
         return
 
-    def _handle_trivial_input(self, input_start, input_end, first_run_end, last_run_start):
+    def _handle_trivial_input(self, input_start, first_run_end, last_run_start, input_end):
         # set the first element, while also building a list of the correct length and element type
         first_run = ListSlice.ListSlice(self.input_list, input_start, first_run_end)
-        runs = [first_run] * (2 + (last_run_start - first_run_end))
+        runs = [first_run] * (2 + (1 + last_run_start - first_run_end))
 
         # add middle elements, if any
         for index in range(first_run_end, last_run_start):
@@ -141,7 +154,7 @@ class Sorter_Peeksort(Sorter.Sorter):
         # 3. remove any m_i values that are inside the start or end run
         m_start = 0
         for m_i in m:
-            if m_i < first_run_end:
+            if m_i <= first_run_end:
                 m_start += 1
             else:
                 break
@@ -173,7 +186,8 @@ class Sorter_Peeksort(Sorter.Sorter):
             else:
                 break
 
-        return r_i
+        # add one because r_i is exclusive
+        return r_i + 1
 
 
 # sorts the input
@@ -186,11 +200,15 @@ def sort(input_list, k=2):
 input_1 = [4, 3, 2, 1]
 input_2 = [4, 3, 2, 1, 5, 7, 6, 8]
 input_3 = [1, 2, 3, 4, 5, 6, 7, 8]
-input_4 = list(range(20))
+
+input_4 = list(range(24))
+random.seed(12345678)
 random.shuffle(input_4)
 
-our_input = input_4
+our_input = input_3
 
 print("sorting:", our_input)
 sort(our_input, 5)
 print("sorted: ", our_input)
+
+
