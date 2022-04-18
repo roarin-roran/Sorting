@@ -165,7 +165,12 @@ class Sorter_Peeksort(Sorter.Sorter):
         print()
 
         #findme
+        # version 1 - works fine
         our_merger = self.merger_init(runs, ListSlice.ListSlice(output_list, input_start, input_end))
+
+        # version 2 - doesn't update correctly (output is [1, 2, 3, 4, 5, 6, 6, 6])
+        our_merger = self.merger_init(runs, ListSlice.ListSlice(self.input_list, input_start, input_end))
+
         our_merger.merge()
 
         print("after: ", output_list)
