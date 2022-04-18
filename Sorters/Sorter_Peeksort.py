@@ -75,7 +75,7 @@ class Sorter_Peeksort(Sorter.Sorter):
                     if next_input_start < l_i:
                         # recurse on the dangly bit (if it isn't just a run) and throw it on the merge stack
                         if next_first_run_end < l_i:
-                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i+1)
+                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, l_i + 1)
                         print("\t\tmerge:     ", next_input_start, l_i + 1)
                     # throw the discovered run on the merge stack
                     print("\t\tmerge:     ", l_i, r_i)
@@ -126,57 +126,27 @@ class Sorter_Peeksort(Sorter.Sorter):
         return
 
     def _handle_trivial_input(self, input_start, first_run_end, last_run_start, input_end):
-        print("_handle_trivial_input called")
-        print("this method is currently broken as all hell - trust nothing south of here")
-
-        print()
-        print(self.input_list)
-        print(input_start, first_run_end)
-
         # set the first element, while also building a list of the correct length and element type
         first_run = ListSlice.ListSlice(self.input_list, input_start, first_run_end)
-        print(str(first_run))
         runs = [first_run] * (2 + (last_run_start - first_run_end))
-
-        print(len(runs))
 
         # add middle elements, if any
         for index in range(first_run_end, last_run_start):
             runs[index] = ListSlice.ListSlice(self.input_list, index, index + 1)
-            print("BOOYA")
 
         if last_run_start != input_end:
             # add the final run, if it exists
             runs[-1] = ListSlice.ListSlice(self.input_list, last_run_start, input_end)
-            print(str(runs[-1]))
 
+        # todo - define me globally, and reuse me
+        output_list = [0] * (input_end - input_start)
 
-        print("input to merger:")
-        runs_str = ""
-        print(len(runs))
-        for run in runs:
-            runs_str += str(run)
-        print(runs_str)
-        print(input_start, input_end)
-
-        output_list = [1, 2, 3, 4, 6, 7, 8, 5]
-        print("before:", output_list)
-        print("input before:", self.input_list)
-        print()
-
-        #findme
-        # version 1 - works fine
         our_merger = self.merger_init(runs, ListSlice.ListSlice(output_list, input_start, input_end))
-
-        # version 2 - doesn't update correctly (output is [1, 2, 3, 4, 5, 6, 6, 6])
-        our_merger = self.merger_init(runs, ListSlice.ListSlice(self.input_list, input_start, input_end))
-
         our_merger.merge()
 
-        print("after: ", output_list)
-        print("input after: ", self.input_list)
-        print()
-
+        # note that this step is inneficient, and improving it is listed as issue #68 on github.
+        for index in range(input_start, input_end):
+            self.input_list[index] = output_list[index]
 
     # todo - write this without a list slice for cheaper memory interactions
     #   (try reducing the length of m at the beginning, then generating m_i values)
@@ -257,12 +227,10 @@ input_5 = [4, 2, 3, 1, 5, 6, 7, 8, 11, 12, 10, 9]
 
 # edge case: mostly sorted inputs, with one unsorted character on the left or right
 input_6 = [5, 1, 2, 3, 4, 6, 7, 8]
-# todo: fix, this case is broken (implying issues with _handle_trivial_cases). output: [1, 1, 1, 1, 1, 1, 1, 1]
 input_7 = [1, 2, 3, 4, 6, 7, 8, 5]
 
-
 # choose an input
-our_input = input_7
+our_input = input_4
 
 print("sorting:", our_input)
 sort(our_input, 4)
