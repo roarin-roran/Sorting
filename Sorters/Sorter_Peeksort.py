@@ -17,12 +17,14 @@ class Sorter_Peeksort(Sorter.Sorter):
         self.merge_stack = [ListSlice.ListSlice([0], 0, 1)] * k
         self.next_merge_stack_index = 0
 
+        self.temp_list = [-1]*len(input_list)
+
     def sort(self):
         """put the list in sorted order using k way peeksort"""
 
-        #first_run_end = self._extend_run_right(0, len(self.input_list))
+        # first_run_end = self._extend_run_right(0, len(self.input_list))
         first_run_end = 0
-        #last_run_start = self._extend_run_left(len(self.input_list) - 1, first_run_end)
+        # last_run_start = self._extend_run_left(len(self.input_list) - 1, first_run_end)
         last_run_start = len(self.input_list)
 
         self._recursively_sort(0, first_run_end, last_run_start, len(self.input_list))
@@ -148,17 +150,9 @@ class Sorter_Peeksort(Sorter.Sorter):
                 our_tester = Tester_Sorter_PeekSort()
                 our_tester.test_merge_stack(self, input_start, input_end)
 
-                output_list = [0] * (input_end - input_start)
-
                 if all_sorted:
                     print("\nmerge!\n")
-                    our_merger = self.merger_init(self.merge_stack[:self.next_merge_stack_index],
-                                                  ListSlice.ListSlice(output_list, input_start, input_end))
-                    our_merger.merge()
-
-                    # note that this step is inneficient, and improving it is listed as issue #68 on github.
-                    for index in range(input_start, input_end):
-                        self.input_list[index] = output_list[index]
+                    self._merge(input_start, input_end)
                 else:
                     print("\nneed recursion to merge\n")
 
@@ -167,31 +161,19 @@ class Sorter_Peeksort(Sorter.Sorter):
 
     def _handle_trivial_input(self, input_start, first_run_end, last_run_start, input_end):
         # set the first element, while also building a list of the correct length and element type
-        first_run = ListSlice.ListSlice(self.input_list, input_start, first_run_end + 1)
-        runs = [first_run] * (2 + (last_run_start - first_run_end))
+        self._add_to_merge_stack(input_start, first_run_end + 1)
         # the next position to write to in the runs list
         posn_in_runs = 1
 
         # add middle elements, if any
         for index in range(first_run_end + 1, last_run_start):
-            runs[posn_in_runs] = ListSlice.ListSlice(self.input_list, index, index + 1)
-            posn_in_runs += 1
+            self._add_to_merge_stack(index, index + 1)
 
         if last_run_start != input_end:
             # add the final run, if it exists
-            runs[posn_in_runs] = ListSlice.ListSlice(self.input_list, last_run_start, input_end)
+            self._add_to_merge_stack(last_run_start, input_end)
 
-        # todo - merge with a method
-        # todo - define output_list globally and reuse to save time allocating it repeatedly.
-        output_list = [0] * (input_end - input_start)
-
-        # todo - update to generate runs in a memory efficient way, rendering the slice unnecesary
-        our_merger = self.merger_init(runs[:posn_in_runs + 1], ListSlice.ListSlice(output_list, input_start, input_end))
-        our_merger.merge()
-
-        # note that this step is inneficient, and improving it is listed as issue #68 on github.
-        for index in range(input_start, input_end):
-            self.input_list[index] = output_list[index]
+        self._merge(input_start, input_end)
 
     # todo - write this without a list slice for cheaper memory interactions
     #   (try reducing the length of m at the beginning, then generating m_i values)
@@ -244,6 +226,16 @@ class Sorter_Peeksort(Sorter.Sorter):
         print("\t\tmerge:     ", run_start, run_end)
         self.merge_stack[self.next_merge_stack_index] = ListSlice.ListSlice(self.input_list, run_start, run_end)
         self.next_merge_stack_index += 1
+
+    def _merge(self, input_start, input_end):
+        # todo - update to generate runs in a memory efficient way, rendering the slice unnecesary
+        our_merger = self.merger_init(self.merge_stack[:self.next_merge_stack_index],
+                                      ListSlice.ListSlice(self.temp_list, input_start, input_end))
+        our_merger.merge()
+
+        # note that this step is inefficient, and improving it is listed as issue #68 on github.
+        for index in range(input_start, input_end):
+            self.input_list[index] = self.temp_list[index]
 
 
 class Tester_Sorter_PeekSort(unittest.TestCase):
@@ -300,10 +292,13 @@ input_8 = [4, 5, 1, 2, 7, 3, 6, 8]
 input_9 = [2, 4, 6, 8, 1, 10, 11, 12, 3, 5, 7, 9]
 
 # choose an input
-our_input = input_9
+our_input = input_1
 
 print("sorting:", our_input)
 sort(our_input, 4)
 print("sorted: ", our_input)
 
-
+if our_input == sorted(our_input):
+    print("sorted correctly")
+else:
+    print("not sorted correctly")
