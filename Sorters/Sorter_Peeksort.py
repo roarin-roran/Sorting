@@ -5,7 +5,7 @@ import unittest
 
 
 # todo: document conventions used wrt inclusive or exclusive parts of the list in function parameters
-#  (specifically that an *inclusive* convention is used throughout - though this should be confirmed by testing)
+#  (specifically that an *exclusive* convention is used throughout - though this should be confirmed by testing)
 
 class Sorter_Peeksort(Sorter.Sorter):
     def __init__(self, input_list, k,
@@ -14,18 +14,21 @@ class Sorter_Peeksort(Sorter.Sorter):
                  test_mode=False):
         super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)
 
-        self.merge_stack = [ListSlice.ListSlice([0], 0, 1)]*k
+        self.merge_stack = [ListSlice.ListSlice([0], 0, 1)] * k
         self.next_merge_stack_index = 0
 
     def sort(self):
         """put the list in sorted order using k way peeksort"""
 
-        first_run_end = self._extend_run_right(0, len(self.input_list))
-        last_run_start = self._extend_run_left(len(self.input_list) - 1, first_run_end)
+        #first_run_end = self._extend_run_right(0, len(self.input_list))
+        first_run_end = 0
+        #last_run_start = self._extend_run_left(len(self.input_list) - 1, first_run_end)
+        last_run_start = len(self.input_list)
 
         self._recursively_sort(0, first_run_end, last_run_start, len(self.input_list))
 
     # sorts the input
+    # todo - increase efficiency by defining these in self instead of passing them
     def _recursively_sort(self, input_start, first_run_end, last_run_start, input_end):
         """recursively sort an input assumed to contain at least two runs"""
         # todo - test for one big run as a step 0, and strip out higher level tests. this will make things shorter and
@@ -65,7 +68,7 @@ class Sorter_Peeksort(Sorter.Sorter):
                 m_values_to_skip = 0
                 # for all m values after the current one.
                 for j in range(i + 1, len(m)):
-                    if m[j] < r_i:
+                    if m[j] <= r_i:
                         m_values_to_skip += 1
                     else:
                         break
@@ -103,13 +106,17 @@ class Sorter_Peeksort(Sorter.Sorter):
                         next_first_run_end = r_i
                     else:
                         print("\tr_i is closer")
-                        # todo: see test 3 below (r_i without a dangly bit)
-                        # recurse on both the dangly bit and the new run (there should always be a dangly bit)
-                        print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, r_i)
+                        # todo - test that this is necesary and sufficient
+                        # recurse on the dangly bit if it isn't a run
+                        if next_input_start < l_i:
+                            print("\t\trecurse on:", next_input_start, next_first_run_end, l_i, r_i)
+
+                        # there always must be a run, even if it's just a single character.
                         self._add_to_merge_stack(next_input_start, r_i)
+
                         # the next dangly bit start without a run.
                         # -1 to fix convention
-                        next_input_start = r_i - 1
+                        next_input_start = r_i
                         next_first_run_end = r_i
 
                 print("\tnext peek time!\n")
@@ -126,35 +133,51 @@ class Sorter_Peeksort(Sorter.Sorter):
                 self._add_to_merge_stack(last_run_start, input_end)
             # if neither is true, no action is required.
 
-            print("time to merge the merge stack!\n")
+            # if there are multiple things on the merge stack - merge them, if not - don't bother
+            if self.next_merge_stack_index > 1:
+                print("time to merge the merge stack!\n")
 
-            our_tester = Tester_Sorter_PeekSort()
-            our_tester.test_merge_stack(self, input_start, input_end)
+                # todo: remove, or reduce to a unit testing thing maybe
+                print("merge only if the inputs are sorted (because we're in dev mode and still not recursing)")
+                all_sorted = True
+                for run in self.merge_stack:
+                    if run.get_list() != sorted(run.get_list()):
+                        print(run.get_list(), "is not sorted")
+                        all_sorted = False
+
+                our_tester = Tester_Sorter_PeekSort()
+                our_tester.test_merge_stack(self, input_start, input_end)
+
+                if all_sorted:
+                    print("\ncan merge (but merging is not implemented)\n")
+                else:
+                    print("\nneed recursion to merge\n")
 
         # return when everything that was passed in is a single run
         return
 
     def _handle_trivial_input(self, input_start, first_run_end, last_run_start, input_end):
         # set the first element, while also building a list of the correct length and element type
-        first_run = ListSlice.ListSlice(self.input_list, input_start, first_run_end)
+        first_run = ListSlice.ListSlice(self.input_list, input_start, first_run_end + 1)
         runs = [first_run] * (2 + (last_run_start - first_run_end))
         # the next position to write to in the runs list
         posn_in_runs = 1
 
         # add middle elements, if any
-        for index in range(first_run_end, last_run_start):
+        for index in range(first_run_end + 1, last_run_start):
             runs[posn_in_runs] = ListSlice.ListSlice(self.input_list, index, index + 1)
             posn_in_runs += 1
 
         if last_run_start != input_end:
             # add the final run, if it exists
-            runs[-1] = ListSlice.ListSlice(self.input_list, last_run_start, input_end)
+            runs[posn_in_runs] = ListSlice.ListSlice(self.input_list, last_run_start, input_end)
 
         # todo - merge with a method
         # todo - define output_list globally and reuse to save time allocating it repeatedly.
         output_list = [0] * (input_end - input_start)
 
-        our_merger = self.merger_init(runs, ListSlice.ListSlice(output_list, input_start, input_end))
+        # todo - update to generate runs in a memory efficient way, rendering the slice unnecesary
+        our_merger = self.merger_init(runs[:posn_in_runs + 1], ListSlice.ListSlice(output_list, input_start, input_end))
         our_merger.merge()
 
         # note that this step is inneficient, and improving it is listed as issue #68 on github.
@@ -206,7 +229,7 @@ class Sorter_Peeksort(Sorter.Sorter):
             else:
                 break
 
-        return r_i
+        return r_i + 1
 
     def _add_to_merge_stack(self, run_start, run_end):
         print("\t\tmerge:     ", run_start, run_end)
@@ -217,7 +240,7 @@ class Sorter_Peeksort(Sorter.Sorter):
 class Tester_Sorter_PeekSort(unittest.TestCase):
 
     def test_merge_stack(self, peek_sorter, input_start, input_end):
-        print("testing merge stack")
+        print("testing merge stack (silent pass)")
         last_end = 0
         merge_length = 0
         for index in range(peek_sorter.next_merge_stack_index):
@@ -241,9 +264,7 @@ def sort(input_list, k=2):
 # todo: convert most of these into additional formal tests in test_sorter
 
 # todo: testing required:
-#       1. implement the merge stack, and automatically test that everything is merged exactly once.
-#       2. edge case: all sorted bar one element at one end (for safety, make two such cases)
-#       3. edge case: r_i is closer, but there's no dangly bit
+#       1. edge case: r_i is closer, but there's no dangly bit
 
 # trivial, unsorted inputs
 input_1 = [4, 3, 2, 1]
@@ -263,9 +284,19 @@ input_5 = [4, 2, 3, 1, 5, 6, 7, 8, 11, 12, 10, 9]
 input_6 = [5, 1, 2, 3, 4, 6, 7, 8]
 input_7 = [1, 2, 3, 4, 6, 7, 8, 5]
 
+# edge case: r_i closer, all dangly bit is sorted
+input_8 = [4, 5, 1, 2, 7, 3, 6, 8]
+
+# input which should merge without recursion with k >= 2
+input_9 = [2, 4, 6, 8, 1, 10, 11, 12, 3, 5, 7, 9]
+
 # choose an input
-our_input = input_4
+our_input = input_9
 
 print("sorting:", our_input)
 sort(our_input, 4)
 print("sorted: ", our_input)
+
+
+
+#not detecting runs properly! seems to be Another error caused by run termination conventions.

@@ -67,6 +67,8 @@ class Test_Mergers(unittest.TestCase):
 
         self._merge_two(merger_init, merger_ipq_init)
         self._merge_three_variable_lengths(merger_init, merger_ipq_init)
+        self._merge_one_element_in_front(merger_init, merger_ipq_init)
+        self._merge_one_element_in_back(merger_init, merger_ipq_init)
         # check that the desired merger was used and no other merger was used
         self.check_correct_merger_used(merger_init)
 
@@ -99,12 +101,32 @@ class Test_Mergers(unittest.TestCase):
 
         self.assertEqual([0, 1, 2, 3, 4, 5, 6, 7], write_list_slice.list)
 
-    def _merge_two_runs_short_long(self, merger_init, merger_ipq_init):
+    def _merge_one_element_in_front(self, merger_init, merger_ipq_init):
+        # two_runs = [1, 2, 3, 4, 6, 7, 8, 5]
+        two_runs = [5, 1, 2, 3, 4, 6, 7, 8]
+        run_1 = ListSlice.ListSlice(two_runs, 0, 1)
+        run_2 = ListSlice.ListSlice(two_runs, 1, 8)
+
+        write_list_slice = ListSlice.ListSlice([-1] * 8, 0, 8)
+
+        our_merger = merger_init([run_1, run_2], write_list_slice, merger_ipq_init=merger_ipq_init, test_mode=True)
+        our_merger.merge()
+
+        self.assertEqual([1, 2, 3, 4, 5, 6, 7, 8], write_list_slice.list)
+
+    def _merge_one_element_in_back(self, merger_init, merger_ipq_init):
         two_runs = [1, 2, 3, 4, 6, 7, 8, 5]
         run_1 = ListSlice.ListSlice(two_runs, 0, 7)
-        run_2 = ListSlice.ListSlice(two_runs, 0, 7)
+        run_2 = ListSlice.ListSlice(two_runs, 7, 8)
 
-        # todo - finish me
+        write_list_slice = ListSlice.ListSlice([-1] * 8, 0, 8)
+
+        our_merger = merger_init([run_1, run_2], write_list_slice, merger_ipq_init=merger_ipq_init, test_mode=True)
+        our_merger.merge()
+
+        self.assertEqual([1, 2, 3, 4, 5, 6, 7, 8], write_list_slice.list)
+
+
 
     def check_correct_merger_used(self, correct_merger_init):
         """checks that the correct merger is the only merger that's been used since the last wipe"""
