@@ -148,8 +148,17 @@ class Sorter_Peeksort(Sorter.Sorter):
                 our_tester = Tester_Sorter_PeekSort()
                 our_tester.test_merge_stack(self, input_start, input_end)
 
+                output_list = [0] * (input_end - input_start)
+
                 if all_sorted:
-                    print("\ncan merge (but merging is not implemented)\n")
+                    print("\nmerge!\n")
+                    our_merger = self.merger_init(self.merge_stack[:self.next_merge_stack_index],
+                                                  ListSlice.ListSlice(output_list, input_start, input_end))
+                    our_merger.merge()
+
+                    # note that this step is inneficient, and improving it is listed as issue #68 on github.
+                    for index in range(input_start, input_end):
+                        self.input_list[index] = output_list[index]
                 else:
                     print("\nneed recursion to merge\n")
 
@@ -298,5 +307,3 @@ sort(our_input, 4)
 print("sorted: ", our_input)
 
 
-
-#not detecting runs properly! seems to be Another error caused by run termination conventions.
