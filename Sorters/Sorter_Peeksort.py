@@ -41,7 +41,8 @@ class Sorter_Peeksort(Sorter.Sorter):
     def _recursively_sort(self, input_start, first_run_end, last_run_start, input_end):
         """recursively sort an input assumed to contain at least two runs"""
 
-        merge_stack = [ListSlice.ListSlice([0], 0, 1)] * self.k
+        # todo - replace the base case, and shrink this back down
+        merge_stack = [ListSlice.ListSlice([0], 0, 1)] * self.k*2
         next_merge_stack_index = 0
 
         print("PASS START")
@@ -205,7 +206,9 @@ class Sorter_Peeksort(Sorter.Sorter):
 
         # add middle elements, if any
         for index in range(first_run_end, last_run_start):
+            print("bing", index, index + 1, merge_stack, next_merge_stack_index)
             self._add_to_merge_stack(index, index + 1, merge_stack, next_merge_stack_index)
+            print("bong")
             next_merge_stack_index += 1
 
         if last_run_start != input_end:
@@ -244,6 +247,10 @@ class Sorter_Peeksort(Sorter.Sorter):
                 break
 
         print("cropped m:", m[m_start:m_end])
+
+        if len(m[m_start:m_end]) == 0:
+            print("no m!")
+            input()
 
         return m[m_start:m_end]
 
@@ -331,12 +338,12 @@ def sort(input_list, k=2):
     our_peek_sorter.sort()
 
 
-def run_all(input_list):
+def run_all(input_list, k):
     all_fine = True
 
     for current_input in input_list:
         unsorted_input = current_input.copy()
-        sort(current_input, 4)
+        sort(current_input, k)
 
         if current_input != sorted(current_input):
             print("input: ", current_input, "wasn't sorted correctly!")
@@ -388,18 +395,38 @@ input_11 = list(range(19))
 random.seed(12345678)
 random.shuffle(input_11)
 
-all_sortable_inputs = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9, input_10,
-                       input_11]
+input_12 = list(range(100))
+random.seed(12345678)
+random.shuffle(input_12)
+
+all_sortable_inputs_k_equals_2 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8,
+                                  input_11]
+all_sortable_inputs_k_equals_3 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
+                                  input_10, input_11, input_12]
+all_sortable_inputs_k_equals_4 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
+                                  input_10, input_11, input_12]
+all_sortable_inputs_k_equals_5 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
+                                  input_10, input_11, input_12]
+all_sortable_inputs_k_equals_6 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
+                                  input_10, input_11, input_12]
+all_sortable_inputs_k_equals_7 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
+                                  input_10, input_11, input_12]
+all_sortable_inputs_k_equals_8 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
+                                  input_10, input_11, input_12]
+all_sortable_inputs_k_equals_9 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
+                                  input_10, input_11, input_12]
+all_sortable_inputs_k_equals_10 = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9,
+                                   input_10, input_11, input_12]
 
 # uncomment to check that all sortable inputs are still sorting correctly
-run_all(all_sortable_inputs)
-input()
+# run_all(all_sortable_inputs_k_equals_2, 2)
+# input()
 
 # choose an input
-our_input = input_10
+our_input = input_9
 
 print("sorting:", our_input)
-sort(our_input, 4)
+sort(our_input, 2)
 print("sorted: ", our_input)
 
 if our_input == sorted(our_input):
