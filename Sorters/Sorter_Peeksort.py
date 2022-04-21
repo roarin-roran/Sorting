@@ -14,9 +14,6 @@ class Sorter_Peeksort(Sorter.Sorter):
                  test_mode=False):
         super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)
 
-        self.merge_stack = [ListSlice.ListSlice([0], 0, 1)] * k
-        self.next_merge_stack_index = 0
-
         # used for merging
         self.temp_list = [-1]*len(input_list)
 
@@ -44,6 +41,9 @@ class Sorter_Peeksort(Sorter.Sorter):
     def _recursively_sort(self, input_start, first_run_end, last_run_start, input_end):
         """recursively sort an input assumed to contain at least two runs"""
 
+        merge_stack = [ListSlice.ListSlice([0], 0, 1)] * self.k
+        next_merge_stack_index = 0
+
         print("beginning a recursive pass, with parameters:", input_start, first_run_end, last_run_start, input_end)
         print("and input list state", self.input_list)
 
@@ -53,7 +53,8 @@ class Sorter_Peeksort(Sorter.Sorter):
         # 1. test for and handle inputs with at most k inputs that aren't in known runs.
         #   (note that inputs where the first run overlaps the second are illegal)
         elif last_run_start - first_run_end <= self.k:
-            self._handle_trivial_input(input_start, first_run_end, last_run_start, input_end)
+            self._handle_trivial_input(input_start, first_run_end, last_run_start, input_end,
+                                       merge_stack, next_merge_stack_index)
         else:
             # 2. and 3. find all m values outside of a known run
             m = self._generate_initial_m_values(input_start, first_run_end, last_run_start, input_end)
@@ -63,8 +64,6 @@ class Sorter_Peeksort(Sorter.Sorter):
             self.next_first_run_end = first_run_end
 
             # 4. generate recursive calls and merges using these m values
-            print("\nm:", m, "\n")
-
             i = 0
             while i < len(m):
                 print("\tm_i:       ", m[i])
@@ -91,14 +90,15 @@ class Sorter_Peeksort(Sorter.Sorter):
                     if self.next_input_start < l_i:
                         # recurse on the dangly bit (if it isn't just a run) and throw it on the merge stack
                         if self.next_first_run_end < l_i:
-                            print("\t\trecurse on, position 1:", self.next_input_start, self.next_first_run_end, l_i, l_i)
+                            print("\t\trecurse on, position 1:",
+                                  self.next_input_start, self.next_first_run_end, l_i, l_i)
                             self._recursively_sort(self.next_input_start, self.next_first_run_end, l_i, l_i)
 
-                        self._add_to_merge_stack(self.next_input_start, l_i, self.merge_stack, self.next_merge_stack_index)
-                        self.next_merge_stack_index += 1
+                        self._add_to_merge_stack(self.next_input_start, l_i, merge_stack, next_merge_stack_index)
+                        next_merge_stack_index += 1
                     # throw the discovered run on the merge stack
-                    self._add_to_merge_stack(l_i, r_i, self.merge_stack, self.next_merge_stack_index)
-                    self.next_merge_stack_index += 1
+                    self._add_to_merge_stack(l_i, r_i, merge_stack, next_merge_stack_index)
+                    next_merge_stack_index += 1
                     self.next_input_start = r_i
                     self.next_first_run_end = r_i
 
@@ -109,14 +109,15 @@ class Sorter_Peeksort(Sorter.Sorter):
                         # if there's an unsorted portion, recurse on it and throw it on the merge stack
                         if self.next_first_run_end < l_i:
                             # end is l_i+1 because ends are exclusive
-                            print("\t\trecurse on, position 2:", self.next_input_start, self.next_first_run_end, l_i, l_i)
+                            print("\t\trecurse on, position 2:",
+                                  self.next_input_start, self.next_first_run_end, l_i, l_i)
                             self._recursively_sort(self.next_input_start, self.next_first_run_end, l_i, l_i)
-                            self._add_to_merge_stack(self.next_input_start, l_i, self.merge_stack, self.next_merge_stack_index)
-                            self.next_merge_stack_index += 1
+                            self._add_to_merge_stack(self.next_input_start, l_i, merge_stack, next_merge_stack_index)
+                            next_merge_stack_index += 1
                         # else if there's just a run, throw it on the stack without recursing first
                         elif self.next_input_start < l_i:
-                            self._add_to_merge_stack(self.next_input_start, l_i, self.merge_stack, self.next_merge_stack_index)
-                            self.next_merge_stack_index += 1
+                            self._add_to_merge_stack(self.next_input_start, l_i, merge_stack, next_merge_stack_index)
+                            next_merge_stack_index += 1
 
                         # this run defines the start of the new dangly bit
                         self.next_input_start = l_i
@@ -126,12 +127,13 @@ class Sorter_Peeksort(Sorter.Sorter):
                         # todo - test that this is necesary and sufficient
                         # recurse on the dangly bit if it isn't a run
                         if self.next_input_start < l_i:
-                            print("\t\trecurse on, position 3:", self.next_input_start, self.next_first_run_end, l_i, r_i)
+                            print("\t\trecurse on, position 3:",
+                                  self.next_input_start, self.next_first_run_end, l_i, r_i)
                             self._recursively_sort(self.next_input_start, self.next_first_run_end, l_i, r_i)
 
                         # there always must be a run, even if it's just a single character.
-                        self._add_to_merge_stack(self.next_input_start, r_i, self.merge_stack, self.next_merge_stack_index)
-                        self.next_merge_stack_index += 1
+                        self._add_to_merge_stack(self.next_input_start, r_i, merge_stack, next_merge_stack_index)
+                        next_merge_stack_index += 1
 
                         # the next dangly bit start without a run.
                         # -1 to fix convention
@@ -145,25 +147,27 @@ class Sorter_Peeksort(Sorter.Sorter):
             print("\t handle last section")
             # if there's a non-run before the last run, recurse on the last section
             if self.next_input_start < last_run_start:
-                print("\t\trecurse on, position 4:", self.next_input_start, self.next_first_run_end, last_run_start, input_end)
+                print("\t\trecurse on, position 4:",
+                      self.next_input_start, self.next_first_run_end, last_run_start, input_end)
                 self._recursively_sort(self.next_input_start, self.next_first_run_end, last_run_start, input_end)
-                self._add_to_merge_stack(self.next_input_start, input_end, self.merge_stack, self.next_merge_stack_index)
-                self.next_merge_stack_index += 1
+                self._add_to_merge_stack(self.next_input_start, input_end, merge_stack, next_merge_stack_index)
+                next_merge_stack_index += 1
             # if there's not, but there is a run - throw it on the merge stack
             elif last_run_start < input_end:
-                self._add_to_merge_stack(last_run_start, input_end, self.merge_stack, self.next_merge_stack_index)
-                self.next_merge_stack_index += 1
+                self._add_to_merge_stack(last_run_start, input_end, merge_stack, next_merge_stack_index)
+                next_merge_stack_index += 1
             # if neither is true, no action is required.
 
             # if there are multiple things on the merge stack - merge them, if not - don't bother
-            if self.next_merge_stack_index > 1:
+            if next_merge_stack_index > 1:
                 print("time to merge the merge stack!\n")
+                print("input_list before", self.input_list)
 
                 our_tester = Tester_Sorter_PeekSort()
-                our_tester.test_merge_stack(self, input_start, input_end)
+                our_tester.test_merge_stack(input_start, input_end, merge_stack, next_merge_stack_index)
 
-                self._merge(input_start, input_end, self.merge_stack, self.next_merge_stack_index)
-                self.next_merge_stack_index = 0
+                self._merge(input_start, input_end, merge_stack, next_merge_stack_index)
+                print("input_list after", self.input_list)
 
         # return when everything that was passed in is a single run
         return
@@ -181,25 +185,27 @@ class Sorter_Peeksort(Sorter.Sorter):
 
         return True
 
-    def _handle_trivial_input(self, input_start, first_run_end, last_run_start, input_end):
+    def _handle_trivial_input(self, input_start, first_run_end, last_run_start, input_end,
+                              merge_stack, next_merge_stack_index):
         print("handling trivial input")
+        print(input_start, first_run_end)
 
-        # set the first element, while also building a list of the correct length and element type
-        self._add_to_merge_stack(input_start, first_run_end + 1, self.merge_stack, self.next_merge_stack_index)
-        self.next_merge_stack_index += 1
+        # add the first run
+        if input_start != first_run_end:
+            self._add_to_merge_stack(input_start, first_run_end, merge_stack, next_merge_stack_index)
+            next_merge_stack_index += 1
 
         # add middle elements, if any
-        for index in range(first_run_end + 1, last_run_start):
-            self._add_to_merge_stack(index, index + 1, self.merge_stack, self.next_merge_stack_index)
-            self.next_merge_stack_index += 1
+        for index in range(first_run_end, last_run_start):
+            self._add_to_merge_stack(index, index + 1, merge_stack, next_merge_stack_index)
+            next_merge_stack_index += 1
 
         if last_run_start != input_end:
             # add the final run, if it exists
-            self._add_to_merge_stack(last_run_start, input_end, self.merge_stack, self.next_merge_stack_index)
-            self.next_merge_stack_index += 1
+            self._add_to_merge_stack(last_run_start, input_end, merge_stack, next_merge_stack_index)
+            next_merge_stack_index += 1
 
-        self._merge(input_start, input_end, self.merge_stack, self.next_merge_stack_index)
-        self.next_merge_stack_index = 0
+        self._merge(input_start, input_end, merge_stack, next_merge_stack_index)
         print("end handle of trivial input")
 
     # todo - write this without a list slice for cheaper memory interactions
@@ -210,7 +216,7 @@ class Sorter_Peeksort(Sorter.Sorter):
         step = (input_end - input_start) / self.k
 
         for i in range(self.k - 1):
-            m[i] = round(step * (i + 1))
+            m[i] = input_start + round(step * (i + 1))
 
         print("uncropped m:", m)
 
@@ -228,6 +234,8 @@ class Sorter_Peeksort(Sorter.Sorter):
                 m_end -= 1
             else:
                 break
+
+        print("cropped m:", m[m_start:m_end])
 
         return m[m_start:m_end]
 
@@ -269,8 +277,6 @@ class Sorter_Peeksort(Sorter.Sorter):
         for index in range(input_start, input_end):
             self.input_list[index] = self.temp_list[index]
 
-
-
     @staticmethod
     def _count_skipped_m_values(m, i, r_i):
         m_values_to_skip = 0
@@ -291,14 +297,18 @@ class Sorter_Peeksort(Sorter.Sorter):
 
 class Tester_Sorter_PeekSort(unittest.TestCase):
 
-    def test_merge_stack(self, peek_sorter, input_start, input_end):
+    def test_merge_stack(self, input_start, input_end, merge_stack, next_merge_stack_index):
         print("testing merge stack (silent pass)")
-        last_end = 0
+        print("merge stack (ignore after", next_merge_stack_index, "):")
+        for thing in merge_stack:
+            print("\t", str(thing))
+        print("\\end")
+        last_end = input_start
         merge_length = 0
-        for index in range(peek_sorter.next_merge_stack_index):
-            run = peek_sorter.merge_stack[index]
+        for index in range(next_merge_stack_index):
+            run = merge_stack[index]
 
-            print(str(run))
+            print(str(run), run.start, input_start)
             self.assertEqual(last_end, run.start)
             merge_length += run.end - run.start
             last_end = run.end
@@ -338,17 +348,17 @@ def run_all(input_list):
 
 # trivial, unsorted inputs
 input_1 = [4, 3, 2, 1]
-input_2 = [4, 3, 2, 1, 5, 7, 6, 8]                      # needs recursion
+input_2 = [4, 3, 2, 1, 5, 7, 6, 8]
 # fully sorted input
 input_3 = [1, 2, 3, 4, 5, 6, 7, 8]
 
 # reproducible random input
-input_4 = list(range(24))                               # needs recursion
+input_4 = list(range(10))
 random.seed(12345678)
 random.shuffle(input_4)
 
 # edge case: long run in the middle of an input, with random stuff on either side (intended for use with k=2 and k=4)
-input_5 = [4, 2, 3, 1, 5, 6, 7, 8, 11, 12, 10, 9]       # needs recursion
+input_5 = [4, 2, 3, 1, 5, 6, 7, 8, 11, 12, 10, 9]
 
 # edge case: mostly sorted inputs, with one unsorted character on the left or right
 input_6 = [5, 1, 2, 3, 4, 6, 7, 8]
@@ -360,14 +370,24 @@ input_8 = [4, 5, 1, 2, 7, 3, 6, 8]
 # input which should merge without recursion with k >= 2
 input_9 = [2, 4, 6, 8, 1, 10, 11, 12, 3, 5, 7, 9]
 
-all_sortable_inputs = [input_1, input_2, input_3, input_6, input_7, input_8, input_9]
+# longer reproducible random input - known bug
+input_10 = list(range(24))
+random.seed(12345678)
+random.shuffle(input_10)
+
+# shortest reproducible random input with the known bug:
+input_11 = list(range(19))
+random.seed(12345678)
+random.shuffle(input_11)
+
+all_sortable_inputs = [input_1, input_2, input_3, input_4, input_5, input_6, input_7, input_8, input_9]
 
 # uncomment to check that all sortable inputs are still sorting correctly
-run_all(all_sortable_inputs)
-input()
+#run_all(all_sortable_inputs)
+#input()
 
 # choose an input
-our_input = input_4
+our_input = input_11
 
 print("sorting:", our_input)
 sort(our_input, 4)
