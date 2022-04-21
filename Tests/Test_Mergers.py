@@ -126,8 +126,6 @@ class Test_Mergers(unittest.TestCase):
 
         self.assertEqual([1, 2, 3, 4, 5, 6, 7, 8], write_list_slice.list)
 
-
-
     def check_correct_merger_used(self, correct_merger_init):
         """checks that the correct merger is the only merger that's been used since the last wipe"""
         blank_merger = correct_merger_init([], ListSlice.ListSlice([], 0, 0))
