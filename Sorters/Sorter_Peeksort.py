@@ -14,6 +14,8 @@ class Sorter_Peeksort(Sorter.Sorter):
                  test_mode=False):
         super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)
 
+        
+
         self.merge_stack = [ListSlice.ListSlice([0], 0, 1)] * k
         self.next_merge_stack_index = 0
 
@@ -152,22 +154,10 @@ class Sorter_Peeksort(Sorter.Sorter):
             if self.next_merge_stack_index > 1:
                 print("time to merge the merge stack!\n")
 
-                # todo: remove, or reduce to a unit testing thing maybe
-                print("merge only if the inputs are sorted (because we're in dev mode and still not recursing)")
-                all_sorted = True
-                for run in self.merge_stack:
-                    if run.get_list() != sorted(run.get_list()):
-                        print(run.get_list(), "is not sorted")
-                        all_sorted = False
-
                 our_tester = Tester_Sorter_PeekSort()
                 our_tester.test_merge_stack(self, input_start, input_end)
 
-                if all_sorted:
-                    print("\nmerge!\n")
-                    self._merge(input_start, input_end)
-                else:
-                    print("\nneed recursion to merge\n")
+                self._merge(input_start, input_end)
 
         # return when everything that was passed in is a single run
         return
@@ -364,11 +354,11 @@ input_9 = [2, 4, 6, 8, 1, 10, 11, 12, 3, 5, 7, 9]
 all_sortable_inputs = [input_1, input_2, input_3, input_6, input_7, input_8, input_9]
 
 # uncomment to check that all sortable inputs are still sorting correctly
-# run_all(all_sortable_inputs)
-# input()
+run_all(all_sortable_inputs)
+input()
 
 # choose an input
-our_input = input_5
+our_input = input_4
 
 print("sorting:", our_input)
 sort(our_input, 4)
