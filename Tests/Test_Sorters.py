@@ -1,6 +1,6 @@
 import random
 import unittest
-from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods
+from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods, Sorter_Peeksort
 from Mergers import Merger, Merger_Adaptive, Merger_Tester
 from Merger_IPQs import MergerIPQ, MergerIPQ_Tester, MergerIPQ_LoserTree
 from Tests import Test_MergerIPQ, Test_Mergers
@@ -9,6 +9,20 @@ import os
 
 
 class Test_Sorters(unittest.TestCase):
+    def test_sorter_peeksort(self,
+                             override_merger_ipq_init=False,
+                             override_merger_init=False):
+        """tests the k-way peeksort sorter"""
+
+        sorter_init = Sorter_Peeksort.Sorter_Peeksort
+        # sorter_init = Sorter_Adaptive.Sorter_PingPong_Adaptive
+        default_merger_init = Merger_Adaptive.Merger_Adaptive
+        default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
+
+        self._passing_test_wrapper(sorter_init,
+                                   override_merger_init, default_merger_init,
+                                   override_merger_ipq_init, default_merger_ipq_init)
+
     def test_sorter_adaptive(self,
                              override_merger_ipq_init=False,
                              override_merger_init=False):
@@ -152,9 +166,6 @@ class Test_Sorters(unittest.TestCase):
         # assure that no mergers or merger ipqs are used for this input
         self.assertFalse(os.path.isfile("test_options_merger_ipq.txt")), "a merger ipq was used for a single element"
         self.assertFalse(os.path.isfile("test_options_merger.txt")), "a merger was used for a single element"
-
-
-
 
 
 if __name__ == '__main__':
