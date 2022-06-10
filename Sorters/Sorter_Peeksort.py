@@ -37,14 +37,13 @@ class Sorter_Peeksort(Sorter.Sorter):
 
         self._recursively_sort(0, first_run_end, last_run_start, len(self.input_list))
 
-    # todo - increase efficiency by defining these in self instead of passing them
+    # todo - increase efficiency by defining these in self instead of passing them?
     def _recursively_sort(self, input_start, first_run_end, last_run_start, input_end):
         """recursively sort an input assumed to contain at least two runs"""
 
-        # todo - replace the base case, and shrink this back down
         # todo - replace this with a global list of some clever size and access convention (size O(k log n)? access by
         #  noting the position locally, but accessing the list globally)
-        merge_stack = [ListSlice.ListSlice([0], 0, 1)] * self.k*2
+        merge_stack = [ListSlice.ListSlice([0], 0, 1)] * (self.k+2)
         next_merge_stack_index = 0
 
         # if the input is a single run - return
@@ -52,6 +51,8 @@ class Sorter_Peeksort(Sorter.Sorter):
             return
         # 1. test for and handle inputs with at most k inputs that aren't in known runs.
         #   (note that inputs where the first run overlaps the second are illegal)
+        # todo - this base case is a hack, and should be replaced with alternatives. also - some experimentation should
+        #  be used to find the appropriate base case size
         elif last_run_start - first_run_end <= self.k:
             self._handle_trivial_input(input_start, first_run_end, last_run_start, input_end,
                                        merge_stack, next_merge_stack_index)

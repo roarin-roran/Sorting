@@ -1,7 +1,7 @@
 import unittest
 from Support import ListSlice
 from Tests import Test_Sorters, Test_MergerIPQ
-from Mergers import Merger_Adaptive, Merger_Tester
+from Mergers import Merger_Adaptive, Merger_Tester, Merger_Two_Way
 from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_LoserTree
 from typing import Union
 import os
@@ -29,6 +29,20 @@ class Test_Mergers(unittest.TestCase):
         default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
 
         self._passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
+
+    def test_two_way_merger(self):
+        """runs a custom test suite for the two way merger, which doesn't use an ipq, and can't use the usual test
+        inputs"""
+        self._merge_two(Merger_Two_Way.Merger_Two_Way, MergerIPQ_Dummy.MergerIPQ_Dummy)
+        self._merge_one_element_in_back(Merger_Two_Way.Merger_Two_Way, MergerIPQ_Dummy.MergerIPQ_Dummy)
+        self._merge_one_element_in_front(Merger_Two_Way.Merger_Two_Way, MergerIPQ_Dummy.MergerIPQ_Dummy)
+
+        # todo - this fails, why?
+        # self.check_correct_merger_used(Merger_Two_Way.Merger_Two_Way)
+
+        # test complete - delete test files to avoid memory leaks
+        Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
 
     def _passing_ipq_test_wrapper(self, merger_init, override_merger_ipq_init, default_merger_ipq_init):
         """wraps prototype_test, checking if merger_ipq is passed around correctly"""

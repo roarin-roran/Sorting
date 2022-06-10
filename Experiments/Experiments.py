@@ -1,7 +1,8 @@
 # probably needs a better name and some structure.. eventually.
 # for now, will use this file to drop misc experimental helper functions
 from random import Random
-from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods, Sorter_Peeksort
+from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods, Sorter_Peeksort, \
+    Sorter_Adaptive_k_2, Sorter_Peeksort_k_2
 
 
 # From main repo repository run
@@ -41,8 +42,16 @@ def run_peeksort(n=100000, repetitions=1, k=4, seed=86438564):
     sort_random_input(n, Sorter_Peeksort, repetitions=repetitions, k=k, seed=seed)
 
 
+def run_peeksort_k_2(n=100000, repetitions=1, k=2, seed=86438564):
+    sort_random_input(n, Sorter_Peeksort_k_2, repetitions=repetitions, k=k, seed=seed)
+
+
 def run_adaptive(n=100000, repetitions=1, k=4, seed=86438564):
     sort_random_input(n, Sorter_Adaptive, repetitions=repetitions, k=k, seed=seed)
+
+
+def run_adaptive_k_2(n=100000, repetitions=1, k=2, seed=86438564):
+    sort_random_input(n, Sorter_Adaptive_k_2, repetitions=repetitions, k=k, seed=seed)
 
 
 def run_bottom_up(n=100000, repetitions=1, k=4, seed=86438564):
