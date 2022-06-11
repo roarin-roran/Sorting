@@ -6,8 +6,8 @@ class Sorter_Default(Sorter.Sorter):
 
     def __init__(self, input_list,
                  k=2,
-                 merger_ipq_init=False,
-                 merger_init=False,
+                 merger_ipq_init=None,
+                 merger_init=None,
                  test_mode=False):
         super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)
 

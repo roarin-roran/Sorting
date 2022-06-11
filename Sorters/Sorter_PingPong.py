@@ -6,8 +6,8 @@ class Sorter_PingPong(Sorter.Sorter, ABC):
     """a middle class between the Sorter class, and fully implemented sorters which use ping pong memory management.
     sets up various shared objects, variables, and methods"""
     def __init__(self, input_list, k,
-                 merger_ipq_init=False,
-                 merger_init=False,
+                 merger_ipq_init=None,
+                 merger_init=None,
                  test_mode=False):
         # passes data down, where it'll be saved
         super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)

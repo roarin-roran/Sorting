@@ -8,8 +8,8 @@ class Sorter:
     """an informal interface for sorters, which accept a list as input, then sort that list in various ways"""
     def __init__(self, input_list,
                  k=2,
-                 merger_ipq_init=False,
-                 merger_init=False,
+                 merger_ipq_init=None,
+                 merger_init=None,
                  test_mode=False):
         self.input_list = input_list
         self.k = k

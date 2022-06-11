@@ -1,6 +1,7 @@
 import unittest
 from Support import ListSlice
-from Tests import Test_Sorters, Test_MergerIPQ
+from Tests import Test_Sorters
+from Misc.mothballed import Test_MergerIPQ
 from Mergers import Merger_Adaptive, Merger_Tester, Merger_Two_Way
 from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_LoserTree
 from typing import Union
@@ -9,21 +10,21 @@ from os.path import exists
 
 
 class Test_Mergers(unittest.TestCase):
-    def test_tests(self, override_merger_ipq_init=False):
+    def test_tests(self, override_merger_ipq_init=None):
         """ensures that the tests below correctly use the desired merger"""
         merger_init = Merger_Tester.Merger_Tester
         default_merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
 
         self._passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
 
-    def test_adaptive_merge(self, override_merger_ipq_init=False):
+    def test_adaptive_merge(self, override_merger_ipq_init=None):
         """runs all tests for the adaptive merge sort"""
         merger_init = Merger_Adaptive.Merger_Adaptive
         default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
 
         self._passing_ipq_test_wrapper(merger_init, override_merger_ipq_init, default_merger_ipq_init)
 
-    def test_adaptive_merge_real_sentinels(self, override_merger_ipq_init=False):
+    def test_adaptive_merge_real_sentinels(self, override_merger_ipq_init=None):
         """runs all tests for the legacy adaptive merge sort which uses real sentinels"""
         merger_init = Merger_Adaptive.Merger_Adaptive_Real_Sentinels
         default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
@@ -79,15 +80,19 @@ class Test_Mergers(unittest.TestCase):
         sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init,
                                             override_merger_init=merger_init)
 
-        self._merge_two(merger_init, merger_ipq_init)
+        self._merge_two(merger_init, merger_ipq_init, keep_files=True)
         self._merge_three_variable_lengths(merger_init, merger_ipq_init)
         self._merge_one_element_in_front(merger_init, merger_ipq_init)
         self._merge_one_element_in_back(merger_init, merger_ipq_init)
         # check that the desired merger was used and no other merger was used
         self.check_correct_merger_used(merger_init)
 
-    def _merge_two(self, merger_init, merger_ipq_init):
+    def _merge_two(self, merger_init, merger_ipq_init, keep_files=False):
         """merges two trivial inputs of the same length"""
+        if not keep_files:
+            Test_Mergers.clear_file_merger()
+            Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
+
         two_runs = [2, 3, 0, 1]
         run_1 = ListSlice.ListSlice(two_runs, 0, 2)
         run_2 = ListSlice.ListSlice(two_runs, 2, 4)
@@ -100,7 +105,11 @@ class Test_Mergers(unittest.TestCase):
 
         self.assertEqual([0, 1, 2, 3], write_list_slice.list)
 
-    def _merge_three_variable_lengths(self, merger_init, merger_ipq_init):
+        if not keep_files:
+            Test_Mergers.clear_file_merger()
+            Test_MergerIPQ.Test_MergerIPQ.clear_file_ipq()
+
+    def _merge_three_variable_lengths(self, merger_init, merger_ipq_init, keep_files=False):
         """merges three inputs with different lengths"""
         three_runs = [7, 0, 2, 4, 1, 3, 5, 6]
         run_1 = ListSlice.ListSlice(three_runs, 0, 1)
@@ -115,7 +124,7 @@ class Test_Mergers(unittest.TestCase):
 
         self.assertEqual([0, 1, 2, 3, 4, 5, 6, 7], write_list_slice.list)
 
-    def _merge_one_element_in_front(self, merger_init, merger_ipq_init):
+    def _merge_one_element_in_front(self, merger_init, merger_ipq_init, keep_files=False):
         # two_runs = [1, 2, 3, 4, 6, 7, 8, 5]
         two_runs = [5, 1, 2, 3, 4, 6, 7, 8]
         run_1 = ListSlice.ListSlice(two_runs, 0, 1)
@@ -128,7 +137,7 @@ class Test_Mergers(unittest.TestCase):
 
         self.assertEqual([1, 2, 3, 4, 5, 6, 7, 8], write_list_slice.list)
 
-    def _merge_one_element_in_back(self, merger_init, merger_ipq_init):
+    def _merge_one_element_in_back(self, merger_init, merger_ipq_init, keep_files=False):
         two_runs = [1, 2, 3, 4, 6, 7, 8, 5]
         run_1 = ListSlice.ListSlice(two_runs, 0, 7)
         run_2 = ListSlice.ListSlice(two_runs, 7, 8)

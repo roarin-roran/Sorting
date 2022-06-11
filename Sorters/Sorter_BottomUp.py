@@ -6,8 +6,8 @@ import math
 class Sorter_PingPong_BottomUp(Sorter_PingPong.Sorter_PingPong):
     """a ping-pong implementation of a bottom-up k-way merge sort with no run detection"""
     def __init__(self, input_list, k,
-                 merger_ipq_init=False,
-                 merger_init=False,
+                 merger_ipq_init=None,
+                 merger_init=None,
                  test_mode=False):
 
         super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)

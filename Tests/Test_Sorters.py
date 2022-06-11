@@ -3,16 +3,15 @@ import unittest
 from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods, Sorter_Peeksort
 from Mergers import Merger, Merger_Adaptive, Merger_Tester
 from Merger_IPQs import MergerIPQ, MergerIPQ_Tester, MergerIPQ_LoserTree
-from Tests import Test_MergerIPQ, Test_Mergers
+from Tests import Test_Mergers
+from Misc.mothballed import Test_MergerIPQ
 from typing import Union
 import os
 
 
 class Test_Sorters(unittest.TestCase):
     # todo - this doesn't pass tests
-    def _test_sorter_peeksort(self,
-                             override_merger_ipq_init=False,
-                             override_merger_init=False):
+    def _test_sorter_peeksort(self, override_merger_ipq_init=None, override_merger_init=None):
         """tests the k-way peeksort sorter"""
 
         sorter_init = Sorter_Peeksort.Sorter_Peeksort
@@ -25,8 +24,8 @@ class Test_Sorters(unittest.TestCase):
                                    override_merger_ipq_init, default_merger_ipq_init)
 
     def test_sorter_adaptive(self,
-                             override_merger_ipq_init=False,
-                             override_merger_init=False):
+                             override_merger_ipq_init=None,
+                             override_merger_init=None):
         """tests the bottom up, k-way, run adaptive sorter"""
 
         sorter_init = Sorter_Adaptive.Sorter_PingPong_Adaptive
@@ -38,8 +37,8 @@ class Test_Sorters(unittest.TestCase):
                                    override_merger_ipq_init, default_merger_ipq_init)
 
     def test_sorter_bottom_up(self,
-                              override_merger_ipq_init=False,
-                              override_merger_init=False):
+                              override_merger_ipq_init=None,
+                              override_merger_init=None):
         """tests the k-way bottom up sorter"""
         sorter_init = Sorter_BottomUp.Sorter_PingPong_BottomUp
         default_merger_init = Merger_Adaptive.Merger_Adaptive

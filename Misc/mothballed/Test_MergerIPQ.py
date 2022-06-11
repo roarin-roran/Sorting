@@ -21,6 +21,9 @@ class Test_MergerIPQ(unittest.TestCase):
 
     def _prototype_test(self, merger_ipq_init):
         """a prototype for all testing of merger ipqs - call it with the right init and let her rip"""
+        # clear files to prevent memory leaks
+        Test_Mergers.Test_Mergers.clear_file_merger()
+        Test_MergerIPQ.clear_file_ipq()
 
         # use the ipq at issue to do a sorting test - high volume random values, testing for problems caused by the ipq
         sorter_tester = Test_Sorters.Test_Sorters()
@@ -28,7 +31,7 @@ class Test_MergerIPQ(unittest.TestCase):
         sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init)
 
         # apply fixed tests - use human generated values to reproduce expected behaviour
-        self._fixed_tests(merger_ipq_init)
+        self._fixed_tests(merger_ipq_init, keep_files=True)
         # check that the desired merger_ipq was used and no other merger_ipq was used
         self.check_correct_merger_ipq_used(merger_ipq_init)
 
@@ -36,8 +39,12 @@ class Test_MergerIPQ(unittest.TestCase):
         Test_Mergers.Test_Mergers.clear_file_merger()
         Test_MergerIPQ.clear_file_ipq()
 
-    def _fixed_tests(self, merger_ipq_init):
+    def _fixed_tests(self, merger_ipq_init, keep_files=False):
         """test the ipq with fixed, well defined values - covering all core methods"""
+        if not keep_files:
+            Test_Mergers.Test_Mergers.clear_file_merger()
+            Test_MergerIPQ.clear_file_ipq()
+
         sample_input = [4, 3, 2, 1]
 
         our_simple_merger = merger_ipq_init(sample_input, test_mode=True)
@@ -59,6 +66,10 @@ class Test_MergerIPQ(unittest.TestCase):
         our_simple_merger.update_lowest_priority(34)
 
         self.assertEqual((2, 12), our_simple_merger.peek_at_lowest_priority_element())
+
+        if not keep_files:
+            Test_Mergers.Test_Mergers.clear_file_merger()
+            Test_MergerIPQ.clear_file_ipq()
 
     def check_correct_merger_ipq_used(self, correct_merger_ipq_init):
         """checks that the input is the only ipq used since records were last wiped"""

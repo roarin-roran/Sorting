@@ -4,8 +4,8 @@ from Support import ListSlice
 
 class Sorter_PingPong_Adaptive(Sorter_PingPong.Sorter_PingPong):
     def __init__(self, input_list, k,
-                 merger_ipq_init=False,
-                 merger_init=False,
+                 merger_ipq_init=None,
+                 merger_init=None,
                  test_mode=False):
         super().__init__(input_list, k, merger_ipq_init, merger_init, test_mode)
 
