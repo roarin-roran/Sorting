@@ -10,6 +10,7 @@ class Merger_Two_Way(Merger.Merger):
                  write_list_slice: ListSlice.ListSlice,
                  option_code: int = 3,
                  merger_ipq_init=False, test_mode=False):
+        print(runs)
         if len(runs) != 2:
             raise ValueError("Merger_Two_Way can only merge two runs, but", len(runs), "were inputted")
 

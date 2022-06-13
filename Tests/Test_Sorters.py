@@ -3,8 +3,7 @@ import unittest
 from Sorters import Sorter_Adaptive, Sorter_BottomUp, Sorter_LibraryMethods, Sorter_Peeksort
 from Mergers import Merger, Merger_Adaptive, Merger_Tester
 from Merger_IPQs import MergerIPQ, MergerIPQ_Tester, MergerIPQ_LoserTree
-from Tests import Test_Mergers
-from Misc.mothballed import Test_MergerIPQ
+from Misc.mothballed import Test_MergerIPQ, Test_Mergers
 from typing import Union
 import os
 

@@ -3,7 +3,7 @@ from Merger_IPQs import MergerIPQ_Tester, MergerIPQ_Dummy, MergerIPQ_LoserTree
 import unittest
 
 
-class Test_MergerIPQ(Test.Test):
+class Test_MergerIPQs(Test.Test):
     def __init__(self, merger_ipq_init,
                  check_ipq_selection=False,
                  check_merger_selection=False):
@@ -11,21 +11,33 @@ class Test_MergerIPQ(Test.Test):
 
         self.merger_ipq_init = merger_ipq_init
 
+    # * * * * * * * * * * * * * *
+    # * * * * * UTILITY * * * * *
+    # * * * * * * * * * * * * * *
+
     def _prototype_test(self):
         """a prototype for all testing of merger ipqs - call it with the right init and let her rip"""
         # clear files to prevent memory leaks
         self.clear_unnecessary_files()
 
-        # 1. use the ipq at issue to do a sorting test:
-        #    high volume random values, testing for problems caused by this ipq
-        sorter_tester = Test_Sorters.Test_Sorters()
-        sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=self.merger_ipq_init)
+        # ensure that a test failing to run doesn't leak
+        test_completed = False
+        try:
+            # 1. use the ipq at issue to do a sorting test:
+            #    high volume random values, testing for problems caused by this ipq
+            sorter_tester = Test_Sorters.Test_Sorters()
+            sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=self.merger_ipq_init)
 
-        # 2. apply fixed tests - use human generated values to reproduce expected behaviour
-        self._fixed_tests(self.merger_ipq_init)
+            # 2. apply fixed tests - use human generated values to reproduce expected behaviour
+            self._fixed_tests(self.merger_ipq_init)
 
-        # 3. check that the desired merger_ipq was used and no other merger_ipq was used
-        self.check_correct_merger_ipq_used(self.merger_ipq_init)
+            # 3. check that the desired merger_ipq was used and no other merger_ipq was used
+            self._check_correct_merger_ipq_used(self.merger_ipq_init)
+
+            test_completed = True
+        finally:
+            if not test_completed:
+                self.fail(msg="ipq test failed to complete")
 
         # clear files to prevent memory leaks
         self.clear_unnecessary_files()
@@ -54,7 +66,7 @@ class Test_MergerIPQ(Test.Test):
 
         self.assertEqual((2, 12), our_simple_merger.peek_at_lowest_priority_element())
 
-    def check_correct_merger_ipq_used(self, correct_merger_ipq_init):
+    def _check_correct_merger_ipq_used(self, correct_merger_ipq_init):
         """checks that the input is the only ipq used since records were last wiped"""
         blank_merger_ipq = correct_merger_ipq_init([])
         f_r = open("test_options_merger_ipq.txt", "r")
@@ -67,26 +79,34 @@ class Test_MergerIPQ(Test.Test):
 
         f_r.close()
 
+    # * * * * * * * * * * * * * *
+    # * * * * * TESTS * * * * * *
+    # * * * * * * * * * * * * * *
+
     def test_tests(self):
         """ensures that the tests below correctly use the desired ipq"""
-        our_tester = Test_MergerIPQ(MergerIPQ_Tester.MergerIPQ_Tester)
+        our_tester = Test_MergerIPQs(MergerIPQ_Tester.MergerIPQ_Tester)
         our_tester._prototype_test()
 
         print("test 1")
 
     def test_dummy_ipq(self):
         """tests the simple ipq"""
-        our_tester = Test_MergerIPQ(MergerIPQ_Dummy.MergerIPQ_Dummy)
+        our_tester = Test_MergerIPQs(MergerIPQ_Dummy.MergerIPQ_Dummy)
         our_tester._prototype_test()
 
         print("test 2")
 
     def test_tournament_ipq(self):
         """tests the tournament tree based ipq"""
-        our_tester = Test_MergerIPQ(MergerIPQ_LoserTree.MergerIPQ_LoserTree)
+        our_tester = Test_MergerIPQs(MergerIPQ_LoserTree.MergerIPQ_LoserTree)
         our_tester._prototype_test()
 
         print("test 3")
+
+    # * * * * * *  * * * * * * *
+    # * * * * * MAIN * * * * * *
+    # * * * * * *  * * * * * * *
 
     # todo - why is this even necessary? if a test isn't copied in here, it says that it runs... but doesn't
     def runTest(self):

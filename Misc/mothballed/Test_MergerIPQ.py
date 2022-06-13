@@ -1,5 +1,6 @@
 import unittest
-from Tests import Test_Sorters, Test_Mergers
+from Tests import Test_Sorters
+from Misc.mothballed import Test_Mergers
 from Merger_IPQs import MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_LoserTree
 import os
 from os.path import exists
