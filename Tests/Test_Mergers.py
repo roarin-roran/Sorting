@@ -1,22 +1,23 @@
 from Tests import Test, Test_Sorters
 from Support import ListSlice
 from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_LoserTree
+from Mergers import Merger, Merger_Tester, Merger_Adaptive, Merger_TwoWay
 from typing import Union
-from Mergers import Merger_Tester, Merger_Adaptive, Merger_Two_Way
 import unittest
 
 
 class Test_Mergers(Test.Test):
-    def __init__(self, merger_init,
+    def __init__(self, merger_init: type(Merger.Merger),
+                 test_case,
                  override_merger_ipq_init: Union[bool, type(MergerIPQ.MergerIPQ)] = False,
                  check_ipq_selection=False,
                  check_merger_selection=False):
         super().__init__(check_ipq_selection, check_merger_selection)
 
+        self.test_case = test_case
+
         self.merger_init = merger_init
         self.override_merger_ipq_init = override_merger_ipq_init
-
-    # todo - should unit tests be native to their respective classes? I think they should.
 
     # * * * * * * ** * * * * * * *
     # * * * * * INPUTS * * * * * *
@@ -35,12 +36,11 @@ class Test_Mergers(Test.Test):
         write_list_slice = ListSlice.ListSlice([-1] * 4, 0, 4)
 
         # merge
-        print("merge stack:", merge_stack)
         our_merger = self.merger_init(merge_stack, write_list_slice, merger_ipq_init=merger_ipq_init, test_mode=True)
         our_merger.merge()
 
         # assert answer is correct
-        self.assertEqual([0, 1, 2, 3], write_list_slice.list)
+        self.test_case.assertEqual([0, 1, 2, 3], write_list_slice.list)
 
         self.clear_unnecessary_files()
 
@@ -62,7 +62,7 @@ class Test_Mergers(Test.Test):
         our_merger.merge()
 
         # assert answer is correct
-        self.assertEqual([0, 1, 2, 3, 4, 5, 6, 7], write_list_slice.list)
+        self.test_case.assertEqual([0, 1, 2, 3, 4, 5, 6, 7], write_list_slice.list)
 
         self.clear_unnecessary_files()
 
@@ -83,7 +83,7 @@ class Test_Mergers(Test.Test):
         our_merger.merge()
 
         # assert answer is correct
-        self.assertEqual([1, 2, 3, 4, 5, 6, 7, 8], write_list_slice.list)
+        self.test_case.assertEqual([1, 2, 3, 4, 5, 6, 7, 8], write_list_slice.list)
 
         self.clear_unnecessary_files()
 
@@ -104,7 +104,7 @@ class Test_Mergers(Test.Test):
         our_merger.merge()
 
         # assert answer is correct
-        self.assertEqual([1, 2, 3, 4, 5, 6, 7, 8], write_list_slice.list)
+        self.test_case.assertEqual([1, 2, 3, 4, 5, 6, 7, 8], write_list_slice.list)
 
         self.clear_unnecessary_files()
 
@@ -125,7 +125,6 @@ class Test_Mergers(Test.Test):
             #    high volume random values, testing for problems caused by this merger
             sorter_tester = Test_Sorters.Test_Sorters()
 
-            print(merger_ipq_init)
             sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init,
                                                 override_merger_init=self.merger_init)
 
@@ -136,12 +135,12 @@ class Test_Mergers(Test.Test):
             self._merge_one_element_in_back(merger_ipq_init)
 
             # 3. check that the desired merger was used and no other merger was used
-            self.check_correct_merger_used(self.merger_init)
+            self._check_correct_merger_used(self.merger_init)
 
             test_completed = True
         finally:
             if not test_completed:
-                self.fail(msg="merger test failed to complete")
+                self.test_case.fail(msg="merger test failed to complete")
 
         # clear files on termination, including the merger selection.
         self.check_merger_selection = False
@@ -179,51 +178,55 @@ class Test_Mergers(Test.Test):
     # * * * * * TESTS * * * * * *
     # * * * * * * * * * * * * * *
 
+
+class TestCases(unittest.TestCase):
     def test_tests(self, override_merger_ipq_init: Union[bool, type(MergerIPQ.MergerIPQ)] = None):
         """ensures that the tests below correctly use the desired merger"""
         merger_init = Merger_Tester.Merger_Tester
         default_merger_ipq_init = MergerIPQ_Dummy.MergerIPQ_Dummy
 
-        our_tester = Test_Mergers(merger_init, default_merger_ipq_init)
+        our_tester = Test_Mergers(merger_init, self, default_merger_ipq_init)
         our_tester._passing_ipq_test_wrapper(override_merger_ipq_init, default_merger_ipq_init)
 
-        print("tested tests")
+        print("tested merger tests")
 
-    def test_adaptive_merge(self, override_merger_ipq_init=None):
+    def test_adaptive_merge(self, override_merger_ipq_init: Union[bool, type(MergerIPQ.MergerIPQ)] = None):
         """runs all tests for the adaptive merge sort"""
         merger_init = Merger_Adaptive.Merger_Adaptive
         default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
 
-        our_tester = Test_Mergers(merger_init, default_merger_ipq_init)
+        our_tester = Test_Mergers(merger_init, self, default_merger_ipq_init)
         our_tester._passing_ipq_test_wrapper(override_merger_ipq_init, default_merger_ipq_init)
 
-        print("tested adaptive merge")
+        print("tested adaptive merge - virtual sentinels")
 
     def test_adaptive_merge_real_sentinels(self, override_merger_ipq_init=None):
         """runs all tests for the legacy adaptive merge sort which uses real sentinels"""
         merger_init = Merger_Adaptive.Merger_Adaptive_Real_Sentinels
         default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
 
-        our_tester = Test_Mergers(merger_init, default_merger_ipq_init)
+        our_tester = Test_Mergers(merger_init, self, default_merger_ipq_init)
         our_tester._passing_ipq_test_wrapper(override_merger_ipq_init, default_merger_ipq_init)
+
+        print("tested adaptive merge - real sentinels")
 
     def test_two_way_merger(self):
         """runs a custom test suite for the two way merger, which doesn't use an ipq, and can't use the usual test
         inputs"""
-        self.clear_unnecessary_files()
-        self.check_merger_selection = True
+        our_tester = Test_Mergers(Merger_TwoWay.Merger_TwoWay, self, check_merger_selection=True)
+
+        our_tester.clear_unnecessary_files()
+        our_tester.check_merger_selection = True
 
         # wrap the test to prevent failure to run from causing issues
         test_completed = False
         try:
-            our_tester = Test_Mergers(Merger_Two_Way.Merger_Two_Way, check_merger_selection=True)
-
             # note that no ipq is actually used - we just have to give one here.
             our_tester._merge_two(MergerIPQ_Dummy.MergerIPQ_Dummy)
             our_tester._merge_one_element_in_back(MergerIPQ_Dummy.MergerIPQ_Dummy)
             our_tester._merge_one_element_in_front(MergerIPQ_Dummy.MergerIPQ_Dummy)
 
-            self.check_correct_merger_used(Merger_Two_Way.Merger_Two_Way)
+            our_tester._check_correct_merger_used(Merger_TwoWay.Merger_TwoWay)
 
             test_completed = True
         finally:
@@ -231,20 +234,14 @@ class Test_Mergers(Test.Test):
                 self.fail(msg="merger test failed to complete")
 
         self.check_merger_selection = False
-        self.clear_unnecessary_files()
+        our_tester.clear_unnecessary_files()
+
+        print("tested two way merge")
 
     # * * * * * *  * * * * * * *
     # * * * * * MAIN * * * * * *
     # * * * * * *  * * * * * * *
 
-    # todo - why is this even necessary? if a test isn't copied in here, it says that it runs... but doesn't
-    def runTest(self):
-        self.test_tests()
-        self.test_adaptive_merge()
-        self.test_adaptive_merge_real_sentinels()
-        self.test_two_way_merger()
-
 
 if __name__ == "__main__":
     unittest.main()
-    pass

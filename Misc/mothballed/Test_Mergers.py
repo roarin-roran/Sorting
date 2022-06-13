@@ -2,7 +2,7 @@ import unittest
 from Support import ListSlice
 from Tests import Test_Sorters
 from Misc.mothballed import Test_MergerIPQ
-from Mergers import Merger_Adaptive, Merger_Tester, Merger_Two_Way
+from Mergers import Merger_Adaptive, Merger_Tester, Merger_TwoWay
 from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_LoserTree
 from typing import Union
 import os
@@ -34,9 +34,9 @@ class Test_Mergers(unittest.TestCase):
     def test_two_way_merger(self):
         """runs a custom test suite for the two way merger, which doesn't use an ipq, and can't use the usual test
         inputs"""
-        self._merge_two(Merger_Two_Way.Merger_Two_Way, MergerIPQ_Dummy.MergerIPQ_Dummy)
-        self._merge_one_element_in_back(Merger_Two_Way.Merger_Two_Way, MergerIPQ_Dummy.MergerIPQ_Dummy)
-        self._merge_one_element_in_front(Merger_Two_Way.Merger_Two_Way, MergerIPQ_Dummy.MergerIPQ_Dummy)
+        self._merge_two(Merger_TwoWay.Merger_TwoWay, MergerIPQ_Dummy.MergerIPQ_Dummy)
+        self._merge_one_element_in_back(Merger_TwoWay.Merger_TwoWay, MergerIPQ_Dummy.MergerIPQ_Dummy)
+        self._merge_one_element_in_front(Merger_TwoWay.Merger_TwoWay, MergerIPQ_Dummy.MergerIPQ_Dummy)
 
         # todo - this fails, why?
         # self.check_correct_merger_used(Merger_Two_Way.Merger_Two_Way)

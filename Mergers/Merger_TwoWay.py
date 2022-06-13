@@ -3,14 +3,13 @@ from Support import ListSlice
 from typing import List
 
 
-class Merger_Two_Way(Merger.Merger):
+class Merger_TwoWay(Merger.Merger):
     """a stripped down merger which only accepts two runs, and always uses k=2"""
     def __init__(self,
                  runs: List[ListSlice.ListSlice],
                  write_list_slice: ListSlice.ListSlice,
                  option_code: int = 3,
                  merger_ipq_init=False, test_mode=False):
-        print(runs)
         if len(runs) != 2:
             raise ValueError("Merger_Two_Way can only merge two runs, but", len(runs), "were inputted")
 

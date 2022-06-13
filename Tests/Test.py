@@ -4,14 +4,12 @@ import unittest
 from Support import ListSlice
 
 
-class Test(unittest.TestCase):
-    def __init__(self,
-                 check_ipq_selection=False,
-                 check_merger_selection=False):
-        super().__init__()
-
+class Test:
+    def __init__(self, check_ipq_selection=False, check_merger_selection=False):
         self.check_ipq_selection = check_ipq_selection
         self.check_merger_selection = check_merger_selection
+
+        self.test_case = None
 
         self.clear_unnecessary_files()
 
@@ -24,11 +22,11 @@ class Test(unittest.TestCase):
 
         for entry in f_r:
             given_answer = entry[0]
-            self.assertEqual(correct_answer, given_answer)
+            self.test_case.assertEqual(correct_answer, given_answer)
 
         f_r.close()
 
-    def check_correct_merger_used(self, correct_merger_init):
+    def _check_correct_merger_used(self, correct_merger_init):
         """checks that the correct merger is the only merger that's been used since the last wipe"""
         # blank merger must be created for its option code to be read
         # two runs must be passed for merger two way to work (but they can be empty)
@@ -39,7 +37,7 @@ class Test(unittest.TestCase):
 
         for entry in f_r:
             given_answer = entry[0]
-            self.assertEqual(correct_answer, given_answer)
+            self.test_case.assertEqual(correct_answer, given_answer)
 
         f_r.close()
 
@@ -49,9 +47,10 @@ class Test(unittest.TestCase):
         if not self.check_merger_selection:
             self.clear_file_merger()
 
-    def clear_all_files(self):
-        self.clear_file_ipq()
-        self.clear_file_merger()
+    @staticmethod
+    def clear_all_files():
+        Test.clear_file_ipq()
+        Test.clear_file_merger()
 
     @staticmethod
     def clear_file_ipq():

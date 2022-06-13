@@ -4,10 +4,10 @@ import unittest
 
 
 class Test_MergerIPQs(Test.Test):
-    def __init__(self, merger_ipq_init,
-                 check_ipq_selection=False,
-                 check_merger_selection=False):
+    def __init__(self, merger_ipq_init, test_case, check_ipq_selection=False, check_merger_selection=False):
         super().__init__(check_ipq_selection, check_merger_selection)
+
+        self.test_case = test_case
 
         self.merger_ipq_init = merger_ipq_init
 
@@ -37,7 +37,7 @@ class Test_MergerIPQs(Test.Test):
             test_completed = True
         finally:
             if not test_completed:
-                self.fail(msg="ipq test failed to complete")
+                self.test_case.fail(msg="ipq test failed to complete")
 
         # clear files to prevent memory leaks
         self.clear_unnecessary_files()
@@ -48,71 +48,55 @@ class Test_MergerIPQs(Test.Test):
 
         our_simple_merger = merger_ipq_init(sample_input, test_mode=True)
 
-        self.assertEqual((3, 1), our_simple_merger.peek_at_lowest_priority_element())
+        self.test_case.assertEqual((3, 1), our_simple_merger.peek_at_lowest_priority_element())
 
         our_simple_merger.update_lowest_priority(17)
 
-        self.assertEqual((2, 2), our_simple_merger.peek_at_lowest_priority_element())
+        self.test_case.assertEqual((2, 2), our_simple_merger.peek_at_lowest_priority_element())
 
         our_simple_merger.update_lowest_priority(12)
 
-        self.assertEqual((1, 3), our_simple_merger.peek_at_lowest_priority_element())
+        self.test_case.assertEqual((1, 3), our_simple_merger.peek_at_lowest_priority_element())
 
         our_simple_merger.update_lowest_priority(15)
 
-        self.assertEqual((0, 4), our_simple_merger.peek_at_lowest_priority_element())
+        self.test_case.assertEqual((0, 4), our_simple_merger.peek_at_lowest_priority_element())
 
         our_simple_merger.update_lowest_priority(34)
 
-        self.assertEqual((2, 12), our_simple_merger.peek_at_lowest_priority_element())
-
-    def _check_correct_merger_ipq_used(self, correct_merger_ipq_init):
-        """checks that the input is the only ipq used since records were last wiped"""
-        blank_merger_ipq = correct_merger_ipq_init([])
-        f_r = open("test_options_merger_ipq.txt", "r")
-
-        correct_answer = str(blank_merger_ipq.option_code)
-
-        for entry in f_r:
-            given_answer = entry[0]
-            self.assertEqual(correct_answer, given_answer)
-
-        f_r.close()
+        self.test_case.assertEqual((2, 12), our_simple_merger.peek_at_lowest_priority_element())
 
     # * * * * * * * * * * * * * *
     # * * * * * TESTS * * * * * *
     # * * * * * * * * * * * * * *
 
+
+class TestCases(unittest.TestCase):
+
     def test_tests(self):
         """ensures that the tests below correctly use the desired ipq"""
-        our_tester = Test_MergerIPQs(MergerIPQ_Tester.MergerIPQ_Tester)
+        our_tester = Test_MergerIPQs(MergerIPQ_Tester.MergerIPQ_Tester, self)
         our_tester._prototype_test()
 
-        print("test 1")
+        print("tested ipq tests")
 
     def test_dummy_ipq(self):
         """tests the simple ipq"""
-        our_tester = Test_MergerIPQs(MergerIPQ_Dummy.MergerIPQ_Dummy)
+        our_tester = Test_MergerIPQs(MergerIPQ_Dummy.MergerIPQ_Dummy, self)
         our_tester._prototype_test()
 
-        print("test 2")
+        print("tested dummy ipq")
 
-    def test_tournament_ipq(self):
-        """tests the tournament tree based ipq"""
-        our_tester = Test_MergerIPQs(MergerIPQ_LoserTree.MergerIPQ_LoserTree)
+    def test_loser_tree_ipq(self):
+        """tests the loser tree based ipq"""
+        our_tester = Test_MergerIPQs(MergerIPQ_LoserTree.MergerIPQ_LoserTree, self)
         our_tester._prototype_test()
 
-        print("test 3")
+        print("tested loser tree ipq")
 
     # * * * * * *  * * * * * * *
     # * * * * * MAIN * * * * * *
     # * * * * * *  * * * * * * *
-
-    # todo - why is this even necessary? if a test isn't copied in here, it says that it runs... but doesn't
-    def runTest(self):
-        self.test_tests()
-        self.test_dummy_ipq()
-        self.test_tournament_ipq()
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 from Sorters import Sorter_Peeksort
-from Mergers import Merger_Two_Way
+from Mergers import Merger_TwoWay
 
 
 # sorts the input
@@ -9,5 +9,5 @@ def sort(input_list, k=2):
     input()
 
     # todo - fix this class. currently, peeksort sometimes uses k=3 even when k is set to 2. it has a fair few issues...
-    sorter = Sorter_Peeksort.Sorter_Peeksort(input_list, 2, merger_init=Merger_Two_Way.Merger_Two_Way)
+    sorter = Sorter_Peeksort.Sorter_Peeksort(input_list, 2, merger_init=Merger_TwoWay.Merger_TwoWay)
     sorter.sort()

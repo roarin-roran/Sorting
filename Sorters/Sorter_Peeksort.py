@@ -43,6 +43,7 @@ class Sorter_Peeksort(Sorter.Sorter):
 
         # todo - replace this with a global list of some clever size and access convention (size O(k log n)? access by
         #  noting the position locally, but accessing the list globally)
+        # do with a list of objects
         merge_stack = [ListSlice.ListSlice([0], 0, 1)] * (self.k+2)
         next_merge_stack_index = 0
 
