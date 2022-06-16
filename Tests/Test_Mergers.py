@@ -1,4 +1,5 @@
-from Tests import Test, Test_Sorters
+from Tests import Test
+from Misc.mothballed import Test_Sorters
 from Support import ListSlice
 from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_LoserTree
 from Mergers import Merger, Merger_Tester, Merger_Adaptive, Merger_TwoWay

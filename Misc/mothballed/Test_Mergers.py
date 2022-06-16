@@ -1,7 +1,6 @@
 import unittest
 from Support import ListSlice
-from Tests import Test_Sorters
-from Misc.mothballed import Test_MergerIPQ
+from Misc.mothballed import Test_MergerIPQ, Test_Sorters
 from Mergers import Merger_Adaptive, Merger_Tester, Merger_TwoWay
 from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_LoserTree
 from typing import Union
