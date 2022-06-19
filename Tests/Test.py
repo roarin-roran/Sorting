@@ -18,7 +18,7 @@ class Test:
         blank_merger_ipq = correct_merger_ipq_init([])
         f_r = open("test_options_merger_ipq.txt", "r")
 
-        correct_answer = str(blank_merger_ipq.option_code)
+        correct_answer = str(blank_merger_ipq.option_code.value)
 
         for entry in f_r:
             given_answer = entry[0]

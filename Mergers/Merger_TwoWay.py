@@ -9,7 +9,6 @@ class Merger_TwoWay(Merger.Merger):
     def __init__(self,
                  runs: List[ListSlice.ListSlice],
                  write_list_slice: ListSlice.ListSlice,
-                 option_code: int = 3,
                  merger_ipq_init=False, test_mode=False):
         if len(runs) != 2:
             raise ValueError("Merger_Two_Way can only merge two runs, but", len(runs), "were inputted")
@@ -17,9 +16,8 @@ class Merger_TwoWay(Merger.Merger):
         if merger_ipq_init:
             raise ValueError("Merger_Two_Way doesn't use an ipq, but ", merger_ipq_init, " was entered")
 
-        self.option_code = Code_Merger.Code_Merger.TWO_WAY
-
-        super().__init__(runs, write_list_slice, option_code, test_mode)
+        super().__init__(runs, write_list_slice, Code_Merger.Code_Merger.TWO_WAY,
+                         test_mode=test_mode)
 
     def merge(self) -> ListSlice.ListSlice:
         """merges the elements passed at object creation by modifying the original list, modifying the write slice"""

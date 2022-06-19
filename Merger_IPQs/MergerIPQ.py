@@ -7,12 +7,13 @@ PRIORITY_TYPE = TypeVar('PRIORITY_TYPE')
 
 
 class MergerIPQ:
-    def __init__(self, initial_priorities: List[PRIORITY_TYPE], option_code: int, test_mode=False) -> None:
+    def __init__(self, initial_priorities: List[PRIORITY_TYPE], option_code, test_mode=False) -> None:
         """an informal interface for an indexed priority queue, with a few shared helper methods built in"""
+
         self.option_code = option_code
 
         if test_mode:
-            self.record_options(option_code)
+            self.record_options()
 
     def update_lowest_priority(self, new_priority: PRIORITY_TYPE) -> None:
         """Updates the priority of the lowest priority element"""
@@ -22,18 +23,17 @@ class MergerIPQ:
         """returns the index of the highest priority element, without modifying it"""
         raise NotImplementedError("peek_at_lowest_priority_element is not implemented")
 
-    @staticmethod
-    def record_options(option_code):
+    def record_options(self):
         """records which merger IPQ is used to an external file for testing purposes"""
         num_options = 0
         # only write unique inputs
         if exists("test_options_merger_ipq.txt"):
             f_r = open("test_options_merger_ipq.txt", "r")
-            all_options = [str(option_code)]
+            all_options = [str(self.option_code.value)]
             for entry in f_r:
                 all_options.append(entry[0])
 
-                if entry == str(option_code) + "\n":
+                if entry == str(self.option_code.value) + "\n":
                     f_r.close()
                     return
                 else:
@@ -46,6 +46,6 @@ class MergerIPQ:
 
         f_a = open("test_options_merger_ipq.txt", "a")
 
-        f_a.write(str(option_code))
+        f_a.write(str(self.option_code.value))
         f_a.write("\n")
         f_a.close()

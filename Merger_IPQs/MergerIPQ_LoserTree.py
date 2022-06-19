@@ -1,5 +1,6 @@
 from Merger_IPQs import MergerIPQ
 import math
+from Codes import Code_IPQ
 
 
 class MergerIPQ_LoserTree(MergerIPQ.MergerIPQ):
@@ -7,8 +8,8 @@ class MergerIPQ_LoserTree(MergerIPQ.MergerIPQ):
     differ in the literature)"""
     # todo - update to use binary heap language in method names, variable names, and comments
 
-    def __init__(self, initial_priorities, option_code=2, test_mode=False):
-        super().__init__(initial_priorities, option_code, test_mode)
+    def __init__(self, initial_priorities, test_mode=False):
+        super().__init__(initial_priorities, Code_IPQ.Code_Ipq.LOSER, test_mode)
 
         self.n = len(initial_priorities)
 

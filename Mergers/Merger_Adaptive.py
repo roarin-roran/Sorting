@@ -11,11 +11,9 @@ class Merger_Adaptive(Merger.Merger):
     def __init__(self,
                  runs: List[ListSlice.ListSlice],
                  write_list_slice: ListSlice.ListSlice,
-                 merger_ipq_init=False, test_mode=False):
-
-        self.option_code = Code_Merger.Code_Merger.ADAPTIVE_VIRTUAL
-
-        super().__init__(runs, write_list_slice, merger_ipq_init, test_mode)
+                 merger_ipq_init=False, test_mode=False,
+                 option_code=Code_Merger.Code_Merger.ADAPTIVE_VIRTUAL):
+        super().__init__(runs, write_list_slice, option_code, merger_ipq_init, test_mode)
 
     def merge(self):
         """merges the elements passed at object creation by modifying the original list, modifying the write slice"""
@@ -63,10 +61,7 @@ class Merger_Adaptive_Real_Sentinels(Merger.Merger):
                  runs: List[ListSlice.ListSlice],
                  write_list_slice: ListSlice.ListSlice,
                  merger_ipq_init=False, test_mode=False):
-
-        self.option_code = Code_Merger.Code_Merger.ADAPTIVE_REAL
-
-        super().__init__(runs, write_list_slice, merger_ipq_init, test_mode)
+        super().__init__(runs, write_list_slice, Code_Merger.Code_Merger.ADAPTIVE_REAL, merger_ipq_init, test_mode)
 
     def merge(self):
         """merges the elements passed at object creation by modifying the original list, modifying the write slice"""

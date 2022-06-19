@@ -1,9 +1,12 @@
 from Merger_IPQs import MergerIPQ
+from Codes import Code_IPQ
 
 
 class MergerIPQ_Dummy(MergerIPQ.MergerIPQ):
     """a simple dummy method for IPQ implementations - methods work, but are far from optimised"""
-    def __init__(self, initial_priorities, option_code=1, test_mode=False):
+
+    # add an additional input to be used exclusively by tester
+    def __init__(self, initial_priorities, test_mode=False, option_code=Code_IPQ.Code_Ipq.DUMMY):
         super().__init__(initial_priorities, option_code, test_mode)
         self.priorities = initial_priorities
 
