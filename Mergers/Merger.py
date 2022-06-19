@@ -2,12 +2,14 @@ from typing import List
 from Support import ListSlice
 from Merger_IPQs import MergerIPQ_LoserTree
 from os.path import exists
+from Codes import Code_Merger
 
 
 class Merger:
     """accepts a list of list slices to merge and a list slice to write to - uses merge method to merge the input
     into the output """
-    def __init__(self, runs: List[ListSlice.ListSlice], write_list_slice: ListSlice.ListSlice, option_code,
+    def __init__(self, runs: List[ListSlice.ListSlice], write_list_slice: ListSlice.ListSlice,
+                 option_code=Code_Merger.Code_Merger.BASE,
                  merger_ipq_init=False,
                  test_mode=False) -> None:
         self.runs = runs

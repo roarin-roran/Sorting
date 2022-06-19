@@ -1,13 +1,17 @@
 # a trimmed down version of a priority queue for use in merge sorting algorithms
 from typing import TypeVar, List, Tuple
 from os.path import exists
+from Codes import Code_Merger
+
 
 # define the type of the priorities we're using
 PRIORITY_TYPE = TypeVar('PRIORITY_TYPE')
 
 
 class MergerIPQ:
-    def __init__(self, initial_priorities: List[PRIORITY_TYPE], option_code, test_mode=False) -> None:
+    def __init__(self, initial_priorities: List[PRIORITY_TYPE],
+                 option_code=Code_Merger.Code_Merger.BASE,
+                 test_mode=False) -> None:
         """an informal interface for an indexed priority queue, with a few shared helper methods built in"""
 
         self.option_code = option_code
