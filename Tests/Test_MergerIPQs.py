@@ -1,5 +1,4 @@
-from Tests import Test
-from Misc.mothballed import Test_Sorters
+from Tests import Test, Test_Sorters
 from Merger_IPQs import MergerIPQ_Tester, MergerIPQ_Dummy, MergerIPQ_LoserTree
 import unittest
 
@@ -26,8 +25,8 @@ class Test_MergerIPQs(Test.Test):
         try:
             # 1. use the ipq at issue to do a sorting test:
             #    high volume random values, testing for problems caused by this ipq
-            sorter_tester = Test_Sorters.Test_Sorters()
-            sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=self.merger_ipq_init)
+            sorter_tester = Test_Sorters.TestCases()
+            sorter_tester.test_element_using_sorter(override_merger_ipq_init=self.merger_ipq_init)
 
             # 2. apply fixed tests - use human generated values to reproduce expected behaviour
             self._fixed_tests(self.merger_ipq_init)

@@ -1,5 +1,4 @@
-from Tests import Test
-from Misc.mothballed import Test_Sorters
+from Tests import Test, Test_Sorters
 from Support import ListSlice
 from Merger_IPQs import MergerIPQ, MergerIPQ_Dummy, MergerIPQ_Tester, MergerIPQ_LoserTree
 from Mergers import Merger, Merger_Tester, Merger_Adaptive, Merger_TwoWay
@@ -124,10 +123,10 @@ class Test_Mergers(Test.Test):
         try:
             # 1. use the merger at issue to do a sorting test:
             #    high volume random values, testing for problems caused by this merger
-            sorter_tester = Test_Sorters.Test_Sorters()
+            sorter_tester = Test_Sorters.TestCases()
 
-            sorter_tester.test_sorter_bottom_up(override_merger_ipq_init=merger_ipq_init,
-                                                override_merger_init=self.merger_init)
+            sorter_tester.test_element_using_sorter(override_merger_ipq_init=merger_ipq_init,
+                                                    override_merger_init=self.merger_init)
 
             # 2. apply fixed tests - use human generated values to reproduce expected behaviour
             self._merge_two(merger_ipq_init)
@@ -223,9 +222,9 @@ class TestCases(unittest.TestCase):
         test_completed = False
         try:
             # note that no ipq is actually used - we just have to give one here.
-            our_tester._merge_two(MergerIPQ_Dummy.MergerIPQ_Dummy)
-            our_tester._merge_one_element_in_back(MergerIPQ_Dummy.MergerIPQ_Dummy)
-            our_tester._merge_one_element_in_front(MergerIPQ_Dummy.MergerIPQ_Dummy)
+            our_tester._merge_two(None)
+            our_tester._merge_one_element_in_back(None)
+            our_tester._merge_one_element_in_front(None)
 
             our_tester._check_correct_merger_used(Merger_TwoWay.Merger_TwoWay)
 

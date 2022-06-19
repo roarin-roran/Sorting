@@ -172,9 +172,15 @@ class TestCases(unittest.TestCase):
 
         print("tested default sorter")
 
+    def test_element_using_sorter(self,
+                                  override_merger_ipq_init=None,
+                                  override_merger_init=None):
+        self.test_sorter_bottom_up(override_merger_ipq_init, override_merger_init, False)
+
     def test_sorter_bottom_up(self,
                               override_merger_ipq_init=None,
-                              override_merger_init=None):
+                              override_merger_init=None,
+                              testing=True):
         """tests the k-way bottom up sorter"""
         sorter_init = Sorter_BottomUp.Sorter_PingPong_BottomUp
         default_merger_init = Merger_Adaptive.Merger_Adaptive
@@ -187,7 +193,8 @@ class TestCases(unittest.TestCase):
                                          override_merger_init, default_merger_init,
                                          override_merger_ipq_init, default_merger_ipq_init)
 
-        print("tested k-way bottom up sorter")
+        if testing:
+            print("tested k-way bottom up sorter")
 
     def test_sorter_adaptive(self,
                              override_merger_ipq_init=None,
@@ -234,13 +241,12 @@ class TestCases(unittest.TestCase):
 
         our_tester.clear_all_files()
 
-        print("testing adaptive k=2 sorter")
+        print("tested adaptive k=2 sorter")
 
     def test_sorter_peeksort(self, override_merger_ipq_init=None, override_merger_init=None):
         """tests the k-way peeksort sorter"""
 
         sorter_init = Sorter_Peeksort.Sorter_Peeksort
-        # sorter_init = Sorter_Adaptive.Sorter_PingPong_Adaptive
         default_merger_init = Merger_Adaptive.Merger_Adaptive
         default_merger_ipq_init = MergerIPQ_LoserTree.MergerIPQ_LoserTree
 

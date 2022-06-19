@@ -1,6 +1,5 @@
 import os
 from os.path import exists
-import unittest
 from Support import ListSlice
 
 
@@ -15,6 +14,7 @@ class Test:
 
     def _check_correct_merger_ipq_used(self, correct_merger_ipq_init):
         """checks that the input is the only ipq used since records were last wiped"""
+
         blank_merger_ipq = correct_merger_ipq_init([])
         f_r = open("test_options_merger_ipq.txt", "r")
 
@@ -30,10 +30,11 @@ class Test:
         """checks that the correct merger is the only merger that's been used since the last wipe"""
         # blank merger must be created for its option code to be read
         # two runs must be passed for merger two way to work (but they can be empty)
+
         blank_merger = correct_merger_init([[], []], ListSlice.ListSlice([], 0, 0))
         f_r = open("test_options_merger.txt", "r")
 
-        correct_answer = str(blank_merger.option_code)
+        correct_answer = str(blank_merger.option_code.value)
 
         for entry in f_r:
             given_answer = entry[0]
