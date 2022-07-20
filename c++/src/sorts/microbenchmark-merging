@@ -1,0 +1,108 @@
+#include <algorithm>
+#include <vector>
+#include <cstring>
+
+using std::memcpy;
+
+	template<typename Iter, typename Iter2>
+	inline void merge_runs(Iter l, Iter m, Iter r, Iter2 B) {
+    Iter i1, j1; Iter2 b;
+		for (i1 = m-1, b = B+(m-1-l); i1 >= l;) *b-- = *i1--;
+		for (j1 = r, b = B+(m-l); j1 >= m;) *b++ = *j1--;
+		Iter2 i = B, j = B+(r-l);
+		for (Iter k = l; k <= r; ++k)
+			*k = *j < *i ? *j-- : *i++;
+	}
+
+	template<typename Iter, typename Iter2>
+	inline void merge_runs_stdcopy(Iter l, Iter m, Iter r, Iter2 B) {
+		std::copy_backward(l,m,B+(m-l));
+		std::reverse_copy(m,r+1,B+(m-l));
+		Iter2 i = B, j = B+(r-l);
+		for (Iter k = l; k <= r; ++k)
+			*k = *j < *i ? *j-- : *i++;
+	}
+
+	template<typename Iter, typename Iter2>
+	inline void merge_runs_branchless(Iter l, Iter m, Iter r, Iter2 B) {
+		std::copy_backward(l,m,B+(m-l));
+		std::reverse_copy(m,r+1,B+(m-l));
+		Iter2 i = B, j = B+(r-l);
+		for (Iter k = l; k <= r; ++k) {
+			bool const cmp = *j < *i;
+			*k = cmp ? *j : *i;
+			j -= cmp ? 1 : 0;
+			i += cmp ? 0 : 1;
+		}
+	}
+
+
+static void MergePlain(benchmark::State& state) {
+    int n = 1000;
+    int * v = new int[n];
+    int * a = new int[n];
+    int * b = new int[n];
+    for (int i = 1; i <= n; ++i) v[i-1]=(i);
+    auto m = v + (n/2);
+    std::sort(v, m);
+    std::sort(m,v+n);
+  // Code inside this loop is measured repeatedly
+  for (auto _ : state) {
+    memcpy(a,v,n * sizeof(int));
+    merge_runs(a, a + n/2, a+n-1, b);
+    // Make sure the variable is not optimized away by compiler
+    benchmark::DoNotOptimize(a);
+  }
+  delete[] v;
+  delete[] b;
+  delete[] a;
+}
+// Register the function as a benchmark
+BENCHMARK(MergePlain);
+
+
+static void MergeCopy(benchmark::State& state) {
+    int n = 1000;
+    int * v = new int[n];
+    int * a = new int[n];
+    int * b = new int[n];
+    for (int i = 1; i <= n; ++i) v[i-1]=(i);
+    auto m = v + (n/2);
+    std::sort(v, m);
+    std::sort(m,v+n);
+  // Code inside this loop is measured repeatedly
+  for (auto _ : state) {
+    memcpy(a,v,n * sizeof(int));
+    merge_runs_stdcopy(a, a + n/2, a+n-1, b);
+    // Make sure the variable is not optimized away by compiler
+    benchmark::DoNotOptimize(a);
+  }
+  delete[] v;
+  delete[] b;
+  delete[] a;
+}
+// Register the function as a benchmark
+BENCHMARK(MergeCopy);
+
+static void MergeBranchLess(benchmark::State& state) {
+    int n = 1000;
+    int * v = new int[n];
+    int * a = new int[n];
+    int * b = new int[n];
+    for (int i = 1; i <= n; ++i) v[i-1]=(i);
+    auto m = v + (n/2);
+    std::sort(v, m);
+    std::sort(m,v+n);
+  // Code inside this loop is measured repeatedly
+  for (auto _ : state) {
+    memcpy(a,v,n * sizeof(int));
+    merge_runs_branchless(a, a + n/2, a+n-1, b);
+    // Make sure the variable is not optimized away by compiler
+    benchmark::DoNotOptimize(a);
+  }
+  delete[] v;
+  delete[] b;
+  delete[] a;
+}
+// Register the function as a benchmark
+BENCHMARK(MergeBranchLess);

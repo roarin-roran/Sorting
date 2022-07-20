@@ -1,0 +1,47 @@
+https://github.com/gfx/cpp-TimSort // used in Morwenn/cpp-sort; close to Java source
+https://github.com/tvanslyke/timsort-cpp // maybe more fine-tuned?
+
+https://github.com/Morwenn/cpp-sort
+
+branchless merge
+http://a-hackers-craic.blogspot.ca/2011/05/branchless-stackless-merge-sort.html
+
+branchless merge (alternative, probably bad)
+https://stackoverflow.com/questions/41129442/branchless-internal-merge-slower-than-internal-merge-with-branch
+
+
+
+Sorting small lists
+https://github.com/Morwenn/comparator-networks
+https://github.com/Morwenn/cpp-sort/wiki/Fixed-size-sorters
+
+
+
+
+https://github.com/weissan/BlockQuicksort/blob/master/partition.h
+
+
+
+
+
+
+
+
+Google benchmark (micro benchmarking suite)
+https://github.com/google/benchmark
+
+
+
+universal references in C++14/17
+https://isocpp.org/blog/2012/11/universal-references-in-c11-scott-meyers
+
+
+
+
+Online tools:
+
+run Google benchmark based microbenchmarks online
+http://quick-bench.com/
+
+check out assembly from many compilers
+https://godbolt.org/
