@@ -2,7 +2,7 @@ import random
 from typing import List
 
 
-def random_permutation(n: int, random: random.Random) -> List[int]:
+def random_permutation(n: int, random : random.Random = random.Random()) -> List[int]:
     A = list(range(n))
     random.shuffle(A)
     return A
@@ -94,7 +94,7 @@ def fill_with_asc_runs_deterministic(A, runLengths, runLenFactor):
         i += L
 
 
-def random_uary_array(u, len, random):
+def random_uary_array(u, len, random = random.Random()):
     """return new array filled with iid uniform numbers in [1..u]"""
     res = [0] * len
     for i in range(len):
