@@ -872,7 +872,9 @@ void experimentPowersortBufferInsertion(int x, int y, int size, int num, bool ru
     a = inputs::random_vector(x, y, size * num);
     if (runs == true)
     {
-        inputs::run_sort(a.begin(), a.end(), sqrt(size));
+        int runLen = sqrt(size);
+        std::cout << "\nRunning powersort with run length = " << runLen << "\n";
+        inputs::run_sort(a.begin(), a.end(), runLen);
     }
     Iter l = a.begin(), r = l + size, b = B.begin();
     auto start = std::chrono::high_resolution_clock::now();
@@ -929,7 +931,7 @@ void experimentPowersort4BufferInsertion(int x, int y, int size, int num, bool r
 
 void experimentPowersort4BufferInsertion2(int x, int y, int size, int num, bool runs)
 {
-    std::cout << "experiment Powersort4 Buffer Insertion 2\n";
+    std::cout << "\nexperiment Powersort4 Buffer Insertion 2\n";
     std::cout << "size of vectors = " << size << "\nnumber of vectors =" << num << "\nrange of ints = " << x << " to " << y << "\nRuns = " << runs;
     std::vector<int> a, B(size + 4 + ceil(log2(size)) + 2);
     a = inputs::random_vector(x, y, size * num);
@@ -1110,7 +1112,7 @@ long int nodePower2(Iter s1, Iter s2, Iter s3, Iter l, Iter r)
 int main(int argc, char** argv)
 {
 	int minNum = INT_MIN, maxNum = INT_MAX-1;
-	int n = 10000000, nInputs=10;
+	int n = 10000000, nInputs=20;
 	bool withSortedRuns = true;
 	
 	inputs::RNG.seed( 32785623 );
