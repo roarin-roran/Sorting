@@ -31,6 +31,7 @@ def sort_random_runs(A, left, right, expRunLen, random):
         i = j + 1
 
 
+
 def timsort_drag_run_lengths(n):
     if n <= 3:
         return [n]
@@ -78,8 +79,7 @@ def fill_with_asc_runs_deterministic(A, runLengths, runLenFactor):
     lengths.
     More precisely, the array is first filled n, n-1, ..., 1
     and then for i=0..l-1 segments of runLengths.get(i) * runLenFactor
-    are sorted ascending when i mod 2 == 0 and descending otherwise
-    (where l = runLengths.size()).
+    are sorted ascending.
     The sum of all lengths in runLengths times runLenFactor should be equal to the
     length of A.
     """
@@ -94,9 +94,18 @@ def fill_with_asc_runs_deterministic(A, runLengths, runLenFactor):
         i += L
 
 
+
+
 def random_uary_array(u, len, random = random.Random()):
     """return new array filled with iid uniform numbers in [1..u]"""
     res = [0] * len
     for i in range(len):
         res[i] = random.randint(1, u)
     return res
+
+
+
+if __name__ == "__main__":
+    pass
+
+
