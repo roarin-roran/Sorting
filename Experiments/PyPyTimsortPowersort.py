@@ -38,6 +38,7 @@ def differences(repetitions, input_generator):
 
 
 
+
 n = 10000
 sqrtn = int(n ** 0.5)
 reps = 10
@@ -55,3 +56,4 @@ diffs = differences(reps, lambda: Inputs.random_permutation(n, RNG))
 # print(diffs)
 print(diffs['mc']  .describe(percentiles=[0.01, 0.05, 0.1, .25, .5, .75]))
 print(diffs['cmps'].describe(percentiles=[0.01, 0.05, 0.1, .25, .5, .75]))
+
