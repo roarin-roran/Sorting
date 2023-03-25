@@ -2,7 +2,7 @@ import random
 from typing import List
 
 
-def random_permutation(n: int, random : random.Random = random.Random()) -> List[int]:
+def random_permutation(n: int, random: random.Random = random.Random()) -> List[int]:
     A = list(range(n))
     random.shuffle(A)
     return A
@@ -27,9 +27,8 @@ def sort_random_runs(A, left, right, expRunLen, random):
         while random.randint(0, expRunLen - 1) != 0:
             j += 1
         j = min(right, i + j)
-        A[i:j+1] = sorted(A[i:j+1])
+        A[i:j + 1] = sorted(A[i:j + 1])
         i = j + 1
-
 
 
 def timsort_drag_run_lengths(n):
@@ -38,7 +37,8 @@ def timsort_drag_run_lengths(n):
     else:
         nPrime = n // 2
         nPrimePrime = n - nPrime - (nPrime - 1)
-        return timsort_drag_run_lengths(nPrime) + timsort_drag_run_lengths(nPrime - 1) + [nPrimePrime]
+        return timsort_drag_run_lengths(nPrime) + timsort_drag_run_lengths(nPrime - 1) + [
+            nPrimePrime]
 
 
 def fill_with_timsort_drag(A, minRunLen, random):
@@ -67,14 +67,14 @@ def fill_with_up_and_down_runs(A, runLengths, runLenFactor, random):
     i = 0
     for l in runLengths:
         L = l * runLenFactor
-        A[i:i+L] = sorted(A[i:i+L])
+        A[i:i + L] = sorted(A[i:i + L])
         if reverse:
-            A[i:i+L] = reversed(A[i:i+L])
+            A[i:i + L] = reversed(A[i:i + L])
         reverse = not reverse
         i += L
 
 
-def fill_with_asc_runs_deterministic(A, runLengths, runLenFactor):
+def fill_with_asc_runs_high_to_low(A, runLengths, runLenFactor):
     """Fills the given array A with ascending runs of the given list of run
     lengths.
     More precisely, the array is first filled n, n-1, ..., 1
@@ -90,13 +90,23 @@ def fill_with_asc_runs_deterministic(A, runLengths, runLenFactor):
     i = 0
     for l in runLengths:
         L = l * runLenFactor
-        A[i:i+L] = sorted(A[i:i+L])
+        A[i:i + L] = sorted(A[i:i + L])
         i += L
 
 
+def fill_with_asc_runs_same(A, runLengths, runLenFactor):
+    """Fills the given list with ascending runs, all starting at 1,2,3, but ending with n"""
+    n = len(A)
+    assert sum(runLengths) * runLenFactor == n
+    i = 0
+    for l in runLengths:
+        L = l * runLenFactor
+        A[i:i + L-1] = range(1, L)
+        A[i + L - 1] = n
+        i += L
 
 
-def random_uary_array(u, len, random = random.Random()):
+def random_uary_array(u, len, random=random.Random()):
     """return new array filled with iid uniform numbers in [1..u]"""
     res = [0] * len
     for i in range(len):
@@ -104,8 +114,9 @@ def random_uary_array(u, len, random = random.Random()):
     return res
 
 
-
 if __name__ == "__main__":
-    pass
-
-
+    import util
+    A = [0]*20
+    fill_with_asc_runs_same(A, [5, 1, 2, 3, 1, 1, 7], 1)
+    print(A)
+    print(util.rank_reduce(A))
