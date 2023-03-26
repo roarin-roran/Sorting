@@ -94,16 +94,28 @@ def fill_with_asc_runs_high_to_low(A, runLengths, runLenFactor):
         i += L
 
 
-def fill_with_asc_runs_same(A, runLengths, runLenFactor):
+def fill_with_asc_runs_same(A, runLengths, runLenFactor, use_n_as_last_entry=True):
     """Fills the given list with ascending runs, all starting at 1,2,3, but ending with n"""
     n = len(A)
     assert sum(runLengths) * runLenFactor == n
     i = 0
     for l in runLengths:
         L = l * runLenFactor
-        A[i:i + L-1] = range(1, L)
-        A[i + L - 1] = n
+        A[i:i + L] = range(1, L+1)
+        if use_n_as_last_entry:
+            A[i + L - 1] = n
         i += L
+
+
+def fill_with_dups_desc(A, runLengths, runLenFactor):
+    i = 0
+    u = len(runLengths)
+    for l in runLengths:
+        L = runLenFactor * l
+        for j in range(L):
+            A[i] = u
+            i += 1
+        u -= 1
 
 
 def random_uary_array(u, len, random=random.Random()):
@@ -116,7 +128,8 @@ def random_uary_array(u, len, random=random.Random()):
 
 if __name__ == "__main__":
     import util
-    A = [0]*20
+
+    A = [0] * 20
     fill_with_asc_runs_same(A, [5, 1, 2, 3, 1, 1, 7], 1)
     print(A)
     print(util.rank_reduce(A))
