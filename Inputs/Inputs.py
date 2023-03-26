@@ -20,15 +20,27 @@ def shuffle(A, left, right, random):
         A[i], A[j] = A[j], A[i]
 
 
-def sort_random_runs(A, left, right, expRunLen, random):
+def sort_random_runs(A, left, right, expRunLen, random=random.Random()):
     i = left
     while i < right:
-        j = 1
+        l = 1
         while random.randint(0, expRunLen - 1) != 0:
-            j += 1
-        j = min(right, i + j)
+            l += 1
+        j = min(right, i + l)
         A[i:j + 1] = sorted(A[i:j + 1])
         i = j + 1
+
+
+def exponential_random_run_lengths(n, expRunLen, random=random.Random()):
+    rl = []
+    i = 0
+    while i < n:
+        l = 1
+        while random.randint(0, expRunLen - 1) != 0:
+            l += 1
+        rl += [min(l,n-i)]
+        i += l
+    return rl
 
 
 def timsort_drag_run_lengths(n):
@@ -133,3 +145,7 @@ if __name__ == "__main__":
     fill_with_asc_runs_same(A, [5, 1, 2, 3, 1, 1, 7], 1)
     print(A)
     print(util.rank_reduce(A))
+
+    runs = exponential_random_run_lengths(20, 10)
+    print(runs)
+    print(sum(runs))

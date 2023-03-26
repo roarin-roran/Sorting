@@ -2,11 +2,11 @@ import random
 import pandas as pd
 import matplotlib.pylab as plt
 
-import PyPySorters.listsort_powersort
-import PyPySorters.listsort_timsort
+import PyPySorters.listsort_powersort as powersort
+import PyPySorters.listsort_timsort as timsort
 import Support.Counters as Counters
 import Inputs.Inputs as Inputs
-
+import Inputs.util as util
 
 
 def cost(lst, sorter):
@@ -23,27 +23,36 @@ def cost(lst, sorter):
 
 
 def differences(repetitions, input_generator):
-    diffs = pd.DataFrame(columns=['algo', 'mc', 'cmps', 'input-hash'])
+    diffs = pd.DataFrame()
     for i in range(repetitions):
-        print(i)
+        if repetitions > 1:
+            print(i)
         A = input_generator()
-        ps = cost(A, PyPySorters.listsort_powersort)
-        ts = cost(A, PyPySorters.listsort_timsort)
+        ps = cost(A, powersort)
+        ts = cost(A, timsort)
         diff = {}
-        diff['algo'] = 'timsort-powersort'
-        diff['mc'] = 1.0 * ts['mc'] - ps['mc']
-        diff['cmps'] = 1.0 * ts['cmps'] - ps['cmps']
+        diff['iteration'] = i
+        diff['algo'] = 'timsort-over-powersort'
+        diff['mc'] = 1.0*ts['mc'] / ps['mc'] if ps['mc'] > 0 else math.nan
+        diff['cmps'] = 1.0*ts['cmps'] / ps['cmps'] if ps['cmps'] > 0 else math.nan
+        diff['mc-diff'] = 1.0 * ts['mc'] - ps['mc']
+        diff['cmps-diff'] = 1.0 * ts['cmps'] - ps['cmps']
+        diff['mc-powersort'] = ps['mc']
+        diff['cmps-powersort'] = ps['cmps']
         diff['input-hash'] = ps['input-hash']
         diffs = diffs.append(diff, ignore_index=True)
     return diffs
 
+
 def contest(input_generator,
-            reps=200, n=10000, seed=2348905734,
+            reps=100, n=10000, seed=2348905734,
             print_describe=True,
-            describe_percentiles=[0.01, 0.05, 0.1, .25, .5, .75],
+            describe_percentiles=[0.01, .25, .5,],
             show_histograms=False,
             show_scatter=True,
+            return_diffs=False,
             ):
+    print('Running  ...')
     RNG = random.Random(seed)
     diffs = differences(reps, lambda: input_generator(n, RNG))
     if print_describe:
@@ -57,44 +66,68 @@ def contest(input_generator,
         plt.hist(diffs['cmps'])
         plt.show()
     if show_scatter:
-        plt.scatter('mc', 'cmps', data = diffs, marker='x')
+        plt.scatter('mc', 'cmps', data = diffs, marker='x', )
         plt.show()
+    return diffs if return_diffs else None
+
+
+def bad_input(n, RNG):
+    sqrtn = int(n ** 0.5)
+    lst = [0] * n
+    Inputs.fill_with_asc_runs_same(lst,
+                                   Inputs.exponential_random_run_lengths(n, sqrtn, RNG),
+                                   1, use_n_as_last_entry=False)
+    lst = util.rank_reduce_ties_desc(lst)
+    return lst
+
+
+def find_bad_inputs(n=10000, seed=2348905734):
+    RNG = random.Random(seed)
+    worst_badness = 0
+    worst_input = []
+    last_input = None
+    def next_input():
+        nonlocal last_input
+        last_input = bad_input(n, RNG)
+        return last_input
+    try:
+        while True:
+            diffs = differences(1, next_input)
+            badness = diffs['cmps'][0]
+            # print(badness)
+            if badness > worst_badness:
+                worst_badness = badness
+                worst_input = last_input
+                print(worst_badness)
+    except KeyboardInterrupt:
+        print(worst_input)
 
 
 # contest(lambda n, rand: Inputs.random_permutation(n, rand), reps=10,n=100)
 
 
-n = 10000
-sqrtn = int(n ** 0.5)
-reps = 1
-
-import sortstats.runs as runs
-import Inputs.util as util
-
-def input_generator(n, RNG):
+if 0:
+    n = 10000
     sqrtn = int(n ** 0.5)
-    lst = Inputs.random_runs(n, sqrtn, RNG)
-    run_lens = runs.run_lengths(runs.runs(lst))
-    Inputs.fill_with_asc_runs_same(lst, run_lens, 1)
-    return util.rank_reduce(lst)
+    reps = 1
 
-import cProfile
-
-cProfile.run('contest(input_generator,reps=1)', sort='time')
-
-# contest(input_generator)
+    import sortstats.runs as runs
+    import Inputs.util as util
 
 
-# RNG = random.Random(2348905734)
-# diffs = differences(reps, lambda: Inputs.random_runs(n, sqrtn, RNG))
-# # print(diffs)
-# print(diffs['mc']  .describe(percentiles=[0.01, 0.05, 0.1, .25, .5, .75]))
-# print(diffs['cmps'].describe(percentiles=[0.01, 0.05, 0.1, .25, .5, .75]))
-#
-#
-# RNG = random.Random(2348905734)
-# diffs = differences(reps, lambda: Inputs.random_permutation(n, RNG))
-# # print(diffs)
-# print(diffs['mc']  .describe(percentiles=[0.01, 0.05, 0.1, .25, .5, .75]))
-# print(diffs['cmps'].describe(percentiles=[0.01, 0.05, 0.1, .25, .5, .75]))
+    def input_generator(n, RNG):
+        sqrtn = int(n ** 0.5)
+        lst = Inputs.random_runs(n, sqrtn, RNG)
+        run_lens = runs.run_lengths(runs.runs(lst))
+        Inputs.fill_with_asc_runs_same(lst, run_lens, 1)
+        return util.rank_reduce(lst)
 
+
+    import cProfile
+
+    cProfile.run('contest(input_generator,reps=1)', sort='time')
+
+    contest(input_generator)
+
+
+find_bad_inputs(10000)
