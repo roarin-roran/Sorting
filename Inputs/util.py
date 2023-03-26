@@ -3,8 +3,8 @@ def rank_reduce(lst):
     is the rank of the corresponding element in the input list.
     """
     n = len(lst)
-    return [sorted([(lst[i], i) for i in range(n)])
-            .index((lst[k], k)) for k in range(n)]
+    sorted_with_index = sorted([(lst[i], i) for i in range(n)])
+    return [sorted_with_index.index((lst[k], k)) for k in range(n)]
 
 
 if __name__ == '__main__':
