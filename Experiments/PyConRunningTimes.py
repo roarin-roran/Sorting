@@ -40,6 +40,7 @@ print('Running time comparison')
 import Inputs.Inputs as Inputs
 import Inputs.Books as Books
 import Inputs.bad_examples as bad_examples
+import Inputs.bad_cmps_1m as bad_cmps_1m
 
 seed = 2378956239523
 n = 1000000
@@ -47,6 +48,7 @@ n = 1000000
 
 RNG = random.Random(seed)
 inputs = [
+    ("bad-example-cmps-1m ", lambda: bad_cmps_1m.bad_cmps_1000000),
     ("random-permutations ", lambda: Inputs.random_permutation(n, RNG)),
     ("random-permutations2", lambda: Inputs.random_permutation(n, RNG)),
     ("random-sqrtn-runs   ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
@@ -55,7 +57,6 @@ inputs = [
     ("words-of-bible      ", lambda: Books.list_of_words_bible()),
     ("bad-example-cmps    ", lambda: bad_examples.bad_cmps_10k),
     ("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
-    ("bad-example-cmps-1m ", lambda: bad_examples.bad_cmps_1m),
 ]
 
 # runner = pyperf.Runner()
@@ -66,8 +67,8 @@ for name, input_generator in inputs:
     lst = input_generator()
     # Take time using pyperf
     # time = runner.timeit('sorted(lst)', globals=globals())
-    # times = timeit.repeat('sorted(lst)', globals=globals(), number=1, repeat=5)
-    times = [timeit.timeit('sorted(lst)', globals=globals(), number=100)]
+    times = timeit.repeat('sorted(lst)', globals=globals(), number=10, repeat=5)
+    # times = [timeit.timeit('sorted(lst)', globals=globals(), number=1)]
     for i, time in enumerate(times):
         results.append((name, i, time))
 

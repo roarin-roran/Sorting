@@ -101,5 +101,10 @@ def input_generator(n, RNG):
 #
 # cProfile.run('contest(input_generator,reps=1)', sort='time')
 
-contest(input_generator)
+# contest(input_generator)
+
+import Inputs.bad_cmps_1m as bad_cmps_1m
+d = differences(1, lambda: bad_cmps_1m.bad_cmps_1000000)
+for col in d.columns:
+    print(col, d[col].values)
 
