@@ -35,6 +35,8 @@ import random
 import sys
 sys.path.append('..')
 
+print('Running time comparison')
+
 import Inputs.Inputs as Inputs
 import Inputs.Books as Books
 import Inputs.bad_examples as bad_examples
