@@ -53,6 +53,7 @@ inputs = [
     ("words-of-bible      ", lambda: Books.list_of_words_bible()),
     ("bad-example-cmps    ", lambda: bad_examples.bad_cmps_10k),
     ("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
+    ("bad-example-cmps-1m ", lambda: bad_examples.bad_cmps_1m),
 ]
 
 # runner = pyperf.Runner()
