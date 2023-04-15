@@ -32,6 +32,9 @@
 
 import timeit
 import random
+import sys
+sys.path.append('..')
+
 import Inputs.Inputs as Inputs
 import Inputs.Books as Books
 import Inputs.bad_examples as bad_examples

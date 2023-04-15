@@ -3,6 +3,10 @@ import random
 
 import pandas as pd
 
+# add parent folder to path
+import sys
+sys.path.append('..')
+
 import Inputs.Inputs as Inputs
 import Inputs.util as util
 import PyPySorters.listsort_powersort as powersort
@@ -86,10 +90,9 @@ def find_bad_inputs(n=10000, seed=2348905734, badness_criterion='cmps',
 
 
 if __name__ == '__main__':
-    # read commandline arguments: n, seed, badness_criterion
-    import sys
-    import os
-
+    if len(sys.argv) < 4:
+        print("usage: python FindBadInputs.py <badness_criterion> <n> <seed> [-f]")
+        exit(1)
     badness_criterion = sys.argv[1]
     n = int(sys.argv[2])
     seed = int(sys.argv[3])
@@ -97,6 +100,7 @@ if __name__ == '__main__':
           .format(n, seed, badness_criterion))
     filename = "bad_{}_n={}_seed={}.py".format(badness_criterion, n, seed)
     # abort if exists
+    import os
     if os.path.exists(filename):
         if len(sys.argv) >= 4 and sys.argv[4] == '-f':
             print("file {} already exists, overwriting".format(filename))
