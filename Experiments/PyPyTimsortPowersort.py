@@ -7,6 +7,7 @@ import PyPySorters.listsort_timsort as timsort
 import Support.Counters as Counters
 import Inputs.Inputs as Inputs
 import Inputs.util as util
+import math
 
 
 def cost(lst, sorter):
@@ -102,6 +103,13 @@ def find_bad_inputs(n=10000, seed=2348905734, badness_criterion='cmps'):
                 worst_input = last_input
                 print(worst_badness, min_badness)
     except KeyboardInterrupt:
+        # write input to file with timestamp
+        import datetime
+        import os
+        import time
+        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d--%H-%M-%S')
+        with open('worst_input-'+timestamp+'.txt', 'w') as f:
+            f.write(str(worst_input))
         print(worst_input)
 
 
