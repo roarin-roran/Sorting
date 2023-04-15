@@ -142,4 +142,4 @@ if 0:
 
 # find_bad_inputs(10000, badness_criterion='cmps')
 
-find_bad_inputs(1000000, badness_criterion='cmps')
+find_bad_inputs(1000, badness_criterion='cmps')
