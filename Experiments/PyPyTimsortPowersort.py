@@ -81,65 +81,25 @@ def bad_input(n, RNG):
     lst = util.rank_reduce_ties_desc(lst)
     return lst
 
+n = 10000
+sqrtn = int(n ** 0.5)
+reps = 1
 
-def find_bad_inputs(n=10000, seed=2348905734, badness_criterion='cmps'):
-    RNG = random.Random(seed)
-    min_badness = 100
-    worst_badness = 0
-    worst_input = []
-    last_input = None
-    def next_input():
-        nonlocal last_input
-        last_input = bad_input(n, RNG)
-        return last_input
-    try:
-        while True:
-            diffs = differences(1, next_input)
-            badness = diffs[badness_criterion][0]
-            # print(badness)
-            min_badness = min(min_badness, badness)
-            if badness > worst_badness:
-                worst_badness = badness
-                worst_input = last_input
-                print(worst_badness, min_badness)
-    except KeyboardInterrupt:
-        # write input to file with timestamp
-        import datetime
-        import os
-        import time
-        timestamp = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d--%H-%M-%S')
-        with open('worst_input-'+timestamp+'.txt', 'w') as f:
-            f.write(str(worst_input))
-        print(worst_input)
+import sortstats.runs as runs
+import Inputs.util as util
 
 
-# contest(lambda n, rand: Inputs.random_permutation(n, rand), reps=10,n=100)
-
-
-if 0:
-    n = 10000
+def input_generator(n, RNG):
     sqrtn = int(n ** 0.5)
-    reps = 1
-
-    import sortstats.runs as runs
-    import Inputs.util as util
-
-
-    def input_generator(n, RNG):
-        sqrtn = int(n ** 0.5)
-        lst = Inputs.random_runs(n, sqrtn, RNG)
-        run_lens = runs.run_lengths(runs.runs(lst))
-        Inputs.fill_with_asc_runs_same(lst, run_lens, 1)
-        return util.rank_reduce(lst)
+    lst = Inputs.random_runs(n, sqrtn, RNG)
+    run_lens = runs.run_lengths(runs.runs(lst))
+    Inputs.fill_with_asc_runs_same(lst, run_lens, 1)
+    return util.rank_reduce(lst)
 
 
-    import cProfile
+# import cProfile
+#
+# cProfile.run('contest(input_generator,reps=1)', sort='time')
 
-    cProfile.run('contest(input_generator,reps=1)', sort='time')
+contest(input_generator)
 
-    contest(input_generator)
-
-
-# find_bad_inputs(10000, badness_criterion='cmps')
-
-find_bad_inputs(1000, badness_criterion='cmps')

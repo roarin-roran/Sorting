@@ -46,6 +46,7 @@ inputs = [
     ("random-permutations2", lambda: Inputs.random_permutation(n, RNG)),
     ("random-sqrtn-runs   ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
     ("random-sqrtn-runs2  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
+    ("random-sqrtn-runs3  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
     ("words-of-bible      ", lambda: Books.list_of_words_bible()),
     ("bad-example-cmps    ", lambda: bad_examples.bad_cmps_10k),
     ("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
