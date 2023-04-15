@@ -50,10 +50,11 @@ def differences(repetitions, input_generator):
 
 
 def bad_input(n, RNG):
-    sqrtn = int(n ** 0.5)
+    #runlen = int(n ** 0.5) # sqrt n
+    runlen = 32
     lst = [0] * n
     Inputs.fill_with_asc_runs_same(lst,
-                                   Inputs.exponential_random_run_lengths(n, sqrtn, RNG),
+                                   Inputs.exponential_random_run_lengths(n, runlen, RNG),
                                    1, use_n_as_last_entry=False)
     lst = util.rank_reduce_ties_desc(lst)
     return lst
