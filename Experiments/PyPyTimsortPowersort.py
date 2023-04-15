@@ -81,8 +81,9 @@ def bad_input(n, RNG):
     return lst
 
 
-def find_bad_inputs(n=10000, seed=2348905734):
+def find_bad_inputs(n=10000, seed=2348905734, badness_criterion='cmps'):
     RNG = random.Random(seed)
+    min_badness = 100
     worst_badness = 0
     worst_input = []
     last_input = None
@@ -93,12 +94,13 @@ def find_bad_inputs(n=10000, seed=2348905734):
     try:
         while True:
             diffs = differences(1, next_input)
-            badness = diffs['cmps'][0]
+            badness = diffs[badness_criterion][0]
             # print(badness)
+            min_badness = min(min_badness, badness)
             if badness > worst_badness:
                 worst_badness = badness
                 worst_input = last_input
-                print(worst_badness)
+                print(worst_badness, min_badness)
     except KeyboardInterrupt:
         print(worst_input)
 
@@ -130,4 +132,6 @@ if 0:
     contest(input_generator)
 
 
-find_bad_inputs(10000)
+# find_bad_inputs(10000, badness_criterion='cmps')
+
+find_bad_inputs(1000000, badness_criterion='cmps')
