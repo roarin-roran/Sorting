@@ -38,7 +38,7 @@ def exponential_random_run_lengths(n, expRunLen, random=random.Random()):
         l = 1
         while random.randint(0, expRunLen - 1) != 0:
             l += 1
-        rl += [min(l,n-i)]
+        rl += [min(l, n - i)]
         i += l
     return rl
 
@@ -58,6 +58,19 @@ def fill_with_timsort_drag(A, minRunLen, random):
     n = N // minRunLen
     RTim = timsort_drag_run_lengths(n)
     fill_with_up_and_down_runs(A, RTim, minRunLen, random)
+
+
+def tims_random_run_lengths(n_runs=10000, short_run_prob=0.80, short_run_range=(1, 100),
+                            long_run_range=(1000, 10000), random=random.Random()):
+    runs = []
+    for i in range(n_runs):
+        switch = random.random()
+        if switch < short_run_prob:
+            x = random.randrange(short_run_range[0], short_run_range[1])
+        else:
+            x = random.randrange(long_run_range[0], long_run_range[1])
+        runs.append(x)
+    return runs
 
 
 def fill_with_up_and_down_runs(A, runLengths, runLenFactor, random):
@@ -113,7 +126,7 @@ def fill_with_asc_runs_same(A, runLengths, runLenFactor, use_n_as_last_entry=Tru
     i = 0
     for l in runLengths:
         L = l * runLenFactor
-        A[i:i + L] = range(1, L+1)
+        A[i:i + L] = range(1, L + 1)
         if use_n_as_last_entry:
             A[i + L - 1] = n
         i += L
@@ -141,11 +154,20 @@ def random_uary_array(u, len, random=random.Random()):
 if __name__ == "__main__":
     import util
 
-    A = [0] * 20
-    fill_with_asc_runs_same(A, [5, 1, 2, 3, 1, 1, 7], 1)
-    print(A)
-    print(util.rank_reduce(A))
+    def input_generator(n, RNG):
+        p = 0.8
+        short = (1, 100)
+        long = (1000, 10000)
+        print(round(10000* (p * 0.5*sum(short) + (1-p) * 0.5*sum(long))))
+        nRuns = max(2, int(n / (p * 0.5*sum(short) + (1-p) * 0.5*sum(long))))
+        print(nRuns)
+        run_lens = tims_random_run_lengths(nRuns, p, short, long, RNG)
+        nn = sum(run_lens)
+        print(nn)
+        lst = [0] * nn
+        fill_with_asc_runs_same(lst, run_lens, 1, use_n_as_last_entry=False)
+        lst = util.rank_reduce_ties_desc(lst)
+        return lst
 
-    runs = exponential_random_run_lengths(20, 10)
-    print(runs)
-    print(sum(runs))
+
+    input_generator(10000000, random.Random())
