@@ -66,6 +66,7 @@ def find_bad_inputs(n=10000, seed=2348905734, badness_criterion='cmps',
     min_badness = 100
     worst_badness = 0
     worst_input = []
+    best_input = []
     last_input = None
 
     def next_input():
@@ -77,15 +78,23 @@ def find_bad_inputs(n=10000, seed=2348905734, badness_criterion='cmps',
         diffs = differences(1, next_input)
         badness = diffs[badness_criterion][0]
         # print(badness)
-        min_badness = min(min_badness, badness)
+        write = False
+        if badness < min_badness:
+            min_badness = badness
+            best_input = last_input
+            print(worst_badness, min_badness)
+            write = True
         if badness > worst_badness:
             worst_badness = badness
             worst_input = last_input
             print(worst_badness, min_badness)
+            write = True
+        if write:
             with open(output_file, 'w') as f:
-                f.write('# cmps:{}\t mc:{}\n'.format(diffs['cmps'][0], diffs['mc'][0]))
                 f.write('# worst_{}:{}\t min_{}:{}\n'.format(badness_criterion, worst_badness, badness_criterion, min_badness))
-                f.write('bad_{}_{} = '.format(badness_criterion, n) + str(worst_input))
+                f.write('# last cmps:{}\t mc:{}\n'.format(diffs['cmps'][0], diffs['mc'][0]))
+                f.write('bad_{}_{} = '.format(badness_criterion, n) + str(worst_input) + '\n')
+                f.write('good_{}_{} = '.format(badness_criterion, n) + str(best_input) + '\n')
                 f.write('\n')
                 f.flush()
 
