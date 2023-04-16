@@ -33,6 +33,9 @@
 import timeit
 import random
 import sys
+
+import Support.Counters as Counters
+
 sys.path.append('..')
 
 print('Running time comparison')
@@ -49,19 +52,21 @@ n = 1000000
 RNG = random.Random(seed)
 inputs = [
     ("bad-example-cmps-1m ", lambda: bad_cmps_1m.bad_cmps_1000000),
-    ("random-permutations ", lambda: Inputs.random_permutation(n, RNG)),
-    ("random-permutations2", lambda: Inputs.random_permutation(n, RNG)),
-    ("random-sqrtn-runs   ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
-    ("random-sqrtn-runs2  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
-    ("random-sqrtn-runs3  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
-    ("words-of-bible      ", lambda: Books.list_of_words_bible()),
-    ("bad-example-cmps    ", lambda: bad_examples.bad_cmps_10k),
-    ("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
+    # ("random-permutations ", lambda: Inputs.random_permutation(n, RNG)),
+    # ("random-permutations2", lambda: Inputs.random_permutation(n, RNG)),
+    # ("random-sqrtn-runs   ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
+    # ("random-sqrtn-runs2  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
+    # ("random-sqrtn-runs3  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
+    # ("words-of-bible      ", lambda: Books.list_of_words_bible()),
+    # ("bad-example-cmps    ", lambda: bad_examples.bad_cmps_10k),
+    # ("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
 ]
 
 def wrap_list(lst):
     # convert number to string with x digits including leading zeros
-    return ['{:0>100}'.format(x) for x in lst]
+    # return ['{:0>100}'.format(x) for x in lst]
+    Counters.reset_counters()
+    return [Counters.ComparisonCounter(x) for x in lst]
 
 # runner = pyperf.Runner()
 # don't use pyperf for now; separate process makes things complicated
@@ -72,8 +77,9 @@ for name, input_generator in inputs:
     lst = wrap_list(lst)
     # Take time using pyperf
     # time = runner.timeit('sorted(lst)', globals=globals())
-    times = timeit.repeat('sorted(lst)', globals=globals(), number=100, repeat=5)
-    # times = [timeit.timeit('sorted(lst)', globals=globals(), number=1)]
+    # times = timeit.repeat('sorted(lst)', globals=globals(), number=100, repeat=5)
+    times = [timeit.timeit('sorted(lst)', globals=globals(), number=1)]
+    Counters.print_counters()
     for i, time in enumerate(times):
         results.append((name, i, time))
 
