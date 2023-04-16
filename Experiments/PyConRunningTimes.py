@@ -34,7 +34,6 @@ import timeit
 import random
 import sys
 
-
 sys.path.append('..')
 
 print('Running time comparison')
