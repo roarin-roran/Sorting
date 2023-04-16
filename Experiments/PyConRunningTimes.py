@@ -59,15 +59,19 @@ inputs = [
     ("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
 ]
 
+def wrap_list(lst):
+    return [f"{x:0100d}" for x in lst]
+
 # runner = pyperf.Runner()
 # don't use pyperf for now; separate process makes things complicated
 results = []
 for name, input_generator in inputs:
     print(f"Running {name} ...")
     lst = input_generator()
+    lst = wrap_list(lst)
     # Take time using pyperf
     # time = runner.timeit('sorted(lst)', globals=globals())
-    times = timeit.repeat('sorted(lst)', globals=globals(), number=10, repeat=5)
+    times = timeit.repeat('sorted(lst)', globals=globals(), number=200, repeat=5)
     # times = [timeit.timeit('sorted(lst)', globals=globals(), number=1)]
     for i, time in enumerate(times):
         results.append((name, i, time))
