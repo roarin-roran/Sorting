@@ -103,8 +103,14 @@ def input_generator(n, RNG):
 
 # contest(input_generator)
 
+def wrap_list(lst):
+    # convert number to string with x digits including leading zeros
+    return ['{:0>20}'.format(x) for x in lst]
+
+print(wrap_list(list(range(10))))
+
 import Inputs.bad_cmps_1m as bad_cmps_1m
-d = differences(1, lambda: bad_cmps_1m.bad_cmps_1000000)
+d = differences(1, lambda: wrap_list(bad_cmps_1m.bad_cmps_1000000))
 for col in d.columns:
     print(col, d[col].values)
 

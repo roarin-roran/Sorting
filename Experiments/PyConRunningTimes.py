@@ -60,7 +60,8 @@ inputs = [
 ]
 
 def wrap_list(lst):
-    return [f"{x:0100d}" if x is int else str(x) for x in lst]
+    # convert number to string with x digits including leading zeros
+    return ['{:0>100}'.format(x) for x in lst]
 
 # runner = pyperf.Runner()
 # don't use pyperf for now; separate process makes things complicated
