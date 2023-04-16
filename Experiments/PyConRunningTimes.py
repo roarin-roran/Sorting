@@ -60,12 +60,30 @@ inputs = [
     # ("bad-example-cmps    ", lambda: bad_examples.bad_cmps_10k),
     # ("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
 ]
+class ComparisonSlower:
+
+    def __init__(self, obj):
+        self.obj = obj
+
+
+    def __lt__(self, other):
+        # waste some time to slow things down
+        for i in range(100):
+            pass
+        return self.obj < other.obj
+
+    def __repr__(self):
+        return 'ComparisonSlower(' + repr(self.obj) + ')'
+
+    def __str__(self):
+        return 'ComparisonSlower(' + str(self.obj) + ')'
+
 
 def wrap_list(lst):
     # convert number to string with x digits including leading zeros
     # return ['{:0>100}'.format(x) for x in lst]
-    Counters.reset_counters()
-    return [Counters.ComparisonCounter(x) for x in lst]
+    # Counters.reset_counters()
+    return [ComparisonSlower(x) for x in lst]
 
 # runner = pyperf.Runner()
 # don't use pyperf for now; separate process makes things complicated
@@ -78,7 +96,7 @@ for name, input_generator in inputs:
     # time = runner.timeit('sorted(lst)', globals=globals())
     # times = timeit.repeat('sorted(lst)', globals=globals(), number=100, repeat=5)
     times = [timeit.timeit('sorted(lst)', globals=globals(), number=1)]
-    Counters.print_counters()
+    # Counters.print_counters()
     for i, time in enumerate(times):
         results.append((name, i, time))
 
