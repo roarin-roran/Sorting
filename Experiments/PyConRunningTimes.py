@@ -71,8 +71,8 @@ for name, input_generator in inputs:
     lst = wrap_list(lst)
     # Take time using pyperf
     # time = runner.timeit('sorted(lst)', globals=globals())
-    # times = timeit.repeat('sorted(lst)', globals=globals(), number=200, repeat=5)
-    times = [timeit.timeit('sorted(lst)', globals=globals(), number=1)]
+    times = timeit.repeat('sorted(lst)', globals=globals(), number=100, repeat=5)
+    # times = [timeit.timeit('sorted(lst)', globals=globals(), number=1)]
     for i, time in enumerate(times):
         results.append((name, i, time))
 
