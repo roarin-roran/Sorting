@@ -99,6 +99,8 @@ def talk_slides_experiments_april_16_2023():
 
 
 
+# talk_slides_experiments_april_16_2023()
+
 # PLAYGROUND
 
 if 1:
@@ -122,5 +124,3 @@ if 1:
         # print as table
         print(f"{name}\t{i}\t{time}")
 
-
-# talk_slides_experiments_april_16_2023()
