@@ -9,6 +9,8 @@ import copy
 
 
 class Sorter_Peeksort(Sorter.Sorter):
+    """a sorter using the munro and wild developed peeksort, extended to include k-way merging."""
+
     def __init__(self, input_list, k,
                  merger_ipq_init=None,
                  merger_init=None,
@@ -54,7 +56,8 @@ class Sorter_Peeksort(Sorter.Sorter):
         #   (note that inputs where the first run overlaps the second are illegal)
         # todo - this base case is a hack, and should be replaced with alternatives. also - some experimentation should
         #  be used to find the appropriate base case size
-        elif last_run_start - first_run_end <= self.k:
+
+        elif self._detect_trivial_input(input_start, first_run_end, last_run_start, input_end):
             self._handle_trivial_input(input_start, first_run_end, last_run_start, input_end,
                                        merge_stack, next_merge_stack_index)
         else:
@@ -207,6 +210,17 @@ class Sorter_Peeksort(Sorter.Sorter):
 
         # all failed tests cause the function to return false - if we get this far, they're all passed.
         return True
+
+    def _detect_trivial_input(self, input_start, first_run_end, last_run_start, input_end):
+        """an easily adjustable and overwritable test to distinguish trival input from recursible input
+
+        trivial input must be handled by a base case: merging everything, or a base sorting method like insertion sort
+
+        recursible input should just be recursed on.
+        """
+        print(input_start, first_run_end, last_run_start, input_end, self.k, self.input_list)
+
+        return last_run_start - first_run_end <= self.k
 
     def _handle_trivial_input(self, input_start, first_run_end, last_run_start, input_end,
                               merge_stack, next_merge_stack_index):
