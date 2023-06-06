@@ -3,25 +3,35 @@ from collections import Counter
 
 
 def runs(lst):
+    """
+    input: list, which should probably have some runs added to it
+    output: list of ranges of all runs
+    """
+    
     ranges = []
     start_index = 0
     last_num = lst[0]
     increasing = None
+    
     for i in range(1, len(lst)):
+        # initialise or switch
         if increasing is None:
             increasing = lst[i] >= last_num
+        # if the direction changes, record and start a new run
         elif increasing != (lst[i] >= last_num):
             end_index = i
             ranges.append((start_index, end_index, increasing))
             start_index = i
             increasing = None
         last_num = lst[i]
+        
     end_index = len(lst)
     ranges.append((start_index, end_index, increasing))
     return ranges
 
 
 def run_lengths(ranges):
+    # _ used here to ignore the variable "increasing"
     return [end - start for start, end, _ in ranges]
 
 

@@ -3,12 +3,14 @@ from typing import List
 
 
 def random_permutation(n: int, random: random.Random = random.Random()) -> List[int]:
+    """ returns the numbers from 0 to n in random order """
     A = list(range(n))
     random.shuffle(A)
     return A
 
 
 def random_runs(n, expRunLen, random):
+    """ returns the numbers from 0 to n in random order, with runs of expected length expRunLen """
     A = random_permutation(n, random)
     sort_random_runs(A, 0, n - 1, expRunLen, random)
     return A
@@ -22,12 +24,18 @@ def shuffle(A, left, right, random):
 
 def sort_random_runs(A, left, right, expRunLen, random=random.Random()):
     i = left
+    # for the whole input
     while i < right:
         l = 1
+
+        # for a random duration, approximately expRunLen, increase the run size
         while random.randint(0, expRunLen - 1) != 0:
             l += 1
+
+        # sort the elements into a run of length l
         j = min(right, i + l)
         A[i:j + 1] = sorted(A[i:j + 1])
+        
         i = j + 1
 
 
@@ -62,6 +70,7 @@ def fill_with_timsort_drag(A, minRunLen, random):
 
 def tims_random_run_lengths(n_runs=10000, short_run_prob=0.80, short_run_range=(1, 100),
                             long_run_range=(1000, 10000), random=random.Random()):
+    """ produces a mix of short and long runs, with p chance of a short run, and an inexact length """
     runs = []
     for i in range(n_runs):
         switch = random.random()
@@ -109,10 +118,15 @@ def fill_with_asc_runs_high_to_low(A, runLengths, runLenFactor):
     length of A.
     """
     n = len(A)
+    # raises a flag if this is false: testing only
     assert sum(runLengths) * runLenFactor == n
+
+    # A lists the numbers from 1 to i, high to low
     for i in range(n):
         A[i] = n - i
     i = 0
+
+    # sorts these runs low to high
     for l in runLengths:
         L = l * runLenFactor
         A[i:i + L] = sorted(A[i:i + L])
