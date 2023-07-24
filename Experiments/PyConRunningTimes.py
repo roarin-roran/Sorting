@@ -42,6 +42,7 @@ import Inputs.Inputs as Inputs
 import Inputs.Books as Books
 import Inputs.bad_examples as bad_examples
 import Inputs.bad_cmps_1m as bad_cmps_1m
+import Inputs.bad_cmps_1m_2 as bad_cmps_1m_2
 import Support.Counters as Counters
 
 seed = 2378956239523
@@ -51,14 +52,15 @@ n = 1000000
 RNG = random.Random(seed)
 inputs = [
     ("bad-example-cmps-1m ", lambda: bad_cmps_1m.bad_cmps_1000000),
-    ("random-permutations ", lambda: Inputs.random_permutation(n, RNG)),
-    ("random-permutations2", lambda: Inputs.random_permutation(n, RNG)),
-    ("random-sqrtn-runs   ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
-    ("random-sqrtn-runs2  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
-    ("random-sqrtn-runs3  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
-    ("words-of-bible      ", lambda: Books.list_of_words_bible()),
-    ("bad-example-cmps    ", lambda: bad_examples.bad_cmps_10k),
-    ("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
+    #("bad-example-cmps-1m2", lambda: bad_cmps_1m_2.bad_cmps_1000000),
+    #("random-permutations ", lambda: Inputs.random_permutation(n, RNG)),
+    #("random-permutations2", lambda: Inputs.random_permutation(n, RNG)),
+    #("random-sqrtn-runs   ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
+    #("random-sqrtn-runs2  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
+    #("random-sqrtn-runs3  ", lambda: Inputs.random_runs(n, int(n ** 0.5), RNG)),
+    #("words-of-bible      ", lambda: Books.list_of_words_bible()),
+    #("bad-example-cmps    ", lambda: bad_examples.bad_cmps_10k),
+    #("bad-example-mc      ", lambda: bad_examples.bad_mc_10k),
 ]
 class ComparisonSlower:
 
@@ -68,7 +70,7 @@ class ComparisonSlower:
 
     def __lt__(self, other):
         # waste some time to slow things down
-        for i in range(100):
+        for i in range(10000):
             pass
         return self.obj < other.obj
 
@@ -91,10 +93,10 @@ results = []
 for name, input_generator in inputs:
     print(f"Running {name} ...")
     lst = input_generator()
-    lst = wrap_list(lst)
+    #lst = wrap_list(lst)
     # Take time using pyperf
     # time = runner.timeit('sorted(lst)', globals=globals())
-    times = timeit.repeat('sorted(lst)', globals=globals(), number=50, repeat=5)
+    times = timeit.repeat('sorted(lst)', globals=globals(), number=1, repeat=1)
     # times = [timeit.timeit('sorted(lst)', globals=globals(), number=1)]
     # Counters.print_counters()
     for i, time in enumerate(times):
