@@ -828,6 +828,12 @@ def entry_point(argv):
             l = pyflate_list[:]
             PowerSortWrapped(l).sort()
             s += l[-42]._key
+#    elif variant == "list-sort":
+#        print("Running Powersort on raw pyflate list")
+#        for rep in range(runs):
+#            l = pyflate_list_raw[:]
+#            l.sort()
+#            s += l[-42]
     else:
         print "invalid variant", variant
         return 1
